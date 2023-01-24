@@ -1,3 +1,3 @@
 [build]
-command = "npm run build && npx tailwind build src/input.css -o dist/output.css"
+command = "npm install -D tailwindcss && npx tailwind -i ./src/input.css -o ./dist/output.css"
 publish = "dist"
