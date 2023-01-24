@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="/dist/output.css" rel="stylesheet" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+			integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+		<script src="/js/script.js" defer></script>
+
+		<title>JB's Portfolio</title>
+	</head>
+	<body
+		class="w-full h-full"
+		style="
+			background-image: url('/img/brooklyn-bridge.jpg');
+			background-size: cover;
+		"
+	>
+		<div
+			class="overlay text-4xl bg-black absolute inset-0 opacity-90"
+		></div>
+		<nav class="navbar relative p-6">
+			<img class="h-16 w-16" src="/img/logo-jb.png" alt="" />
+		</nav>
+		<header class="flex h-full w-full absolute inset-0 z-20 px-8">
+			<div class="portfolio-header text-center m-auto">
+				<h1
+					class="text-2xl md:text-3xl lg:text-4xl uppercase text-white tracking-[13px] font-bold mb-4"
+				>
+					Joe Balzac
+				</h1>
+				<span
+					id="myWord"
+					class="my-word text-xs md:text-base inline-block w-auto overflow-hidden animate-typing animate-blinking uppercase text-white tracking-[6px] mx-auto whitespace-nowrap border-r-2 max-w-sm delay-1000"
+				></span>
+				<p class="text-white text-[10px] lg:text-base mt-4 uppercase">
+					👁‍🗨 NEW YORK
+				</p>
+			</div>
+		</header>
+		<footer
+			class="social-links fixed bottom-0 text-white w-full z-20 flex flex-col justify-center items-center mb-4"
+		>
+			<ul class="flex justify-center items-center mb-4">
+				<a
+					href="https://github.com/joebalzac"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+				>
+					<i
+						class="fab fa-github text-2xl md:text-4xl"
+						aria-hidden="true"
+					></i>
+				</a>
+				<a
+					href="https://codepen.io/joebalzac"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+					><i
+						class="fab fa-codepen text-2xl md:text-4xl"
+						aria-hidden="true"
+					></i>
+				</a>
+				<a
+					href="https://dribbble.com/joebalzac"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+				>
+					<i
+						class="fab fa-dribbble text-2xl md:text-4xl"
+						aria-hidden="true"
+					></i>
+				</a>
+				<a
+					href="https://www.linkedin.com/in/joebalzac/"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+				>
+					<i
+						class="fab fa-linkedin text-2xl md:text-4xl"
+						aria-hidden="true"
+					></i>
+				</a>
+				<a
+					href="mailto:jgbalzac@gmail.com"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+				>
+					<i
+						class="fa fa-envelope text-2xl md:text-4xl"
+						aria-hidden="true"
+					></i>
+				</a>
+			</ul>
+			<span class="text-xs">Made with ♡</span>
+		</footer>
+	</body>
+</html>
