@@ -1,4 +1,3 @@
 [build]
-command = "npm install -D tailwindcss &&
-npx tailwindcss init && npx tailwindcss -i ./src/input.css -o ./dist/output.css"
+command = "npx tailwindcss init && npx tailwindcss -i ./src/input.css -o ./dist/output.css"
 publish = "src"
