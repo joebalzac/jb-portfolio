@@ -7,7 +7,8 @@ module.exports = {
 			keyframes: {
 				typing: {
 					'0%': { maxWidth: '0%' },
-					'100%': { maxWidth: '100%' },
+					'90%': { maxWidth: '100%' },
+					'100%': { maxWidth: '0%' },
 				},
 				blinking: {
 					'0%': { borderColor: 'transparent' },
