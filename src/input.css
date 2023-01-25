@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.slider {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	cursor: pointer;
+	z-index: 50;
+	background: rgb(209 213 219);
+	border-radius: 16px;
+	transition: 0.4s;
+	height: 32px;
+	width: 72px;
+}
+
+.slider:after {
+	content: '    ';
+	background: #000;
+	opacity: 0.9;
+	height: 26px;
+	width: 26px;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	border-radius: 999px;
+	transition: 0.4s;
+}
+
+.switch input {
+	height: 0;
+	width: 0;
+	opacity: 0;
+}
+
+input:checked + .slider {
+	background-color: #000;
+	opacity: 0.9;
+}
+
+input:checked + .slider:after {
+	background: #fff;
+	transform: translateX(-150%);
+	transition: 0.4s;
+}

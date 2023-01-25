@@ -1,3 +1,10 @@
+const darkSwitch = document.getElementById('darkMode');
+const fullPage = document.querySelector('html');
+
+darkSwitch.addEventListener('click', () => {
+	fullPage.classList.toggle('dark');
+});
+
 let texts = ['Web Developer', 'Problem Solver', 'Logical Thinker'];
 
 let currentIndex = 0;

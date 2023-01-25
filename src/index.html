@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -17,12 +17,13 @@
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
 		/>
+
 		<script src="/js/script.js" defer></script>
 
 		<title>JB's Portfolio</title>
 	</head>
 	<body
-		class="w-full h-screen lg:h-full"
+		class="w-full h-screen xl:h-full"
 		style="
 			background-image: url('https://images.unsplash.com/photo-1586782002395-4b748cf6e71d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
 			background-size: cover;
@@ -30,32 +31,48 @@
 		"
 	>
 		<div
-			class="overlay text-4xl bg-black absolute inset-0 opacity-90"
+			class="overlay text-4xl bg-black dark:bg-slate-200 absolute inset-0 opacity-90"
 		></div>
 		<nav class="navbar relative p-6 flex justify-between items-center">
-			<img class="h-16 w-16" src="/img/logo-jb.png" alt="" />
-			<span
-				class="slider relative cursor-pointer mr-6 mt-6 bg-gray-300 h-6 w-10 transition-[.4s] after:content-[''] after:h-5 after:w-5 after:bg-black after:absolute after:right-0 after:bottom-0"
-			></span>
+			<img class="h-16 w-16 dark:hidden" src="/img/logo-jb.png" alt="" />
+			<img
+				class="h-16 w-16 hidden dark:inline-block"
+				src="/img/logo-black.png"
+				alt=""
+			/>
+			<label class="switch">
+				<input id="darkMode" type="checkbox" />
+
+				<span class="slider">
+					<i
+						class="fa-solid fa-sun text-lg text-black absolute left-2 bottom-1/4 z-50"
+					></i>
+					<i
+						class="fa-solid fa-moon text-lg text-white absolute right-2.5 bottom-1/4 z-50"
+					></i>
+				</span>
+			</label>
 		</nav>
 		<header class="flex h-full w-full absolute inset-0 z-20 px-8">
 			<div class="portfolio-header text-center m-auto">
 				<h1
-					class="text-2xl md:text-3xl lg:text-4xl uppercase text-white tracking-[13px] font-bold mb-4"
+					class="text-2xl md:text-3xl lg:text-4xl uppercase text-white dark:text-black tracking-[13px] font-bold mb-4"
 				>
 					Joe Balzac
 				</h1>
 				<span
 					id="myWord"
-					class="my-word text-xs md:text-base inline-block w-auto overflow-hidden animate-typing animate-blinking uppercase text-white tracking-[6px] mx-auto whitespace-nowrap border-r-2 max-w-sm delay-1000"
+					class="my-word text-xs md:text-base inline-block w-auto overflow-hidden animate-typing animate-blinking uppercase text-white dark:text-black tracking-[6px] mx-auto whitespace-nowrap border-r-2 max-w-sm delay-1000"
 				></span>
-				<p class="text-white text-[10px] lg:text-base mt-4 uppercase">
+				<p
+					class="text-white dark:text-black text-[10px] lg:text-base mt-4 uppercase"
+				>
 					👁‍🗨 NEW YORK
 				</p>
 			</div>
 		</header>
 		<footer
-			class="social-links fixed bottom-0 text-white w-full z-20 flex flex-col justify-center items-center mb-4"
+			class="social-links fixed bottom-0 text-white dark:text-black w-full z-20 flex flex-col justify-center items-center mb-4"
 		>
 			<ul class="flex justify-center items-center mb-4">
 				<a
@@ -71,7 +88,7 @@
 				<a
 					href="https://codepen.io/joebalzac"
 					target="blank_"
-					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-700"
 					><i
 						class="fab fa-codepen text-2xl md:text-4xl"
 						aria-hidden="true"
@@ -79,7 +96,7 @@
 				</a>
 				<a
 					href="https://dribbble.com/joebalzac"
-					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-700"
 				>
 					<i
 						class="fab fa-dribbble text-2xl md:text-4xl"
@@ -89,7 +106,7 @@
 				<a
 					href="https://www.linkedin.com/in/joebalzac/"
 					target="blank_"
-					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-700"
 				>
 					<i
 						class="fab fa-linkedin text-2xl md:text-4xl"
@@ -99,7 +116,7 @@
 				<a
 					href="mailto:jgbalzac@gmail.com"
 					target="blank_"
-					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
+					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-700"
 				>
 					<i
 						class="fa fa-envelope text-2xl md:text-4xl"
