@@ -10,5 +10,4 @@ const updateText = () => {
 
 updateText();
 
-setTimeout(updateText, 5000);
 setInterval(updateText, 3500);

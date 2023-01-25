@@ -17,7 +17,7 @@
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
 		/>
-		<script src="/src/js/script.js" defer></script>
+		<script src="/js/script.js" defer></script>
 
 		<title>JB's Portfolio</title>
 	</head>
@@ -32,8 +32,11 @@
 		<div
 			class="overlay text-4xl bg-black absolute inset-0 opacity-90"
 		></div>
-		<nav class="navbar relative p-6">
-			<img class="h-16 w-16" src="/src/img/logo-jb.png" alt="" />
+		<nav class="navbar relative p-6 flex justify-between items-center">
+			<img class="h-16 w-16" src="/img/logo-jb.png" alt="" />
+			<span
+				class="slider relative cursor-pointer mr-6 mt-6 bg-gray-300 h-6 w-10 transition-[.4s] after:content-[''] after:h-5 after:w-5 after:bg-black after:absolute after:right-0 after:bottom-0"
+			></span>
 		</nav>
 		<header class="flex h-full w-full absolute inset-0 z-20 px-8">
 			<div class="portfolio-header text-center m-auto">
@@ -57,6 +60,7 @@
 			<ul class="flex justify-center items-center mb-4">
 				<a
 					href="https://github.com/joebalzac"
+					target="blank_"
 					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
 				>
 					<i
@@ -66,6 +70,7 @@
 				</a>
 				<a
 					href="https://codepen.io/joebalzac"
+					target="blank_"
 					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
 					><i
 						class="fab fa-codepen text-2xl md:text-4xl"
@@ -83,6 +88,7 @@
 				</a>
 				<a
 					href="https://www.linkedin.com/in/joebalzac/"
+					target="blank_"
 					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
 				>
 					<i
@@ -92,6 +98,7 @@
 				</a>
 				<a
 					href="mailto:jgbalzac@gmail.com"
+					target="blank_"
 					class="p-4 cursor-pointer rounded-lg hover:bg-slate-800 active:bg-slate-900"
 				>
 					<i
