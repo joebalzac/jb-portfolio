@@ -559,6 +559,10 @@ video {
 	bottom: 0px;
 }
 
+.left-2\.5 {
+	left: 0.625rem;
+}
+
 .z-50 {
 	z-index: 50;
 }
