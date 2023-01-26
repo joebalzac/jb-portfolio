@@ -886,6 +886,16 @@ input:checked + .slider:after {
 	background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 
+.dark .dark\:active\:bg-slate-300:active {
+	--tw-bg-opacity: 1;
+	background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:active\:bg-slate-400:active {
+	--tw-bg-opacity: 1;
+	background-color: rgb(148 163 184 / var(--tw-bg-opacity));
+}
+
 @media (min-width: 768px) {
 	.md\:text-3xl {
 		font-size: 1.875rem;
@@ -922,6 +932,13 @@ input:checked + .slider:after {
 @media (min-width: 1280px) {
 	.xl\:h-full {
 		height: 100%;
+	}
+}
+
+@media (orientation: portrait) {
+	.portrait\:text-2xl {
+		font-size: 1.5rem;
+		line-height: 2rem;
 	}
 }
 
