@@ -15,6 +15,11 @@ module.exports = {
 					'50%': { borderColor: 'white' },
 					'100%': { borderColor: 'transparent' },
 				},
+				blinkingDark: {
+					'0%': { borderColor: 'transparent' },
+					'50%': { borderColor: 'black' },
+					'100%': { borderColor: 'transparent' },
+				},
 			},
 			animation: {
 				typing: 'typing 3.5s steps(30, end) infinite, blinking .8s infinite',

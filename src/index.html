@@ -34,12 +34,18 @@
 			class="overlay text-4xl bg-black dark:bg-slate-200 absolute inset-0 opacity-90"
 		></div>
 		<nav class="navbar relative p-6 flex justify-between items-center">
-			<img class="h-16 w-16 dark:hidden" src="/img/logo-jb.png" alt="" />
-			<img
-				class="h-16 w-16 hidden dark:inline-block"
-				src="/img/logo-black.png"
-				alt=""
-			/>
+			<a class="cursor-pointer" href="/">
+				<img
+					class="h-16 w-16 dark:hidden"
+					src="/img/logo-jb.png"
+					alt=""
+				/>
+				<img
+					class="h-16 w-16 hidden dark:inline-block"
+					src="/img/logo-black.png"
+					alt=""
+				/>
+			</a>
 			<label class="switch flex">
 				<input id="darkMode" type="checkbox" />
 
@@ -62,7 +68,7 @@
 				</h1>
 				<span
 					id="myWord"
-					class="my-word text-xs md:text-base inline-block w-auto overflow-hidden animate-typing animate-blinking uppercase text-white dark:text-black tracking-[6px] mx-auto whitespace-nowrap border-r-2 dark:border-black max-w-sm delay-1000"
+					class="my-word text-xs md:text-base inline-block w-auto overflow-hidden animate-typing animate-blinking dark:animate-blinking-dark uppercase text-white dark:text-black tracking-[6px] mx-auto whitespace-nowrap max-w-sm border-r-2"
 				></span>
 				<p
 					class="text-white dark:text-black text-[10px] lg:text-base mt-4 uppercase"

@@ -768,10 +768,6 @@ video {
 	opacity: 0.9;
 }
 
-.delay-1000 {
-	transition-delay: 1000ms;
-}
-
 .slider {
 	display: flex;
 	justify-content: center;
@@ -783,7 +779,7 @@ video {
 	border-radius: 16px;
 	transition: 0.4s;
 	height: 32px;
-	width: 72px;
+	width: 64px;
 }
 
 .slider:after {
@@ -812,7 +808,7 @@ input:checked + .slider {
 
 input:checked + .slider:after {
 	background: #fff;
-	transform: translateX(-150%);
+	transform: translateX(-120%);
 	transition: 0.4s;
 }
 
