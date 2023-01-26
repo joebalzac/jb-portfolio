@@ -924,3 +924,9 @@ input:checked + .slider:after {
 		height: 100%;
 	}
 }
+
+@media (orientation: landscape) {
+	.landscape\:h-full {
+		height: 100%;
+	}
+}
