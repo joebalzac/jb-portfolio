@@ -638,38 +638,6 @@ video {
 	}
 }
 
-@keyframes typingDark {
-	0% {
-		border-color: transparent;
-	}
-
-	50% {
-		border-color: black;
-	}
-
-	100% {
-		border-color: transparent;
-	}
-}
-
-.animate-typingDark {
-	animation: typing 3.5s steps(30, end) infinite, typingDark 0.8s infinite;
-}
-
-@keyframes typing {
-	0% {
-		max-width: 0%;
-	}
-
-	90% {
-		max-width: 100%;
-	}
-
-	100% {
-		max-width: 0%;
-	}
-}
-
 @keyframes blinking {
 	0% {
 		border-color: transparent;
