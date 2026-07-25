@@ -1,5 +1,5 @@
 export const profile = {
-  name: 'Joseph Balzac',
+  name: 'joseph balzac',
   lines: [
     'design engineer building ai-native products.',
     'currently building agents at eliseai.',
