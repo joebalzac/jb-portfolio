@@ -1,5 +1,6 @@
 import { useEffect, useState, type MouseEvent } from 'react';
-import type { WorkImage, WorkItem } from '../../data/site';
+import type { WorkImage, WorkItem, WorkSection } from '../../data/site';
+import { WorkCover } from './WorkCover';
 
 type WorkDetailProps = {
   item: WorkItem;
@@ -45,10 +46,116 @@ function FramedShot({
   );
 }
 
-export function WorkDetail({ item, onClose }: WorkDetailProps) {
-  const [hero, ...carousel] = item.images;
+function MediaCarousel({ images }: { images: WorkImage[] }) {
   const [index, setIndex] = useState(0);
-  const image = carousel[index];
+  const image = images[index];
+
+  if (images.length === 0) return null;
+
+  return (
+    <div>
+      <div className="relative">
+        <FramedShot image={image} />
+
+        {images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={() =>
+                setIndex((index - 1 + images.length) % images.length)
+              }
+              aria-label="Previous image"
+              className="absolute top-1/2 left-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/90 text-ink backdrop-blur-sm transition-colors hover:bg-card"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={() => setIndex((index + 1) % images.length)}
+              aria-label="Next image"
+              className="absolute top-1/2 right-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/90 text-ink backdrop-blur-sm transition-colors hover:bg-card"
+            >
+              ›
+            </button>
+          </>
+        )}
+      </div>
+
+      <div className="mt-3">
+        <p className="text-sm font-medium text-ink">{image.caption}</p>
+        <p className="mt-1 text-sm leading-relaxed text-muted">
+          {image.description}
+        </p>
+      </div>
+
+      {images.length > 1 && (
+        <div className="mt-4 flex items-center gap-2">
+          {images.map((img, i) => (
+            <button
+              key={img.caption + i}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`Go to ${img.caption}`}
+              className={`h-1.5 rounded-full transition-all ${
+                i === index ? 'w-5 bg-accent' : 'w-1.5 bg-line hover:bg-faint'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MediaSection({
+  section,
+  itemName,
+}: {
+  section: WorkSection;
+  itemName: string;
+}) {
+  return (
+    <div className="space-y-4">
+      {section.cover && (
+        <WorkCover
+          item={{
+            name: itemName,
+            cover: section.cover,
+            coverLogo: section.coverLogo,
+            coverLogoColor: section.coverLogoColor,
+            brandTone: 'soft',
+          }}
+          className="aspect-16/10"
+        />
+      )}
+
+      {section.hero && (
+        <div>
+          <FramedShot image={section.hero} aspectClassName="aspect-16/10" />
+          <div className="mt-3">
+            <p className="text-sm font-medium text-ink">{section.hero.caption}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">
+              {section.hero.description}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <MediaCarousel images={section.images} />
+    </div>
+  );
+}
+
+export function WorkDetail({ item, onClose }: WorkDetailProps) {
+  const sections: WorkSection[] =
+    item.sections && item.sections.length > 0
+      ? item.sections
+      : [
+          {
+            hero: item.images[0],
+            images: item.images.slice(1),
+          },
+        ];
 
   useEffect(() => {
     document.documentElement.dataset.cursorMode = 'close';
@@ -63,10 +170,6 @@ export function WorkDetail({ item, onClose }: WorkDetailProps) {
       window.removeEventListener('keydown', handleKey);
     };
   }, [onClose]);
-
-  useEffect(() => {
-    setIndex(0);
-  }, [item.name]);
 
   const handleSurfaceClick = (e: MouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('a, button')) return;
@@ -112,74 +215,14 @@ export function WorkDetail({ item, onClose }: WorkDetailProps) {
         </ul>
       </div>
 
-      <div className="space-y-4">
-        {hero && (
-          <div>
-            <FramedShot image={hero} aspectClassName="aspect-16/10" />
-            <div className="mt-3">
-              <p className="text-sm font-medium text-ink">{hero.caption}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted">
-                {hero.description}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {carousel.length > 0 && (
-          <div>
-            <div className="relative">
-              <FramedShot image={image} />
-
-              {carousel.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setIndex((index - 1 + carousel.length) % carousel.length)
-                    }
-                    aria-label="Previous image"
-                    className="absolute top-1/2 left-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/90 text-ink backdrop-blur-sm transition-colors hover:bg-card"
-                  >
-                    ‹
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIndex((index + 1) % carousel.length)}
-                    aria-label="Next image"
-                    className="absolute top-1/2 right-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/90 text-ink backdrop-blur-sm transition-colors hover:bg-card"
-                  >
-                    ›
-                  </button>
-                </>
-              )}
-            </div>
-
-            <div className="mt-3">
-              <p className="text-sm font-medium text-ink">{image.caption}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted">
-                {image.description}
-              </p>
-            </div>
-
-            {carousel.length > 1 && (
-              <div className="mt-4 flex items-center gap-2">
-                {carousel.map((img, i) => (
-                  <button
-                    key={img.caption + i}
-                    type="button"
-                    onClick={() => setIndex(i)}
-                    aria-label={`Go to ${img.caption}`}
-                    className={`h-1.5 rounded-full transition-all ${
-                      i === index
-                        ? 'w-5 bg-accent'
-                        : 'w-1.5 bg-line hover:bg-faint'
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+      <div className="space-y-16">
+        {sections.map((section, i) => (
+          <MediaSection
+            key={`${section.hero?.caption ?? section.cover ?? i}`}
+            section={section}
+            itemName={item.name}
+          />
+        ))}
       </div>
     </div>
   );

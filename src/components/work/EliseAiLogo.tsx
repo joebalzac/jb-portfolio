@@ -1,8 +1,11 @@
+import type { CSSProperties } from 'react';
+
 type EliseAiLogoProps = {
   className?: string;
+  style?: CSSProperties;
 };
 
-export function EliseAiLogo({ className }: EliseAiLogoProps) {
+export function EliseAiLogo({ className, style }: EliseAiLogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -11,6 +14,7 @@ export function EliseAiLogo({ className }: EliseAiLogoProps) {
       viewBox="0 0 61 20"
       fill="none"
       className={className}
+      style={style}
       aria-label="EliseAI"
     >
       <path

@@ -20,13 +20,23 @@ export type WorkImage = {
   description: string;
 };
 
+export type WorkSection = {
+  cover?: string;
+  coverLogo?: 'eliseai';
+  coverLogoColor?: string;
+  hero?: WorkImage;
+  images: WorkImage[];
+};
+
 export type WorkItem = {
   name: string;
   description: string;
   whatIDid: string[];
   images: WorkImage[];
+  sections?: WorkSection[];
   cover?: string;
   coverLogo?: 'eliseai';
+  coverLogoColor?: string;
   brandTone?: 'dark' | 'soft';
   url?: string;
 };
@@ -79,29 +89,47 @@ export const work: WorkItem[] = [
     ],
   },
   {
-    name: 'milbotix',
+    name: 'One AI',
     description:
-      'the web design and setup tooling behind smartsocks, a health wearable in a sock.',
+      'eliseai manages the entire renter lifecycle in one connected system.',
     brandTone: 'soft',
+    cover: '/img/eliseai/blue-fade.png',
+    coverLogo: 'eliseai',
+    coverLogoColor: '#ffffff',
     whatIDid: [
-      'led the web design and setup for smartsocks.',
-      'automated the manual onboarding and halved startup time.',
-      'shipped user-validated prototypes with an outsourced team, plus the diagnostic tools the engineers worked from.',
-      'piloted the ux across care organisations.',
+      'designed the one ai lifecycle story across inquiry, tour, and renewal.',
+      'built conversation surfaces that keep context from first call to signed lease.',
+      'shipped product flows for voice, leasing, guided tours, and renewals.',
     ],
-    images: [
+    images: [],
+    sections: [
       {
-        caption: 'smartsocks',
-        description:
-          'the wearable itself — hardware paired with the companion app.',
-      },
-      {
-        caption: 'placeholder',
-        description: 'add a caption for this image.',
-      },
-      {
-        caption: 'placeholder',
-        description: 'add a caption for this image.',
+        hero: {
+          src: '/img/eliseai/one-ai.png',
+          caption: 'one ai',
+          description:
+            'one connected system across the renter lifecycle — inquiry to renewal.',
+        },
+        images: [
+          {
+            src: '/img/eliseai/convo-inquiry.png',
+            caption: 'inquiry',
+            description:
+              'voice + leasing handoff — waitlists, sister communities, and next steps in one thread.',
+          },
+          {
+            src: '/img/eliseai/convo-tour.png',
+            caption: 'tour & apply',
+            description:
+              'ai-guided tours in chat, highlighting what makes the unit special.',
+          },
+          {
+            src: '/img/eliseai/convo-renewal.png',
+            caption: 'renewal',
+            description:
+              'sentiment-aware renewal offers when the resident is most likely to stay.',
+          },
+        ],
       },
     ],
   },
