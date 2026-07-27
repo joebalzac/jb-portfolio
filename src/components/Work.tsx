@@ -40,7 +40,7 @@ export function Work() {
               </div>
               <WorkCover
                 item={item}
-                className="aspect-video border border-line transition-colors group-hover:border-ink/20"
+                className="aspect-video transition-opacity group-hover:opacity-95"
               />
             </button>
           ))}

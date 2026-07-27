@@ -20,8 +20,9 @@ export function CustomCursor() {
     let lastY = 0;
 
     const syncMode = (target?: EventTarget | null) => {
+      const el = target as HTMLElement | null;
       const prefersDot = Boolean(
-        (target as HTMLElement | null)?.closest?.('[data-cursor="dot"]'),
+        el?.closest?.('[data-cursor="dot"], a, button'),
       );
       isClose =
         document.documentElement.dataset.cursorMode === 'close' && !prefersDot;

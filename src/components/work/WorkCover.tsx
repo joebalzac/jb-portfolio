@@ -35,7 +35,11 @@ export function WorkCover({ item, className = '' }: WorkCoverProps) {
     <div
       className={[
         'relative flex items-center justify-center overflow-hidden rounded-2xl',
-        brandTone === 'dark' ? 'bg-ink' : 'bg-[#ebe8f2]',
+        item.cover
+          ? 'bg-transparent'
+          : brandTone === 'dark'
+            ? 'bg-ink'
+            : 'bg-[#ebe8f2]',
         className,
       ].join(' ')}
     >
@@ -45,7 +49,7 @@ export function WorkCover({ item, className = '' }: WorkCoverProps) {
             src={item.cover}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full scale-[1.02] object-cover"
           />
           <div
             className={
