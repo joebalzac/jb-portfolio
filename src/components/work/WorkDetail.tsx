@@ -53,7 +53,7 @@ function MediaCarousel({ images }: { images: WorkImage[] }) {
   if (images.length === 0) return null;
 
   return (
-    <div>
+    <div data-cursor="dot">
       <div className="relative">
         <FramedShot image={image} />
 
@@ -65,7 +65,7 @@ function MediaCarousel({ images }: { images: WorkImage[] }) {
                 setIndex((index - 1 + images.length) % images.length)
               }
               aria-label="Previous image"
-              className="absolute top-1/2 left-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/90 text-ink backdrop-blur-sm transition-colors hover:bg-card"
+              className="absolute top-1/2 left-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line/80 bg-bg/50 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-bg/80"
             >
               ‹
             </button>
@@ -73,7 +73,7 @@ function MediaCarousel({ images }: { images: WorkImage[] }) {
               type="button"
               onClick={() => setIndex((index + 1) % images.length)}
               aria-label="Next image"
-              className="absolute top-1/2 right-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/90 text-ink backdrop-blur-sm transition-colors hover:bg-card"
+              className="absolute top-1/2 right-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-line/80 bg-bg/50 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-bg/80"
             >
               ›
             </button>
@@ -97,7 +97,7 @@ function MediaCarousel({ images }: { images: WorkImage[] }) {
               onClick={() => setIndex(i)}
               aria-label={`Go to ${img.caption}`}
               className={`h-1.5 rounded-full transition-all ${
-                i === index ? 'w-5 bg-accent' : 'w-1.5 bg-line hover:bg-faint'
+                i === index ? 'w-5 bg-ink/50' : 'w-1.5 bg-line hover:bg-faint'
               }`}
             />
           ))}
@@ -196,7 +196,7 @@ export function WorkDetail({ item, onClose }: WorkDetailProps) {
             href={item.url}
             target="_blank"
             rel="noreferrer"
-            className="mt-6 inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm text-accent transition-colors hover:bg-accent/15"
+            className="mt-6 inline-flex items-center gap-1 rounded-full border border-line bg-bg/50 px-4 py-1.5 text-sm text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-bg/80"
           >
             view <span aria-hidden>+</span>
           </a>

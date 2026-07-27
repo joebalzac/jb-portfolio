@@ -34,13 +34,13 @@ export function Work() {
                 <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
                   {item.description}
                 </p>
-                <span className="mt-6 inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm text-accent transition-colors group-hover:bg-accent/15">
+                <span className="mt-6 inline-flex items-center gap-1 rounded-full border border-line bg-bg/50 px-4 py-1.5 text-sm text-ink shadow-sm backdrop-blur-sm transition-colors group-hover:bg-bg/80">
                   view case study <span aria-hidden>+</span>
                 </span>
               </div>
               <WorkCover
                 item={item}
-                className="aspect-video border border-line transition-colors group-hover:border-accent/30"
+                className="aspect-video border border-line transition-colors group-hover:border-ink/20"
               />
             </button>
           ))}

@@ -16,13 +16,21 @@ export function CustomCursor() {
 
     let hovering = false;
     let isClose = false;
+    let lastX = 0;
+    let lastY = 0;
 
-    const syncMode = () => {
-      isClose = document.documentElement.dataset.cursorMode === 'close';
+    const syncMode = (target?: EventTarget | null) => {
+      const prefersDot = Boolean(
+        (target as HTMLElement | null)?.closest?.('[data-cursor="dot"]'),
+      );
+      isClose =
+        document.documentElement.dataset.cursorMode === 'close' && !prefersDot;
       setCloseMode(isClose);
     };
 
     const render = (x: number, y: number) => {
+      lastX = x;
+      lastY = y;
       if (isClose) {
         tip.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         return;
@@ -33,13 +41,16 @@ export function CustomCursor() {
 
     const handleMove = (event: MouseEvent) => {
       tip.style.opacity = '1';
-      syncMode();
+      syncMode(event.target);
+      hovering = Boolean(
+        (event.target as HTMLElement).closest('a, button'),
+      );
       render(event.clientX, event.clientY);
     };
 
     const handleOver = (event: MouseEvent) => {
       hovering = Boolean((event.target as HTMLElement).closest('a, button'));
-      syncMode();
+      syncMode(event.target);
       render(event.clientX, event.clientY);
     };
 
@@ -47,7 +58,10 @@ export function CustomCursor() {
       tip.style.opacity = '0';
     };
 
-    const observer = new MutationObserver(syncMode);
+    const observer = new MutationObserver(() => {
+      syncMode(document.elementFromPoint(lastX, lastY));
+      render(lastX, lastY);
+    });
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['data-cursor-mode'],
@@ -72,7 +86,7 @@ export function CustomCursor() {
       ref={tipRef}
       className={
         closeMode
-          ? 'pointer-events-none fixed top-0 left-0 z-100 flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3.5 py-1.5 text-sm text-accent opacity-0 backdrop-blur-sm transition-[opacity,transform] duration-150 ease-out'
+          ? 'pointer-events-none fixed top-0 left-0 z-100 flex items-center gap-1.5 rounded-full border border-line bg-bg/70 px-3.5 py-1.5 text-sm text-ink opacity-0 shadow-sm backdrop-blur-sm transition-[opacity,transform] duration-150 ease-out'
           : 'pointer-events-none fixed top-0 left-0 z-100 h-2 w-2 rounded-full bg-ink opacity-0 transition-[opacity,transform] duration-150 ease-out'
       }
     >
