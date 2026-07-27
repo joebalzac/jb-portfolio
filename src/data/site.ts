@@ -185,10 +185,29 @@ export const sideProjects: WorkItem[] = [
 export type WritingPost = {
   title: string;
   date: string;
+  excerpt: string;
+  cover: string;
+  body: string[];
   url?: string;
 };
 
-export const writing: WritingPost[] = [];
+export const writing: WritingPost[] = [
+  {
+    title: 'the design engineer',
+    date: 'jul 2026',
+    excerpt:
+      'how a role emerged at the intersection of design and engineering — and why agents made it inevitable.',
+    cover: '/img/writing/design-engineer-cover.jpg',
+    body: [
+      'for a long time, product teams treated design and engineering like a relay. designers handed off. engineers implemented. the gap between the two was where quality leaked — timing that felt off, states that never got designed, interactions that died in a ticket.',
+      'the design engineer sits in that gap on purpose. not a designer who codes a little, and not an engineer who has taste. someone who can hold the whole loop: feel the product, shape the interface, and ship the thing that makes it real.',
+      'tools closed the distance. figma got closer to production. components became the design system. prototyping stopped being a separate craft and started living in the same repo as the product. the handoff got thinner until, in the best teams, it mostly disappeared.',
+      'agents accelerated the shift. when the product itself is a system that thinks, calls tools, and streams uncertainty, you cannot design it in static frames and hope engineering figures out the motion. the interesting problems are temporal — thinking states, interrupted generation, tool call choreography, trust as the model changes its mind.',
+      'those surfaces only get good when the person designing them can also build them. taste without implementation stalls. implementation without taste ships the wrong certainty. the design engineer is the person who can do both in the same afternoon.',
+      'so the role is not a rebrand of frontend. it is a bet that the highest leverage work now lives where craft and systems meet — and that the people who thrive there will define how software feels next.',
+    ],
+  },
+];
 
 export const links = [
   { label: 'GitHub', href: 'https://github.com/joebalzac' },
