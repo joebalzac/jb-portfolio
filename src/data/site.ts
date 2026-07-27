@@ -135,7 +135,52 @@ export const work: WorkItem[] = [
   },
 ];
 
-export const sideProjects: WorkItem[] = [];
+export const sideProjects: WorkItem[] = [
+  {
+    name: 'Research Agent',
+    description:
+      'a local-first research agent — ask a question, watch it search, and get a compiled report.',
+    brandTone: 'dark',
+    url: 'https://research-agent-kappa-five.vercel.app/',
+    whatIDid: [
+      'designed a calm research workspace for empty, live, and completed states.',
+      'built light and dark themes with a clear search-to-report timeline.',
+      'shaped the report layout so sources, narration, and findings stay scannable.',
+    ],
+    images: [
+      {
+        src: '/img/research-agent/empty-light.png',
+        caption: 'empty — light',
+        description:
+          'starting state with prompt suggestions and a clear research cta.',
+      },
+      {
+        src: '/img/research-agent/empty-dark.png',
+        caption: 'empty — dark',
+        description:
+          'same workspace in dark mode — focused input, local folder, research action.',
+      },
+      {
+        src: '/img/research-agent/live-timeline.png',
+        caption: 'live research',
+        description:
+          'live timeline as the agent searches the web and starts synthesizing.',
+      },
+      {
+        src: '/img/research-agent/report-light.png',
+        caption: 'report — light',
+        description:
+          'compiled report with sources, narration, and structured findings.',
+      },
+      {
+        src: '/img/research-agent/report-dark.png',
+        caption: 'report — dark',
+        description:
+          'dark-mode research run with live search status and result links.',
+      },
+    ],
+  },
+];
 
 export type WritingPost = {
   title: string;

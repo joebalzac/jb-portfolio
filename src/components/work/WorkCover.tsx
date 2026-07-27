@@ -9,10 +9,27 @@ type WorkCoverProps = {
   className?: string;
 };
 
+function SparkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M8 1.2 9.1 6.1 14 7.2 9.1 8.3 8 13.2 6.9 8.3 2 7.2 6.9 6.1 8 1.2Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export function WorkCover({ item, className = '' }: WorkCoverProps) {
   const brandTone = item.brandTone ?? 'soft';
   const logoColor = item.coverLogoColor ?? '#ffffff';
   const isDarkLogo = logoColor.toLowerCase() !== '#ffffff';
+  const gradientOnly = !item.cover && brandTone === 'dark';
 
   return (
     <div
@@ -53,16 +70,33 @@ export function WorkCover({ item, className = '' }: WorkCoverProps) {
             )}
           </div>
         </>
+      ) : gradientOnly ? (
+        <>
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_20%,#2a3348_0%,#141820_42%,#0a0b0e_100%)]"
+          />
+          <div
+            aria-hidden
+            className="absolute -top-1/4 left-1/4 h-3/4 w-1/2 rounded-full bg-[#4b6fff]/18 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="absolute -right-10 -bottom-16 h-2/3 w-1/2 rounded-full bg-[#6b8cff]/12 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-white/5"
+          />
+          <div className="relative z-10 flex items-center gap-2.5 text-white">
+            <SparkIcon className="h-4 w-4 text-[#6b8cff] sm:h-5 sm:w-5" />
+            <span className="text-lg font-medium tracking-tight sm:text-xl">
+              {item.name}
+            </span>
+          </div>
+        </>
       ) : (
-        <span
-          className={
-            brandTone === 'dark'
-              ? 'text-2xl font-medium tracking-tight text-bg sm:text-3xl'
-              : 'font-mono text-xs text-faint'
-          }
-        >
-          {item.name}
-        </span>
+        <span className="font-mono text-xs text-faint">{item.name}</span>
       )}
     </div>
   );
