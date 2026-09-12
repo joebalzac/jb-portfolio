@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { nav, profile } from '../data/site';
+import { GitHubIcon } from './GitHubIcon';
 
 const clockFormatter = new Intl.DateTimeFormat('en-US', {
   timeZone: 'America/New_York',
@@ -41,6 +42,16 @@ export function Nav() {
           <span className="font-mono text-muted">
             {time} {profile.location}
           </span>
+          <span className="text-line">/</span>
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub"
+            className="github-mark inline-flex overflow-visible text-muted transition-colors hover:text-ink"
+          >
+            <GitHubIcon className="size-3.5" />
+          </a>
         </nav>
       </div>
     </header>

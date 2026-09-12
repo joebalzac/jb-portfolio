@@ -42,3 +42,34 @@ html.cursor-none,
 html.cursor-none * {
   cursor: none !important;
 }
+
+.github-tail {
+  transform-box: view-box;
+  transform-origin: 9px 19px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .github-mark:hover .github-tail,
+  .github-mark:focus-visible .github-tail {
+    animation: github-tail-wiggle 0.45s ease-in-out infinite;
+  }
+}
+
+@keyframes github-tail-wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(38deg);
+  }
+  40% {
+    transform: rotate(-32deg);
+  }
+  60% {
+    transform: rotate(24deg);
+  }
+  80% {
+    transform: rotate(-12deg);
+  }
+}

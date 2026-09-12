@@ -5,6 +5,7 @@ export const profile = {
     'currently building agents at eliseai.',
   ],
   location: 'nyc',
+  github: 'https://github.com/joebalzac',
 };
 
 export const nav = [
