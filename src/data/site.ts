@@ -40,9 +40,25 @@ export type WorkItem = {
   coverLogoColor?: string;
   brandTone?: 'dark' | 'soft';
   url?: string;
+  demo?: 'apollo';
+  plainMedia?: boolean;
 };
 
 export const work: WorkItem[] = [
+  {
+    name: 'Apollo UI',
+    description:
+      'a role-aware chat surface — leasing, maintenance, community, and leadership, each in its own thread.',
+    brandTone: 'soft',
+    cover: '/img/eliseai/apollo-ui.png',
+    demo: 'apollo',
+    whatIDid: [
+      'built the persona carousel so each role types a prompt, plans, and answers in character.',
+      'designed the chat blocks for drafts, tables, checklists, and follow-up actions.',
+      'timed the loop so it holds on the answer, then advances, and pauses while you read.',
+    ],
+    images: [],
+  },
   {
     name: 'EliseAI',
     description: 'design, website, ux, engineering and everything in between.',
@@ -97,6 +113,7 @@ export const work: WorkItem[] = [
     cover: '/img/eliseai/blue-fade.png',
     coverLogo: 'eliseai',
     coverLogoColor: '#ffffff',
+    plainMedia: true,
     whatIDid: [
       'designed the one ai lifecycle story across inquiry, tour, and renewal.',
       'built conversation surfaces that keep context from first call to signed lease.',

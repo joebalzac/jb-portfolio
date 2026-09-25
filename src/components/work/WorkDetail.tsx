@@ -1,5 +1,6 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import type { WorkImage, WorkItem, WorkSection } from '../../data/site';
+import { ApolloUI } from '../projects/ApolloUI';
 import { WorkCover } from './WorkCover';
 
 type WorkDetailProps = {
@@ -10,10 +11,24 @@ type WorkDetailProps = {
 function FramedShot({
   image,
   aspectClassName = 'aspect-4/3',
+  plain = false,
 }: {
   image?: WorkImage;
   aspectClassName?: string;
+  plain?: boolean;
 }) {
+  if (plain) {
+    return (
+      <div className="overflow-hidden rounded-2xl">
+        {image?.src ? (
+          <img src={image.src} alt={image.caption} className="w-full" />
+        ) : (
+          <span className="font-mono text-xs text-faint">image placeholder</span>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="relative overflow-hidden rounded-2xl border border-line bg-card">
       {image?.src && (
@@ -46,7 +61,13 @@ function FramedShot({
   );
 }
 
-function MediaCarousel({ images }: { images: WorkImage[] }) {
+function MediaCarousel({
+  images,
+  plain = false,
+}: {
+  images: WorkImage[];
+  plain?: boolean;
+}) {
   const [index, setIndex] = useState(0);
   const image = images[index];
 
@@ -55,7 +76,7 @@ function MediaCarousel({ images }: { images: WorkImage[] }) {
   return (
     <div data-cursor="dot">
       <div className="relative">
-        <FramedShot image={image} />
+        <FramedShot image={image} plain={plain} />
 
         {images.length > 1 && (
           <>
@@ -110,9 +131,11 @@ function MediaCarousel({ images }: { images: WorkImage[] }) {
 function MediaSection({
   section,
   itemName,
+  plain = false,
 }: {
   section: WorkSection;
   itemName: string;
+  plain?: boolean;
 }) {
   return (
     <div className="space-y-4">
@@ -131,7 +154,11 @@ function MediaSection({
 
       {section.hero && (
         <div>
-          <FramedShot image={section.hero} aspectClassName="aspect-16/10" />
+          <FramedShot
+            image={section.hero}
+            aspectClassName="aspect-16/10"
+            plain={plain}
+          />
           <div className="mt-3">
             <p className="text-sm font-medium text-ink">{section.hero.caption}</p>
             <p className="mt-1 text-sm leading-relaxed text-muted">
@@ -141,7 +168,7 @@ function MediaSection({
         </div>
       )}
 
-      <MediaCarousel images={section.images} />
+      <MediaCarousel images={section.images} plain={plain} />
     </div>
   );
 }
@@ -172,7 +199,7 @@ export function WorkDetail({ item, onClose }: WorkDetailProps) {
   }, [onClose]);
 
   const handleSurfaceClick = (e: MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('a, button')) return;
+    if ((e.target as HTMLElement).closest('a, button, [data-interactive]')) return;
     onClose();
   };
 
@@ -181,7 +208,11 @@ export function WorkDetail({ item, onClose }: WorkDetailProps) {
       role="dialog"
       aria-label={`${item.name} case study`}
       onClick={handleSurfaceClick}
-      className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
+      className={
+        item.demo === 'apollo'
+          ? 'flex flex-col gap-12'
+          : 'grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]'
+      }
     >
       <div>
         <h3 className="text-3xl font-semibold tracking-tight text-ink">
@@ -216,13 +247,18 @@ export function WorkDetail({ item, onClose }: WorkDetailProps) {
       </div>
 
       <div className="space-y-16">
-        {sections.map((section, i) => (
-          <MediaSection
-            key={`${section.hero?.caption ?? section.cover ?? i}`}
-            section={section}
-            itemName={item.name}
-          />
-        ))}
+        {item.demo === 'apollo' ? (
+          <ApolloUI />
+        ) : (
+          sections.map((section, i) => (
+            <MediaSection
+              key={`${section.hero?.caption ?? section.cover ?? i}`}
+              section={section}
+              itemName={item.name}
+              plain={item.plainMedia}
+            />
+          ))
+        )}
       </div>
     </div>
   );

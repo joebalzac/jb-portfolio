@@ -21,7 +21,7 @@ export function Work() {
       ) : work.length === 0 ? (
         <p className="text-sm italic text-muted">Case studies coming soon.</p>
       ) : (
-        <div className="space-y-20">
+        <div className="flex flex-col gap-20">
           {work.map((item) => (
             <button
               key={item.name}

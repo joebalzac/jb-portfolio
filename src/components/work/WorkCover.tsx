@@ -58,21 +58,14 @@ export function WorkCover({ item, className = '' }: WorkCoverProps) {
                 : 'absolute inset-0 bg-linear-to-t from-ink/8 via-transparent to-transparent'
             }
           />
-          <div className="relative z-10 flex items-center justify-center">
-            {item.coverLogo === 'eliseai' ? (
+          {item.coverLogo === 'eliseai' ? (
+            <div className="relative z-10 flex items-center justify-center">
               <EliseAiLogo
                 className="h-4 w-auto drop-shadow-sm sm:h-5"
                 style={{ color: logoColor }}
               />
-            ) : (
-              <span
-                className="text-2xl font-medium tracking-tight sm:text-3xl"
-                style={{ color: logoColor }}
-              >
-                {item.name}
-              </span>
-            )}
-          </div>
+            </div>
+          ) : null}
         </>
       ) : gradientOnly ? (
         <>
