@@ -238,24 +238,24 @@ const WORKING_ACTIONS = [
 ] as const;
 
 const NAV = [
-  { src: "/apollo-ui/search.svg", label: "Search", size: "size-3.333325" },
-  { src: "/apollo-ui/atlas.svg", label: "Apollo", size: "size-3.3616", active: true },
-  { src: "/apollo-ui/smart-home.svg", label: "Home", size: "size-3.333325" },
-  { src: "/apollo-ui/square-check.svg", label: "Tasks", size: "size-3.333325" },
-  { src: "/apollo-ui/user-square.svg", label: "Contacts", size: "size-3.333325" },
-  { src: "/apollo-ui/signature.svg", label: "Leases", size: "size-3.333325" },
-  { src: "/apollo-ui/calendar.svg", label: "Calendar", size: "size-3.333325" },
-  { src: "/apollo-ui/chart-bar.svg", label: "Reports", size: "size-3.333325" },
-  { src: "/apollo-ui/building.svg", label: "Communities", size: "size-3.333325" },
-  { src: "/apollo-ui/brain.svg", label: "Knowledge", size: "size-3.333325" },
-  { src: "/apollo-ui/user-cog.svg", label: "Users", size: "size-3.333325" },
-  { src: "/apollo-ui/hammer.svg", label: "Maintenance", size: "size-3.333325" },
-  { src: "/apollo-ui/refresh.svg", label: "Sync", size: "size-3.333325" },
-  { src: "/apollo-ui/phone.svg", label: "Phone", size: "size-3.333325" },
-  { src: "/apollo-ui/ladder.svg", label: "Onboarding", size: "size-3.333325" },
-  { src: "/apollo-ui/mood-smile.svg", label: "Sentiment", size: "size-3.333325" },
-  { src: "/apollo-ui/file-search.svg", label: "File search", size: "size-3.333325" },
-  { src: "/apollo-ui/bell.svg", label: "Notifications", size: "size-3.333325" },
+  { src: "/apollo-ui/search.svg", label: "Search", size: "size-3.5" },
+  { src: "/apollo-ui/atlas.svg", label: "Apollo", size: "size-3.5", active: true },
+  { src: "/apollo-ui/smart-home.svg", label: "Home", size: "size-3.5" },
+  { src: "/apollo-ui/square-check.svg", label: "Tasks", size: "size-3.5" },
+  { src: "/apollo-ui/user-square.svg", label: "Contacts", size: "size-3.5" },
+  { src: "/apollo-ui/signature.svg", label: "Leases", size: "size-3.5" },
+  { src: "/apollo-ui/calendar.svg", label: "Calendar", size: "size-3.5" },
+  { src: "/apollo-ui/chart-bar.svg", label: "Reports", size: "size-3.5" },
+  { src: "/apollo-ui/building.svg", label: "Communities", size: "size-3.5" },
+  { src: "/apollo-ui/brain.svg", label: "Knowledge", size: "size-3.5" },
+  { src: "/apollo-ui/user-cog.svg", label: "Users", size: "size-3.5" },
+  { src: "/apollo-ui/hammer.svg", label: "Maintenance", size: "size-3.5" },
+  { src: "/apollo-ui/refresh.svg", label: "Sync", size: "size-3.5" },
+  { src: "/apollo-ui/phone.svg", label: "Phone", size: "size-3.5" },
+  { src: "/apollo-ui/ladder.svg", label: "Onboarding", size: "size-3.5" },
+  { src: "/apollo-ui/mood-smile.svg", label: "Sentiment", size: "size-3.5" },
+  { src: "/apollo-ui/file-search.svg", label: "File search", size: "size-3.5" },
+  { src: "/apollo-ui/bell.svg", label: "Notifications", size: "size-3.5" },
 ] as const;
 
 const DESKTOP_STAGE =
@@ -307,7 +307,7 @@ function UiIcon({ src, className }: { src: string; className: string }) {
       src={src}
       alt=""
       draggable={false}
-      className={`block max-w-none shrink-0 ${className}`}
+      className={`block aspect-square max-w-none shrink-0 object-contain ${className}`}
     />
   );
 }
@@ -455,7 +455,7 @@ function ApolloBlocks({ blocks }: { blocks: MessageBlock[] }) {
 function ThinkingStatus({ elapsedSeconds }: { elapsedSeconds: number }) {
   return (
     <div className="flex w-full flex-col motion-safe:animate-message-enter">
-      <div className="flex min-h-7.875 w-full items-center gap-1.75 px-1.3125 py-1.3125 text-sm leading-product tracking-product text-product-muted">
+      <div className="flex min-h-8 w-full items-center gap-1.75 px-1.25 py-1.25 text-sm leading-product tracking-product text-product-muted">
         <span
           className="grid size-5.25 place-items-center text-product-accent motion-safe:animate-working-pulse"
           aria-hidden
@@ -469,14 +469,14 @@ function ThinkingStatus({ elapsedSeconds }: { elapsedSeconds: number }) {
         </span>
         <span>Working</span>
         <span
-          className="size-0.4375 shrink-0 rounded-full bg-product-muted"
+          className="size-0.5 shrink-0 rounded-full bg-product-muted"
           aria-hidden
         />
         <span>{elapsedSeconds.toFixed(1)}s</span>
       </div>
-      <div className="flex w-full gap-1.75 px-1.3125">
+      <div className="flex w-full gap-1.75 px-1.25">
         <span
-          className="mx-2.0625 w-px shrink-0 self-stretch bg-product-line"
+          className="mx-2 w-px shrink-0 self-stretch bg-product-line"
           aria-hidden
         />
         <div className="flex min-w-0 flex-1 flex-col gap-1.75 py-3.5 text-sm leading-product tracking-product text-product-muted">
@@ -659,7 +659,7 @@ function ConversationPreview({
         ),
       )}
       {phase === "planning" ? (
-        <p className="m-0 px-1.3125 py-1.3125 motion-safe:animate-message-enter">
+        <p className="m-0 px-1.25 py-1.25 motion-safe:animate-message-enter">
           <span className="bg-planning bg-clip-text text-sm leading-product tracking-product text-transparent motion-safe:animate-planning-shimmer motion-reduce:bg-none motion-reduce:text-product-muted">
             Planning next moves
           </span>
@@ -759,12 +759,12 @@ export function ApolloUI() {
           <div className="flex h-full w-full overflow-hidden rounded-product bg-product-bg shadow-product panel:rounded-xl">
             <div className="flex h-full w-10 shrink-0 flex-col overflow-hidden bg-product text-white">
               <div className="grid h-10.75 shrink-0 place-items-center">
-                <UiIcon src="/apollo-ui/chevron-double-right.svg" className="size-3.333325" />
+                <UiIcon src="/apollo-ui/chevron-double-right.svg" className="size-3.5" />
               </div>
-              <div className="flex min-h-0 flex-1 flex-col gap-0.625 overflow-hidden p-1.5625">
+              <div className="flex min-h-0 flex-1 flex-col gap-0.75 overflow-hidden p-1.5">
                 {NAV.map((item) => (
                   <span
-                    className={`grid size-6.66675 shrink-0 place-items-center rounded-product-mark ${
+                    className={`grid size-6.75 shrink-0 place-items-center rounded-product-mark ${
                       "active" in item && item.active ? "bg-product-accent" : ""
                     }`}
                     key={item.label}
@@ -773,30 +773,30 @@ export function ApolloUI() {
                   </span>
                 ))}
               </div>
-              <div className="flex h-21.25 shrink-0 flex-col items-center justify-center gap-1.5625 p-3.125">
-                <span className="grid size-6.66675 place-items-center rounded-full bg-product-pill">
-                  <UiIcon src="/apollo-ui/question.svg" className="size-3.333325" />
+              <div className="flex h-21.25 shrink-0 flex-col items-center justify-center gap-1.5 p-3.25">
+                <span className="grid size-6.75 place-items-center rounded-full bg-product-pill">
+                  <UiIcon src="/apollo-ui/question.svg" className="size-3.5" />
                 </span>
-                <span className="relative grid size-6.66675 place-items-center rounded-full bg-product-pill">
-                  <UiIcon src="/apollo-ui/headset.svg" className="size-3.333325" />
-                  <span className="absolute top-0 left-5 size-1.66675 rounded-full border-dot border-product bg-product-online" />
+                <span className="relative grid size-6.75 place-items-center rounded-full bg-product-pill">
+                  <UiIcon src="/apollo-ui/headset.svg" className="size-3.5" />
+                  <span className="absolute top-0 left-5 size-1.75 rounded-full border-dot border-product bg-product-online" />
                 </span>
               </div>
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col bg-product-bg">
               <header className="flex min-h-12 shrink-0 items-center justify-between overflow-hidden px-4 py-3 text-sm leading-product font-normal tracking-product panel:min-h-15.25 panel:px-7 panel:py-5.25">
-                <div className="flex min-w-0 items-center gap-2.625">
-                  <UiIcon src="/apollo-ui/menu.svg" className="size-4.375" />
+                <div className="flex min-w-0 items-center gap-2.75">
+                  <UiIcon src="/apollo-ui/menu.svg" className="size-4.5" />
                   <span className="truncate">Chat Name</span>
                 </div>
                 <div className="flex shrink-0 items-center gap-5.25">
-                  <span className="hidden items-center gap-2.625 whitespace-nowrap panel:inline-flex">
-                    <UiIcon src="/apollo-ui/new-chat.svg" className="size-4.375" />
+                  <span className="hidden items-center gap-2.75 whitespace-nowrap panel:inline-flex">
+                    <UiIcon src="/apollo-ui/new-chat.svg" className="size-4.5" />
                     New Chat
                   </span>
-                  <UiIcon src="/apollo-ui/expand.svg" className="size-4.375" />
-                  <UiIcon src="/apollo-ui/close.svg" className="size-4.375" />
+                  <UiIcon src="/apollo-ui/expand.svg" className="size-4.5" />
+                  <UiIcon src="/apollo-ui/close.svg" className="size-4.5" />
                 </div>
               </header>
 
@@ -809,29 +809,29 @@ export function ApolloUI() {
                   onComposerTextChange={setComposerText}
                 />
 
-                <div className="flex w-full max-w-164.5 shrink-0 flex-col justify-between gap-4 self-center overflow-hidden rounded-lg border-hair border-product-ring bg-white px-3 py-2.5 shadow-composer panel:min-h-35 panel:p-4.375">
+                <div className="flex w-full max-w-164.5 shrink-0 flex-col justify-between gap-4 self-center overflow-hidden rounded-lg border-hair border-product-ring bg-white px-3 py-2.5 shadow-composer panel:min-h-35 panel:p-4.5">
                   <p className="m-0 text-sm leading-product tracking-product wrap-anywhere whitespace-pre-wrap text-product">
                     {composerText}
                     <span className="ml-px inline-block h-3.5 w-px translate-y-0.5 bg-product align-text-bottom motion-safe:animate-blink" />
                   </p>
-                  <div className="flex h-4.375 w-full items-center justify-between text-product-muted">
+                  <div className="flex h-4.5 w-full items-center justify-between text-product-muted">
                     <div className="flex min-w-0 flex-1 items-center gap-4 overflow-hidden panel:gap-5.25">
-                      <UiIcon src="/apollo-ui/attach.svg" className="size-4.375" />
-                      <UiIcon src="/apollo-ui/microphone.svg" className="size-4.375" />
-                      <UiIcon src="/apollo-ui/document.svg" className="size-4.375" />
-                      <span className="grid size-4.375 shrink-0 place-items-center">
+                      <UiIcon src="/apollo-ui/attach.svg" className="size-4.5" />
+                      <UiIcon src="/apollo-ui/microphone.svg" className="size-4.5" />
+                      <UiIcon src="/apollo-ui/document.svg" className="size-4.5" />
+                      <span className="grid size-4.5 shrink-0 place-items-center">
                         <UiIcon src="/apollo-ui/context.svg" className="size-3.5" />
                       </span>
-                      <span className="hidden items-center gap-1.3125 whitespace-nowrap panel:inline-flex">
+                      <span className="hidden items-center gap-1.25 whitespace-nowrap panel:inline-flex">
                         Caladan Lofts
                         <UiIcon src="/apollo-ui/chevron.svg" className="size-3.5" />
                       </span>
-                      <span className="hidden items-center gap-1.3125 whitespace-nowrap panel:inline-flex">
+                      <span className="hidden items-center gap-1.25 whitespace-nowrap panel:inline-flex">
                         Full Agent
                         <UiIcon src="/apollo-ui/chevron.svg" className="size-3.5" />
                       </span>
                     </div>
-                    <UiIcon src="/apollo-ui/send.svg" className="size-4.375" />
+                    <UiIcon src="/apollo-ui/send.svg" className="size-4.5" />
                   </div>
                 </div>
               </div>
