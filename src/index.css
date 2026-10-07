@@ -28,6 +28,8 @@
   --color-product-ring: #a093fd;
   --color-product-alert: #b42318;
   --color-product-label: #3f3e3c;
+  --color-product-pill: #3a3a3b;
+  --color-product-online: #47c47d;
 
   --breakpoint-panel: 45.0625rem;
   --breakpoint-wide: 68.75rem;
@@ -47,6 +49,7 @@
   --shadow-composer: 0 0 1px 0 rgb(0 0 0 / 0.2), 0 2px 4px 0 rgb(0 0 0 / 0.04);
   --inset-shadow-stage: inset 0 0 0 0.5px rgb(255 255 255 / 0.1);
   --border-width-hair: 0.5px;
+  --border-width-dot: 0.833px;
   --spacing-list: 1.15em;
 
   --animate-blink: blink 1s step-end infinite;

@@ -4,7 +4,6 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type ReactNode,
 } from "react";
 
 type Persona = {
@@ -239,21 +238,24 @@ const WORKING_ACTIONS = [
 ] as const;
 
 const NAV = [
-  { id: "search", label: "Search" },
-  { id: "atlas", label: "Apollo", active: true },
-  { id: "home", label: "Home" },
-  { id: "check", label: "Tasks" },
-  { id: "person", label: "Contacts" },
-  { id: "signature", label: "Leases" },
-  { id: "calendar", label: "Calendar" },
-  { id: "chart", label: "Reports" },
-  { id: "building", label: "Communities" },
-  { id: "brain", label: "Knowledge" },
-  { id: "gear", label: "Users" },
-  { id: "hammer", label: "Maintenance" },
-  { id: "refresh", label: "Sync" },
-  { id: "phone", label: "Phone" },
-  { id: "ladder", label: "Onboarding" },
+  { src: "/apollo-ui/search.svg", label: "Search", size: "size-3.333325" },
+  { src: "/apollo-ui/atlas.svg", label: "Apollo", size: "size-3.3616", active: true },
+  { src: "/apollo-ui/smart-home.svg", label: "Home", size: "size-3.333325" },
+  { src: "/apollo-ui/square-check.svg", label: "Tasks", size: "size-3.333325" },
+  { src: "/apollo-ui/user-square.svg", label: "Contacts", size: "size-3.333325" },
+  { src: "/apollo-ui/signature.svg", label: "Leases", size: "size-3.333325" },
+  { src: "/apollo-ui/calendar.svg", label: "Calendar", size: "size-3.333325" },
+  { src: "/apollo-ui/chart-bar.svg", label: "Reports", size: "size-3.333325" },
+  { src: "/apollo-ui/building.svg", label: "Communities", size: "size-3.333325" },
+  { src: "/apollo-ui/brain.svg", label: "Knowledge", size: "size-3.333325" },
+  { src: "/apollo-ui/user-cog.svg", label: "Users", size: "size-3.333325" },
+  { src: "/apollo-ui/hammer.svg", label: "Maintenance", size: "size-3.333325" },
+  { src: "/apollo-ui/refresh.svg", label: "Sync", size: "size-3.333325" },
+  { src: "/apollo-ui/phone.svg", label: "Phone", size: "size-3.333325" },
+  { src: "/apollo-ui/ladder.svg", label: "Onboarding", size: "size-3.333325" },
+  { src: "/apollo-ui/mood-smile.svg", label: "Sentiment", size: "size-3.333325" },
+  { src: "/apollo-ui/file-search.svg", label: "File search", size: "size-3.333325" },
+  { src: "/apollo-ui/bell.svg", label: "Notifications", size: "size-3.333325" },
 ] as const;
 
 const DESKTOP_STAGE =
@@ -276,24 +278,8 @@ function userMessageText(message: ChatMessage) {
     .join("\n");
 }
 
-function lastUserIndex(messages: ChatMessage[]) {
-  for (let index = messages.length - 1; index >= 0; index -= 1) {
-    if (messages[index].role === "user") return index;
-  }
-  return -1;
-}
-
 function thinksBeforeReply(messages: ChatMessage[], index: number) {
-  const userCount = messages.filter(
-    (message) => message.role === "user",
-  ).length;
-  const lastUser = lastUserIndex(messages);
-  for (let cursor = index - 1; cursor >= 0; cursor -= 1) {
-    if (messages[cursor].role !== "user") continue;
-    if (userCount < 2) return true;
-    return cursor !== lastUser;
-  }
-  return false;
+  return messages[index]?.role === "apollo";
 }
 
 function slideDurationMs(messages: ChatMessage[]) {
@@ -315,162 +301,15 @@ function slideDurationMs(messages: ChatMessage[]) {
   return Math.max(MIN_INTERVAL_MS, duration + HOLD_AFTER_MS);
 }
 
-function Icon({
-  children,
-  className = "size-3.5",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+function UiIcon({ src, className }: { src: string; className: string }) {
   return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
-      {children}
-    </svg>
+    <img
+      src={src}
+      alt=""
+      draggable={false}
+      className={`block max-w-none shrink-0 ${className}`}
+    />
   );
-}
-
-const stroke = {
-  stroke: "currentColor",
-  strokeWidth: 1.4,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
-};
-
-function NavGlyph({ id }: { id: (typeof NAV)[number]["id"] }) {
-  switch (id) {
-    case "search":
-      return (
-        <Icon>
-          <circle cx="7" cy="7" r="4.2" {...stroke} />
-          <path d="M10.2 10.2 13 13" {...stroke} />
-        </Icon>
-      );
-    case "atlas":
-      return (
-        <Icon>
-          <path
-            d="M8 1.6 9.1 6.2 13.6 8 9.1 9.8 8 14.4 6.9 9.8 2.4 8 6.9 6.2 8 1.6Z"
-            fill="currentColor"
-          />
-        </Icon>
-      );
-    case "home":
-      return (
-        <Icon>
-          <path
-            d="M2.5 7.2 8 2.8l5.5 4.4V13a1 1 0 0 1-1 1h-3.2V9.6H6.7V14H3.5a1 1 0 0 1-1-1V7.2Z"
-            {...stroke}
-          />
-        </Icon>
-      );
-    case "check":
-      return (
-        <Icon>
-          <rect x="2.2" y="2.2" width="11.6" height="11.6" rx="2" {...stroke} />
-          <path d="M5 8.1 7.1 10.2 11 6" {...stroke} />
-        </Icon>
-      );
-    case "person":
-      return (
-        <Icon>
-          <rect x="2.2" y="2.2" width="11.6" height="11.6" rx="2" {...stroke} />
-          <circle cx="8" cy="6.4" r="1.6" {...stroke} />
-          <path d="M5 11.4c.5-1.3 1.6-1.9 3-1.9s2.5.6 3 1.9" {...stroke} />
-        </Icon>
-      );
-    case "signature":
-      return (
-        <Icon>
-          <path
-            d="M2.4 11.2c2.2-3.4 3-5.2 3.4-5.2.6 0 .4 3.2 1.5 3.2 1 0 1.2-4.6 2.2-4.6.8 0 .6 3.4 1.6 3.4.7 0 1.2-.8 2.5-2.4"
-            {...stroke}
-          />
-        </Icon>
-      );
-    case "calendar":
-      return (
-        <Icon>
-          <rect
-            x="2.2"
-            y="3.2"
-            width="11.6"
-            height="10.2"
-            rx="1.6"
-            {...stroke}
-          />
-          <path d="M2.2 6.4h11.6M5.2 2.2v2.2M10.8 2.2v2.2" {...stroke} />
-        </Icon>
-      );
-    case "chart":
-      return (
-        <Icon>
-          <path d="M3 13V8.5M6.5 13V5.5M10 13V7.5M13.2 13V3.5" {...stroke} />
-        </Icon>
-      );
-    case "building":
-      return (
-        <Icon>
-          <path d="M3 13.5V3.2L8 2l5 1.2v10.3" {...stroke} />
-          <path
-            d="M6.2 6h.1M9.7 6h.1M6.2 8.6h.1M9.7 8.6h.1M7 13.5v-2.2h2v2.2"
-            {...stroke}
-          />
-        </Icon>
-      );
-    case "brain":
-      return (
-        <Icon>
-          <path
-            d="M6 13.2V8.8M10 13.2V8.8M5.2 8.2a2.4 2.4 0 1 1 1.6-4.4A2.6 2.6 0 0 1 11 5.2a2.2 2.2 0 0 1 .2 4.2"
-            {...stroke}
-          />
-        </Icon>
-      );
-    case "gear":
-      return (
-        <Icon>
-          <circle cx="8" cy="8" r="2" {...stroke} />
-          <path
-            d="M8 2.4v1.4M8 12.2v1.4M2.4 8h1.4M12.2 8h1.4M4 4l1 1M11 11l1 1M12 4l-1 1M5 11l-1 1"
-            {...stroke}
-          />
-        </Icon>
-      );
-    case "hammer":
-      return (
-        <Icon>
-          <path
-            d="M9.2 2.6 13 6.4 8.2 8.2 3.4 13l-1-1 4.8-4.8L6.2 2.6l3 .0Z"
-            {...stroke}
-          />
-        </Icon>
-      );
-    case "refresh":
-      return (
-        <Icon>
-          <path d="M13 8a5 5 0 1 1-1.4-3.5" {...stroke} />
-          <path d="M13 2.8v3.2H9.8" {...stroke} />
-        </Icon>
-      );
-    case "phone":
-      return (
-        <Icon>
-          <path
-            d="M4.2 2.8h2L7.4 6 5.8 7.2a8 8 0 0 0 3 3L10 8.6l3.2 1.2v2a1.2 1.2 0 0 1-1.3 1.2A10.2 10.2 0 0 1 3 4.1a1.2 1.2 0 0 1 1.2-1.3Z"
-            {...stroke}
-          />
-        </Icon>
-      );
-    case "ladder":
-      return (
-        <Icon>
-          <path
-            d="M5 2.2 3.6 13.8M11 2.2 12.4 13.8M4.6 5.6h6.4M4.2 8.4h7.2M3.8 11.2h8"
-            {...stroke}
-          />
-        </Icon>
-      );
-  }
 }
 
 function ActionGlyph({
@@ -478,31 +317,34 @@ function ActionGlyph({
 }: {
   type: (typeof WORKING_ACTIONS)[number]["type"];
 }) {
+  const common = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
   if (type === "conversation") {
     return (
-      <Icon className="size-2.625">
-        <path
-          d="M3 2.2h7.2l2.2 2.2v8.2a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.2a1 1 0 0 1 1-1Z"
-          {...stroke}
-        />
-        <path d="M4.2 7.2h5.2M4.2 9.6h3.4" {...stroke} />
-      </Icon>
+      <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
+        <path d="M3.2 2.4h6.4L12 4.8v7.6a1 1 0 0 1-1 1H3.2a1 1 0 0 1-1-1V3.4a1 1 0 0 1 1-1Z" {...common} />
+        <path d="M4.4 7.2h5.2M4.4 9.6h3.2" {...common} />
+      </svg>
     );
   }
   if (type === "data") {
     return (
-      <Icon className="size-2.625">
-        <path d="M3 4.2 1.6 5.6 3 7M6.2 7.6 8.6 3.4" {...stroke} />
-        <rect x="1.2" y="1.6" width="13.6" height="10.2" rx="1.4" {...stroke} />
-        <path d="M1.2 11.8h13.6" {...stroke} />
-      </Icon>
+      <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
+        <rect x="1.6" y="2.2" width="12.8" height="9.2" rx="1.2" {...common} />
+        <path d="M3.2 5.2 1.8 6.4 3.2 7.6M5.6 8.2 7.8 4.4" {...common} />
+      </svg>
     );
   }
   return (
-    <Icon className="size-2.625">
-      <path d="M2.2 5.2 8 2.4l5.8 2.8L8 8 2.2 5.2Z" {...stroke} />
-      <path d="M2.2 5.2V11L8 13.6 13.8 11V5.2" {...stroke} />
-    </Icon>
+    <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
+      <path d="M2.4 5.4 8 2.6l5.6 2.8L8 8.2 2.4 5.4Z" {...common} />
+      <path d="M2.4 5.4V10.6L8 13.4l5.6-2.8V5.4" {...common} />
+    </svg>
   );
 }
 
@@ -615,15 +457,15 @@ function ThinkingStatus({ elapsedSeconds }: { elapsedSeconds: number }) {
     <div className="flex w-full flex-col motion-safe:animate-message-enter">
       <div className="flex min-h-7.875 w-full items-center gap-1.75 px-1.3125 py-1.3125 text-sm leading-product tracking-product text-product-muted">
         <span
-          className="grid size-5.25 place-items-center motion-safe:animate-working-pulse"
+          className="grid size-5.25 place-items-center text-product-accent motion-safe:animate-working-pulse"
           aria-hidden
         >
-          <Icon className="size-4.5 text-product-accent">
+          <svg viewBox="0 0 21 21" width="21" height="21" aria-hidden>
             <path
-              d="M8 1.4 9.05 6.1 13.8 8 9.05 9.9 8 14.6 6.95 9.9 2.2 8 6.95 6.1 8 1.4Z"
+              d="M10.5 1.8 11.9 8.1 18.2 10.5 11.9 12.9 10.5 19.2 9.1 12.9 2.8 10.5 9.1 8.1 10.5 1.8Z"
               fill="currentColor"
             />
-          </Icon>
+          </svg>
         </span>
         <span>Working</span>
         <span
@@ -830,16 +672,6 @@ function ConversationPreview({
   );
 }
 
-function MenuIcon() {
-  return (
-    <span className="flex w-4.375 flex-col gap-0.95" aria-hidden>
-      <span className="h-px w-3.25 bg-product" />
-      <span className="h-px w-3.25 bg-product" />
-      <span className="h-px w-3.25 bg-product" />
-    </span>
-  );
-}
-
 export function ApolloUI() {
   const rootRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -927,12 +759,7 @@ export function ApolloUI() {
           <div className="flex h-full w-full overflow-hidden rounded-product bg-product-bg shadow-product panel:rounded-xl">
             <div className="flex h-full w-10 shrink-0 flex-col overflow-hidden bg-product text-white">
               <div className="grid h-10.75 shrink-0 place-items-center">
-                <Icon className="size-3.5">
-                  <path
-                    d="M4 3.5 8.5 8 4 12.5M8 3.5 12.5 8 8 12.5"
-                    {...stroke}
-                  />
-                </Icon>
+                <UiIcon src="/apollo-ui/chevron-double-right.svg" className="size-3.333325" />
               </div>
               <div className="flex min-h-0 flex-1 flex-col gap-0.625 overflow-hidden p-1.5625">
                 {NAV.map((item) => (
@@ -942,49 +769,34 @@ export function ApolloUI() {
                     }`}
                     key={item.label}
                   >
-                    <NavGlyph id={item.id} />
+                    <UiIcon src={item.src} className={item.size} />
                   </span>
                 ))}
               </div>
-              <div className="flex h-21.25 shrink-0 flex-col items-center justify-center gap-1.5625 px-3.125">
-                <img
-                  src="https://cdn.prod.website-files.com/63cc1eef179b054a9306598d/6a99c21d8224474fd312458b_Frame%201216043788.png"
-                  alt=""
-                  className="size-6.66675 rounded-full object-cover"
-                />
-                <img
-                  src="https://cdn.prod.website-files.com/63cc1eef179b054a9306598d/6a99cc9870c17f342bbf7407_Frame%201216043789%20(1).png"
-                  alt=""
-                  className="size-6.66675 object-contain"
-                />
+              <div className="flex h-21.25 shrink-0 flex-col items-center justify-center gap-1.5625 p-3.125">
+                <span className="grid size-6.66675 place-items-center rounded-full bg-product-pill">
+                  <UiIcon src="/apollo-ui/question.svg" className="size-3.333325" />
+                </span>
+                <span className="relative grid size-6.66675 place-items-center rounded-full bg-product-pill">
+                  <UiIcon src="/apollo-ui/headset.svg" className="size-3.333325" />
+                  <span className="absolute top-0 left-5 size-1.66675 rounded-full border-dot border-product bg-product-online" />
+                </span>
               </div>
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col bg-product-bg">
               <header className="flex min-h-12 shrink-0 items-center justify-between overflow-hidden px-4 py-3 text-sm leading-product font-normal tracking-product panel:min-h-15.25 panel:px-7 panel:py-5.25">
-                <MenuIcon />
-                <div className="flex shrink-0 items-center gap-5 panel:gap-5.25">
+                <div className="flex min-w-0 items-center gap-2.625">
+                  <UiIcon src="/apollo-ui/menu.svg" className="size-4.375" />
+                  <span className="truncate">Chat Name</span>
+                </div>
+                <div className="flex shrink-0 items-center gap-5.25">
                   <span className="hidden items-center gap-2.625 whitespace-nowrap panel:inline-flex">
-                    <Icon className="size-4.375">
-                      <path
-                        d="M9.2 2.4 13.2 6.4 6.2 13.4H2.2v-4L9.2 2.4Z"
-                        {...stroke}
-                      />
-                    </Icon>
+                    <UiIcon src="/apollo-ui/new-chat.svg" className="size-4.375" />
                     New Chat
                   </span>
-                  <Icon className="size-4.375">
-                    <path
-                      d="M6 3.2H3.4v2.6M10 3.2h2.6v2.6M13 10v2.6H10.4M3.4 10v2.6H6"
-                      {...stroke}
-                    />
-                  </Icon>
-                  <Icon className="size-4.375">
-                    <path
-                      d="M4.2 4.2 11.8 11.8M11.8 4.2 4.2 11.8"
-                      {...stroke}
-                    />
-                  </Icon>
+                  <UiIcon src="/apollo-ui/expand.svg" className="size-4.375" />
+                  <UiIcon src="/apollo-ui/close.svg" className="size-4.375" />
                 </div>
               </header>
 
@@ -1004,53 +816,22 @@ export function ApolloUI() {
                   </p>
                   <div className="flex h-4.375 w-full items-center justify-between text-product-muted">
                     <div className="flex min-w-0 flex-1 items-center gap-4 overflow-hidden panel:gap-5.25">
-                      <Icon className="size-4.375">
-                        <path
-                          d="M10.2 3.6 6.2 7.6a2.2 2.2 0 0 0 3.1 3.1l4.2-4.2a1.5 1.5 0 0 0-2.1-2.1L7.2 8.6"
-                          {...stroke}
-                        />
-                      </Icon>
-                      <Icon className="size-4.375">
-                        <rect
-                          x="6"
-                          y="2"
-                          width="4"
-                          height="7.2"
-                          rx="2"
-                          {...stroke}
-                        />
-                        <path
-                          d="M4.2 8.2a3.8 3.8 0 0 0 7.6 0M8 12v2"
-                          {...stroke}
-                        />
-                      </Icon>
-                      <Icon className="size-4.375">
-                        <path
-                          d="M4 2.2h5.2L12 5v8.6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3.2a1 1 0 0 1 1-1Z"
-                          {...stroke}
-                        />
-                        <path d="M5.2 8h5M5.2 10.4h3.4" {...stroke} />
-                      </Icon>
+                      <UiIcon src="/apollo-ui/attach.svg" className="size-4.375" />
+                      <UiIcon src="/apollo-ui/microphone.svg" className="size-4.375" />
+                      <UiIcon src="/apollo-ui/document.svg" className="size-4.375" />
+                      <span className="grid size-4.375 shrink-0 place-items-center">
+                        <UiIcon src="/apollo-ui/context.svg" className="size-3.5" />
+                      </span>
                       <span className="hidden items-center gap-1.3125 whitespace-nowrap panel:inline-flex">
-                        <Icon className="size-3.5">
-                          <circle cx="8" cy="8" r="5.2" {...stroke} />
-                          <path d="M8 5.2v3l2 1.2" {...stroke} />
-                        </Icon>
                         Caladan Lofts
-                        <Icon className="size-3.5">
-                          <path d="M4 6.2 8 10.2 12 6.2" {...stroke} />
-                        </Icon>
+                        <UiIcon src="/apollo-ui/chevron.svg" className="size-3.5" />
                       </span>
                       <span className="hidden items-center gap-1.3125 whitespace-nowrap panel:inline-flex">
                         Full Agent
-                        <Icon className="size-3.5">
-                          <path d="M4 6.2 8 10.2 12 6.2" {...stroke} />
-                        </Icon>
+                        <UiIcon src="/apollo-ui/chevron.svg" className="size-3.5" />
                       </span>
                     </div>
-                    <Icon className="size-4.375 text-product">
-                      <path d="M2.4 8h10.4M9.2 4.2 13.2 8l-4 3.8" {...stroke} />
-                    </Icon>
+                    <UiIcon src="/apollo-ui/send.svg" className="size-4.375" />
                   </div>
                 </div>
               </div>

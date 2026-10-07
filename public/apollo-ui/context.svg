@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 1984080412">
+<g clip-path="url(#clip0_0_1643)">
+<rect width="14" height="14" rx="7" fill="#1475E8"/>
+<path id="Ellipse 289118" d="M14 7C14 8.38447 13.5895 9.73785 12.8203 10.889C12.0511 12.0401 10.9579 12.9373 9.67878 13.4672C8.3997 13.997 6.99223 14.1356 5.63437 13.8655C4.2765 13.5954 3.02922 12.9287 2.05025 11.9497C1.07128 10.9708 0.4046 9.7235 0.134503 8.36563C-0.135594 7.00777 0.00302985 5.6003 0.532843 4.32122C1.06266 3.04213 1.95986 1.94888 3.11101 1.17971C4.26215 0.410543 5.61553 -1.65096e-08 7 0L7 7L14 7Z" fill="#DDDCDA"/>
+<circle id="Ellipse 289117" cx="7" cy="7" r="5.25" fill="#FDFCFB"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_1643">
+<rect width="14" height="14" rx="7" fill="white"/>
+</clipPath>
+</defs>
+</svg>
