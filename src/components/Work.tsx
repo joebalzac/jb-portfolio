@@ -15,7 +15,7 @@ export function Work() {
   };
 
   return (
-    <Section id="work" title="work">
+    <Section id="work" title="work" wide={selected?.demo === 'apollo'}>
       {selected ? (
         <WorkDetail item={selected} onClose={() => select(null)} />
       ) : work.length === 0 ? (

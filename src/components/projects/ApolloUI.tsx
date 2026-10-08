@@ -755,7 +755,7 @@ export function ApolloUI() {
         }}
         aria-hidden
       >
-        <div className="absolute inset-x-0 top-0 -bottom-6 overflow-hidden bg-black/2 panel:inset-x-auto panel:top-14 panel:-bottom-8 panel:left-1/2 panel:w-[calc(100%-128px)] panel:-translate-x-1/2 panel:rounded-2xl panel:bg-black/2 panel:p-1">
+        <div className="absolute inset-x-0 top-0 -bottom-6 overflow-hidden bg-black/2 panel:inset-x-auto panel:top-10 panel:-bottom-8 panel:left-1/2 panel:w-[calc(100%-48px)] panel:-translate-x-1/2 panel:rounded-2xl panel:bg-black/2 panel:p-1">
           <div className="flex h-full w-full overflow-hidden rounded-product bg-product-bg shadow-product panel:rounded-xl">
             <div className="flex h-full w-10 shrink-0 flex-col overflow-hidden bg-product text-white">
               <div className="grid h-10.75 shrink-0 place-items-center">
@@ -800,7 +800,7 @@ export function ApolloUI() {
                 </div>
               </header>
 
-              <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-3.5 pt-3 pb-10 panel:px-12 panel:pt-6 panel:pb-11 panel:max-wide:px-7">
+              <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-3.5 pt-3 pb-10 panel:px-8 panel:pt-6 panel:pb-11">
                 <ConversationPreview
                   key={`${current.title}-${activeIndex}`}
                   messages={currentMessages}
@@ -856,8 +856,8 @@ export function ApolloUI() {
           const selected = index === activeIndex;
           return (
             <button
-              className={`relative flex min-w-0 flex-1 cursor-pointer flex-col items-start gap-1.5 border-0 border-t border-ink/15 bg-transparent pt-5 text-left font-sans text-muted transition-colors duration-300 max-panel:w-full max-panel:flex-none max-panel:py-4 max-panel:order-[calc(var(--tab-index)*2+1)] max-panel:last-of-type:border-b ${
-                selected ? "text-ink max-panel:pb-0" : ""
+              className={`relative flex min-w-0 flex-1 cursor-pointer flex-col items-start gap-1.5 border-0 border-t border-ink/15 bg-transparent pt-5 text-left font-sans transition-colors duration-300 max-panel:w-full max-panel:flex-none max-panel:py-4 max-panel:order-[calc(var(--tab-index)*2+1)] max-panel:last-of-type:border-b ${
+                selected ? "max-panel:pb-0" : ""
               }`}
               key={slide.title}
               type="button"
@@ -869,12 +869,16 @@ export function ApolloUI() {
               {selected ? (
                 <span className="pointer-events-none absolute -top-px left-0 hidden h-px w-full bg-ink motion-safe:animate-persona-progress motion-reduce:w-[68%] motion-reduce:animate-none max-panel:block" />
               ) : null}
-              <span className="text-product-title leading-product-title font-product tracking-product-title max-wide:text-[clamp(16px,2vw,22px)] max-panel:text-xl">
+              <span
+                className={`text-product-title leading-product-title font-product tracking-product-title max-wide:text-[clamp(16px,2vw,22px)] max-panel:text-xl ${
+                  selected ? "text-[#181819]" : "text-muted"
+                }`}
+              >
                 {slide.title}
               </span>
               <span
                 className={`text-lg leading-product font-normal tracking-product max-wide:text-[clamp(14px,1.6vw,18px)] max-panel:text-base ${
-                  selected ? "text-muted max-panel:block" : "max-panel:hidden"
+                  selected ? "text-[#515152] max-panel:block" : "text-muted max-panel:hidden"
                 }`}
               >
                 {slide.subtitle}
