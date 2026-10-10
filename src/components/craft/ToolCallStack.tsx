@@ -75,7 +75,7 @@ export function ToolCallStack() {
   }, []);
 
   return (
-    <div className="w-full max-w-[17.5rem]">
+    <div className="w-full max-w-70">
       <div className="mb-3 flex items-center gap-2">
         <span className="relative flex h-2 w-2">
           <span
@@ -96,7 +96,7 @@ export function ToolCallStack() {
 
       <ol className="relative space-y-2.5">
         <span
-          className="absolute top-3 bottom-3 left-[7px] w-px bg-line"
+          className="absolute top-3 bottom-3 left-1.75 w-px bg-line"
           aria-hidden
         />
         {STEPS.map((step, i) => {

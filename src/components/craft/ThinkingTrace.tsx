@@ -62,7 +62,7 @@ export function ThinkingTrace() {
   const done = phase === 'collapsed' || phase === 'open';
 
   return (
-    <div className="w-full max-w-[17.5rem]" aria-live="polite">
+    <div className="w-full max-w-70" aria-live="polite">
       <div className="flex w-full items-center gap-2" aria-expanded={open}>
         <span
           className={`grid h-4 w-4 place-items-center transition-transform duration-300 ${
@@ -101,8 +101,8 @@ export function ThinkingTrace() {
       </div>
 
       <div
-        className={`grid transition-[grid-template-rows,opacity] duration-[400ms] ease-out ${
-          open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        className={`grid transition-[grid-template-rows,opacity] duration-400 ease-out ${
+          open ? 'grid-rows-open opacity-100' : 'grid-rows-closed opacity-0'
         }`}
       >
         <div className="overflow-hidden">

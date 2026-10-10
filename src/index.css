@@ -45,6 +45,12 @@
   --radius-product: 10px;
   --radius-product-mark: 3.5px;
   --ease-product: cubic-bezier(0.22, 1, 0.36, 1);
+  --spacing-mark: 1.5px;
+  --spacing-shift: 4.25px;
+  --transition-property-menu: transform, width;
+  --transition-property-rows: grid-template-rows;
+  --grid-template-rows-open: 1fr;
+  --grid-template-rows-closed: 0fr;
   --shadow-product: 0 0 0.5px rgb(0 0 0 / 0.2), 0 2px 2px rgb(0 0 0 / 0.04);
   --shadow-composer: 0 0 1px 0 rgb(0 0 0 / 0.2), 0 2px 4px 0 rgb(0 0 0 / 0.04);
   --inset-shadow-stage: inset 0 0 0 0.5px rgb(255 255 255 / 0.1);
