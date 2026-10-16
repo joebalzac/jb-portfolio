@@ -356,7 +356,7 @@ export function Engineering() {
     <CaseSection id="engineering" number="04" title="Engineering & architecture">
       <Reveal>
         <h3 className="max-w-2xl text-xl leading-snug font-medium tracking-tight text-ink sm:text-2xl">
-          Three structural decisions, each quoted from the file it lives in.
+          Three structural decisions.
         </h3>
         <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
           React 19 and TypeScript, Tailwind v4 for tokens, Vite to build. No
@@ -365,7 +365,7 @@ export function Engineering() {
         </p>
       </Reveal>
 
-      <div className="mt-16 space-y-20">
+      <div className="mt-14 space-y-14">
         {architecture.map((note, index) => (
           <Reveal key={note.id} delay={index === 0 ? 0 : 40}>
             <article className="border-t border-line pt-7">
@@ -382,12 +382,6 @@ export function Engineering() {
                   note={note.code.note}
                   source={note.code.source}
                 />
-              ) : null}
-              {note.takeaway ? (
-                <p className="mt-4 flex items-start gap-2.5 text-sm leading-relaxed text-ink">
-                  <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                  {note.takeaway}
-                </p>
               ) : null}
             </article>
           </Reveal>

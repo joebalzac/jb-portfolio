@@ -127,7 +127,7 @@ export const architecture: ArchitectureNote[] = [
     id: 'block-model',
     title: 'Model the response, not the markup',
     body:
-      'Apollo answers in several shapes. Rather than a component per shape, a response is a discriminated union of blocks with one exhaustive renderer — so a new answer type is a data change plus one branch, and a missing case is a build error instead of a blank space in production.',
+      'Apollo answers in several shapes — prose, checklists, tables, drafted messages, action chips. Rather than a component per shape, a response is a discriminated union with one exhaustive renderer: a new answer type is a data change, and a missing case is a build error rather than a blank space in production.',
     code: {
       lang: 'ts',
       file: 'src/components/apollo/types.ts',
@@ -139,48 +139,29 @@ export const architecture: ArchitectureNote[] = [
   | { type: "draft"; text: string }
   | { type: "actions"; items: string[] };`,
     },
-    takeaway:
-      'The union is the contract between whoever writes conversations and whoever renders them.',
   },
   {
     id: 'layer',
     title: 'One primitive layer, two chromes',
     body:
-      'Everything shared lives in `src/components/apollo/`. Two very different surfaces compose it: the in-product app, which is nothing but typing, and the marketing carousel, which nobody types into. They share the renderer and the fixtures and share no layout at all — so a restyle is a chrome change, never a fork of the conversation logic.',
-    code: {
-      lang: 'txt',
-      file: 'src/components/apollo/',
-      note: 'module layout',
-      source: `types.ts · timing.ts · conversations.ts    shared model
-ApolloBlocks.tsx · ThinkingStatus.tsx     renderer
-Composer.tsx · AttachMenu.tsx             input
-AgentMenu.tsx · Dropdown.tsx · useMenu.ts menus
-SuggestionCard.tsx · CopyButton.tsx       controls
-
-ApolloApp.tsx              in-product chrome  ─┐ one
-../projects/ApolloUI.tsx   marketing chrome   ─┘ renderer`,
-    },
-    takeaway: 'Reuse what renders; specialise what choreographs.',
+      'Everything shared lives in `src/components/apollo/` — the renderer, the composer, the menus, the fixtures. The in-product app and the marketing carousel compose the same parts and share no layout at all, so a restyle is a chrome change rather than a fork of the conversation logic.',
   },
   {
     id: 'theming',
-    title: 'Re-theming a subtree with seven variables',
+    title: 'Re-theming by token, not by rewrite',
     body:
-      'This page had to adopt Apollo’s palette, including components written against the portfolio scale. Tailwind v4 compiles every colour utility to `var(--color-*)`, so rather than rewriting class names I rebound the variables on one wrapper. The reused components are unmodified — they inherit the product colours because the tokens beneath them changed.',
+      'Tailwind v4 compiles every colour utility to `var(--color-*)`. Rebinding seven variables on a single wrapper re-themes the entire subtree, so components originally written against the portfolio palette adopt Apollo’s without being touched.',
     code: {
       lang: 'css',
       file: 'src/index.css',
       note: 'theme scope',
       source: `.theme-apollo {
-  --color-bg: #fdfcfb;
   --color-ink: #0e0d0c;
   --color-muted: #7a7977;
   --color-line: #dddcda;
   --color-accent: #6b4fff;
 }`,
     },
-    takeaway:
-      'Token indirection is the feature. One class re-themes a subtree without touching a component.',
   },
 ];
 
