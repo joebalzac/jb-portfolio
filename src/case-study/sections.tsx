@@ -3,22 +3,17 @@ import { ApolloApp } from '../components/apollo/ApolloApp';
 import { ApolloUI } from '../components/projects/ApolloUI';
 import {
   architecture,
-  audit,
   caseMeta,
   collaboration,
   contributions,
-  decisions,
   outcomes,
   problem,
   provenance,
   reflection,
 } from '../data/apollo';
 import { ComponentGallery } from './ComponentGallery';
-import { MotionPreference } from './MotionPreference';
-import { TimingLedger } from './TimingLedger';
 import { useDemoReset } from './presentationContext';
 import {
-  Annotation,
   CaseSection,
   CodeExcerpt,
   DemoNotice,
@@ -221,14 +216,12 @@ export function Introduction() {
 /* ---------------------------------------------------- 02 the product experience */
 
 const TRY_IT = [
-  { action: 'Pick a suggestion', result: 'Runs that role’s scripted exchange, with tables, drafts and action chips.' },
-  { action: 'The + menu', result: 'Upload from device, or drill into Entities, Connectors and Skills — each badged with the character that invokes it.' },
-  { action: 'Agent & model', result: 'Reads out both settings at rest rather than hiding them; either row drills in to change it.' },
-  { action: 'Type anything', result: 'Gets an honest fallback — there is no model behind this page, and it says so.' },
-  { action: 'Press Stop', result: 'Cancels a reply mid-flight. Lands immediately, no half-finished sequence.' },
-  { action: 'New Chat', result: 'Clears the thread and returns to the welcome screen.' },
-  { action: 'Hover a reply', result: 'Reveals a copy control that writes the whole answer to your clipboard.' },
-  { action: 'Expand / Close', result: 'Top right. Expand grows the window; Close minimises to a reopen pill.' },
+  { action: 'Pick a suggestion', result: 'Runs that role’s scripted exchange — tables, drafts and action chips.' },
+  { action: 'The + menu', result: 'Upload from device, or drill into Entities, Connectors and Skills.' },
+  { action: 'Agent & model', result: 'Reads out both settings at rest; either row drills in to change it.' },
+  { action: 'Press Stop', result: 'Cancels a reply mid-flight. Lands immediately.' },
+  { action: 'Hover a reply', result: 'Reveals a copy control for the whole answer.' },
+  { action: 'Drag the corner', result: 'Resizes the window — arrow keys work on the handle too.' },
 ];
 
 export function ProductExperience() {
@@ -330,10 +323,7 @@ export function ProductExperience() {
   );
 }
 
-/* ------------------------------------------------------ 03 interaction design */
-
-/** Decisions that are better read than demoed; the rest are tiles above. */
-const NARRATED = ['derived-timing', 'interruptible', 'scroll-anchor', 'reduced-motion'];
+/* ------------------------------------------------ 03 components & interactions */
 
 export function InteractionDesign() {
   return (
@@ -347,7 +337,7 @@ export function InteractionDesign() {
           <code className="font-mono text-[13px] text-ink">
             src/components/apollo/
           </code>
-          . The surface in section 02 is these parts composed — nothing in it is
+          . The app in section 02 is these parts composed — nothing in it is
           bespoke.
         </p>
       </Reveal>
@@ -355,34 +345,6 @@ export function InteractionDesign() {
       <Reveal delay={60} className="mt-12">
         <ComponentGallery />
       </Reveal>
-
-      <Reveal className="mt-24">
-        <Eyebrow>decisions behind the timing</Eyebrow>
-      </Reveal>
-
-      <div className="mt-10 space-y-16">
-        {decisions
-          .filter((decision) => NARRATED.includes(decision.id))
-          .map((decision, index) => (
-            <Reveal key={decision.id} delay={index === 0 ? 0 : 40}>
-              <Annotation
-                index={decision.index}
-                title={decision.title}
-                problem={decision.problem}
-                decision={decision.decision}
-              >
-                {decision.id === 'derived-timing' ? <TimingLedger /> : null}
-                {decision.id === 'reduced-motion' ? <MotionPreference /> : null}
-                {decision.evidence ? (
-                  <p className="mt-4 font-mono text-[11px] text-faint">
-                    {decision.evidence.file}:{decision.evidence.line} ·{' '}
-                    {decision.evidence.label}
-                  </p>
-                ) : null}
-              </Annotation>
-            </Reveal>
-          ))}
-      </div>
     </CaseSection>
   );
 }
@@ -394,12 +356,12 @@ export function Engineering() {
     <CaseSection id="engineering" number="04" title="Engineering & architecture">
       <Reveal>
         <h3 className="max-w-2xl text-xl leading-snug font-medium tracking-tight text-ink sm:text-2xl">
-          Six structural decisions, each quoted from the file it lives in.
+          Three structural decisions, each quoted from the file it lives in.
         </h3>
         <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
           React 19 and TypeScript, Tailwind v4 for tokens, Vite to build. No
           router, no animation library, no state library — the interesting work
-          was in modeling and timing, not in dependencies.
+          was in modelling and composition, not in dependencies.
         </p>
       </Reveal>
 
@@ -431,26 +393,6 @@ export function Engineering() {
           </Reveal>
         ))}
       </div>
-
-      <Reveal className="mt-24">
-        <div className="border-t border-line pt-7">
-          <Eyebrow>accessibility — what the audit found</Eyebrow>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
-            Writing this case study meant re-reading my own component with fresh
-            eyes. Three findings, including one real defect.
-          </p>
-          <div className="mt-8 grid gap-x-8 gap-y-9 md:grid-cols-3">
-            {audit.map((item) => (
-              <div key={item.title}>
-                <h4 className="text-sm font-medium text-ink">{item.title}</h4>
-                <p className="mt-2.5 text-sm leading-relaxed text-muted">
-                  {item.body}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Reveal>
     </CaseSection>
   );
 }
@@ -474,15 +416,15 @@ export function Outcome() {
         </ul>
       </Reveal>
 
-      <Reveal delay={60} className="mt-14">
+      <Reveal delay={60} className="mt-12">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {outcomes.metrics.map((metric) => (
             <MetricPlaceholder key={metric} label={metric} />
           ))}
         </div>
         <p className="mt-4 text-xs leading-relaxed text-faint">
-          Left unfilled on purpose. I would rather present a case study with four
-          visible gaps than one number I cannot source.
+          Left unfilled on purpose — I would rather show four visible gaps than
+          one number I cannot source.
         </p>
       </Reveal>
 

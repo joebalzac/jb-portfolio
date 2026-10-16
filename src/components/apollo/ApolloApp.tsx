@@ -92,6 +92,9 @@ export function ApolloApp() {
   const [closed, setClosed] = useState(false);
   const timers = useRef<number[]>([]);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  const drag = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
 
   const clearTimers = useCallback(() => {
     timers.current.forEach((id) => window.clearTimeout(id));
@@ -210,6 +213,61 @@ export function ApolloApp() {
       ? userMessageText(nextScripted)
       : null;
 
+  const clampSize = useCallback((w: number, h: number) => {
+    const maxW = frameRef.current?.parentElement?.clientWidth ?? w;
+    return {
+      w: Math.max(560, Math.min(w, maxW)),
+      h: Math.max(440, Math.min(h, window.innerHeight * 0.94)),
+    };
+  }, []);
+
+  /** Corner resize. Pointer events so mouse, pen and touch all work. */
+  const startResize = useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
+    const rect = frameRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    drag.current = { x: event.clientX, y: event.clientY, w: rect.width, h: rect.height };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }, []);
+
+  const onResizeMove = useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      const start = drag.current;
+      if (!start) return;
+      setSize(
+        clampSize(
+          start.w + (event.clientX - start.x),
+          start.h + (event.clientY - start.y),
+        ),
+      );
+    },
+    [clampSize],
+  );
+
+  const endResize = useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
+    drag.current = null;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  }, []);
+
+  /** Dragging is pointer-only, so the handle also takes arrow keys. */
+  const onResizeKey = useCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      const step = event.shiftKey ? 80 : 24;
+      const rect = frameRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const deltas: Record<string, [number, number]> = {
+        ArrowRight: [step, 0],
+        ArrowLeft: [-step, 0],
+        ArrowDown: [0, step],
+        ArrowUp: [0, -step],
+      };
+      const delta = deltas[event.key];
+      if (!delta) return;
+      event.preventDefault();
+      setSize(clampSize(rect.width + delta[0], rect.height + delta[1]));
+    },
+    [clampSize],
+  );
+
   const headerButton =
     'grid size-8 cursor-pointer place-items-center rounded-md text-app-muted transition-colors hover:bg-app-hover hover:text-app-ink focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none';
 
@@ -220,8 +278,10 @@ export function ApolloApp() {
       className="w-full"
     >
       <div
+        ref={frameRef}
+        style={size ? { width: size.w, height: size.h } : undefined}
         className={`relative flex overflow-hidden rounded-xl border border-app-line bg-white shadow-[0_1px_2px_rgba(17,24,39,0.04),0_12px_32px_rgba(17,24,39,0.06)] ${
-          expanded ? 'h-[min(860px,90vh)]' : 'h-[min(720px,82vh)]'
+          size ? '' : expanded ? 'h-[min(940px,92vh)]' : 'h-[min(820px,86vh)]'
         }`}
       >
         {closed ? (
@@ -340,7 +400,7 @@ export function ApolloApp() {
             </aside>
 
             {/* Main column */}
-            <div className="flex min-w-0 flex-1 flex-col">
+            <div className="flex min-w-0 min-h-0 flex-1 flex-col">
               <header className="flex h-14 shrink-0 items-center gap-2 px-4">
                 <button
                   type="button"
@@ -360,7 +420,10 @@ export function ApolloApp() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setExpanded((v) => !v)}
+                  onClick={() => {
+                    setSize(null);
+                    setExpanded((v) => !v);
+                  }}
                   aria-pressed={expanded}
                   aria-label={expanded ? 'Restore size' : 'Expand'}
                   className={headerButton}
@@ -391,7 +454,7 @@ export function ApolloApp() {
                         Continue where you left off, or start something new.
                       </p>
 
-                      <h3 className="mt-9 text-[17px] font-semibold tracking-[-0.01em] text-app-ink">
+                      <h3 className="mt-7 text-[17px] font-semibold tracking-[-0.01em] text-app-ink">
                         Continue
                       </h3>
                       <button
@@ -416,7 +479,7 @@ export function ApolloApp() {
                         />
                       </button>
 
-                      <h3 className="mt-9 text-[17px] font-semibold tracking-[-0.01em] text-app-ink">
+                      <h3 className="mt-7 text-[17px] font-semibold tracking-[-0.01em] text-app-ink">
                         Things Apollo can help with
                       </h3>
                       <p className="mt-1.5 text-[15px] text-app-muted">
@@ -520,6 +583,27 @@ export function ApolloApp() {
                 </div>
               </div>
             </div>
+            {/* Resize handle */}
+            <button
+              type="button"
+              aria-label="Resize the Apollo window. Use the arrow keys, or drag."
+              onPointerDown={startResize}
+              onPointerMove={onResizeMove}
+              onPointerUp={endResize}
+              onPointerCancel={endResize}
+              onKeyDown={onResizeKey}
+              className="absolute right-0 bottom-0 z-30 grid size-5 cursor-nwse-resize touch-none place-items-center text-app-faint transition-colors hover:text-app-muted focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none"
+            >
+              <svg viewBox="0 0 12 12" className="size-3" aria-hidden>
+                <path
+                  d="M11 5 5 11M11 9l-2 2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
           </>
         )}
       </div>
