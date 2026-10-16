@@ -227,7 +227,7 @@ const TRY_IT = [
   { action: 'New Chat', result: 'Clears the thread and returns to the welcome screen.' },
   { action: 'Scope / Agent mode', result: 'Real listboxes — arrow keys move, Escape returns focus to the trigger.' },
   { action: 'Hover a reply', result: 'Reveals a copy control that writes the whole answer to your clipboard.' },
-  { action: 'Sidebar rows', result: 'Selected row carries the product’s own gradient highlight.' },
+  { action: 'Sidebar rows', result: 'Selected row takes the app’s grey, with weight rather than colour carrying the state.' },
   { action: 'Expand / Close', result: 'Top right. Expand grows the window; Close minimises to a reopen pill.' },
 ];
 
@@ -297,8 +297,10 @@ export function ProductExperience() {
             The same conversation components, restyled for the public marketing
             page — where nobody is going to type anything, so it plays itself.
             Two chromes, one renderer: the app above is built for work, this one
-            is built to be looked at. Dwell time is computed from each script,
-            and playback pauses on hover or off-screen.
+            is built to be looked at — which is why the brand gradient lives
+            here, on the highlighted rail item, and the app settles for grey.
+            Dwell time is computed from each script, and playback pauses on
+            hover or off-screen.
           </p>
         </Reveal>
 

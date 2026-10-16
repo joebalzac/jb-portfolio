@@ -380,7 +380,7 @@ export function ApolloUI({ autoplay = true }: { autoplay?: boolean } = {}) {
                 {NAV.map((item) => (
                   <span
                     className={`grid size-6.75 shrink-0 place-items-center rounded-product-mark ${
-                      "active" in item && item.active ? "bg-product-accent" : ""
+                      "active" in item && item.active ? "bg-apollo-gradient" : ""
                     }`}
                     key={item.label}
                   >

@@ -229,7 +229,7 @@ export function ApolloApp() {
             <button
               type="button"
               onClick={() => setClosed(false)}
-              className="flex cursor-pointer items-center gap-2 rounded-full bg-app-active px-4 py-2.5 text-[15px] text-white transition-transform duration-200 ease-product hover:scale-105 focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none motion-reduce:transition-none"
+              className="flex cursor-pointer items-center gap-2 rounded-full bg-app-ink px-4 py-2.5 text-[15px] text-white transition-transform duration-200 ease-product hover:scale-105 focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none motion-reduce:transition-none"
             >
               <ApolloMark className="size-4" />
               Open Apollo
@@ -252,10 +252,7 @@ export function ApolloApp() {
                 >
                   <AppIcon name="menu" className="size-[19px]" />
                 </button>
-                <span className="flex items-center gap-2 text-[17px] font-semibold tracking-[-0.01em] text-app-ink">
-                  <span className="grid size-5 place-items-center rounded-[4px] bg-app-active text-white">
-                    <ApolloMark className="size-[11px]" />
-                  </span>
+                <span className="text-[17px] font-semibold tracking-[-0.01em] text-app-ink">
                   Apollo
                 </span>
                 <button
@@ -281,19 +278,19 @@ export function ApolloApp() {
                       }}
                       className={`flex w-full cursor-pointer items-center gap-3 rounded-[2px] px-3 py-[7px] text-left text-[15px] transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none ${
                         active
-                          ? 'bg-app-active font-medium text-white'
+                          ? 'bg-app-selected font-semibold text-app-ink'
                           : 'text-app-ink hover:bg-app-hover'
                       }`}
                     >
                       <AppIcon
                         name={item.icon}
-                        className={`size-[18px] ${active ? 'text-white' : 'text-app-muted'}`}
+                        className={`size-[18px] ${active ? 'text-app-ink' : 'text-app-muted'}`}
                       />
                       {item.label}
                       {'more' in item && item.more ? (
                         <AppIcon
                           name="chevron-right"
-                          className={`ml-auto size-3.5 ${active ? 'text-white/80' : 'text-app-faint'}`}
+                          className="ml-auto size-3.5 text-app-faint"
                         />
                       ) : null}
                     </button>
@@ -445,7 +442,7 @@ export function ApolloApp() {
                           key={`u-${index}`}
                           className="flex w-full justify-end motion-safe:animate-message-enter"
                         >
-                          <p className="m-0 max-w-[min(620px,88%)] rounded-xl bg-app-hover px-4 py-3 text-[15px] leading-[1.5] whitespace-pre-wrap text-app-ink">
+                          <p className="m-0 max-w-[min(620px,88%)] rounded-xl bg-app-selected px-4 py-3 text-[15px] leading-[1.5] whitespace-pre-wrap text-app-ink">
                             {userMessageText(message)}
                           </p>
                         </div>

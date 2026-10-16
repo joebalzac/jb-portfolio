@@ -173,7 +173,7 @@ export function Dropdown({
                 }}
                 className={`flex cursor-pointer items-start gap-2 px-3 py-1.75 text-left text-[14px] leading-snug transition-colors duration-100 focus-visible:outline-none ${
                   index === activeIndex
-                    ? 'bg-app-hover text-app-ink'
+                    ? 'bg-app-selected text-app-ink'
                     : 'text-app-ink hover:bg-app-hover'
                 }`}
               >

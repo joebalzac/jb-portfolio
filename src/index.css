@@ -36,7 +36,8 @@
   --color-app-muted: #6b7280;
   --color-app-faint: #9ca3af;
   --color-app-line: #e5e7eb;
-  --color-app-hover: #f3f4f6;
+  --color-app-hover: oklch(98.5% 0.002 247.839);
+  --color-app-selected: oklch(96.7% 0.003 264.542);
   --color-app-purple-0: #f3f0ff;
   --color-app-purple-5: #7950f2;
 
@@ -172,8 +173,8 @@
   --color-accent: #6b4fff;
 }
 
-/* Selected navigation row in the Apollo app rail. */
-@utility bg-app-active {
+/* Apollo brand gradient — the highlighted nav item on the marketing surface. */
+@utility bg-apollo-gradient {
   background: linear-gradient(
     231.21deg,
     rgb(74, 18, 226) 0%,
