@@ -95,6 +95,7 @@ export function ApolloApp() {
   const frameRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const drag = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [resizing, setResizing] = useState(false);
 
   const clearTimers = useCallback(() => {
     timers.current.forEach((id) => window.clearTimeout(id));
@@ -216,7 +217,7 @@ export function ApolloApp() {
   const clampSize = useCallback((w: number, h: number) => {
     const maxW = frameRef.current?.parentElement?.clientWidth ?? w;
     return {
-      w: Math.max(560, Math.min(w, maxW)),
+      w: Math.max(420, Math.min(w, maxW)),
       h: Math.max(440, Math.min(h, window.innerHeight * 0.94)),
     };
   }, []);
@@ -226,6 +227,7 @@ export function ApolloApp() {
     const rect = frameRef.current?.getBoundingClientRect();
     if (!rect) return;
     drag.current = { x: event.clientX, y: event.clientY, w: rect.width, h: rect.height };
+    setResizing(true);
     event.currentTarget.setPointerCapture(event.pointerId);
   }, []);
 
@@ -245,6 +247,7 @@ export function ApolloApp() {
 
   const endResize = useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
     drag.current = null;
+    setResizing(false);
     event.currentTarget.releasePointerCapture(event.pointerId);
   }, []);
 
@@ -280,9 +283,9 @@ export function ApolloApp() {
       <div
         ref={frameRef}
         style={size ? { width: size.w, height: size.h } : undefined}
-        className={`relative flex overflow-hidden rounded-xl border border-app-line bg-white shadow-[0_1px_2px_rgba(17,24,39,0.04),0_12px_32px_rgba(17,24,39,0.06)] ${
-          size ? '' : expanded ? 'h-[min(940px,92vh)]' : 'h-[min(820px,86vh)]'
-        }`}
+        className={`@container/window relative flex max-w-full overflow-hidden rounded-xl border border-app-line bg-white shadow-[0_1px_2px_rgba(17,24,39,0.04),0_12px_32px_rgba(17,24,39,0.06)] ${
+          resizing ? 'select-none' : ''
+        } ${size ? '' : expanded ? 'h-[min(940px,92vh)]' : 'h-[min(820px,86vh)]'}`}
       >
         {closed ? (
           <div className="grid flex-1 place-items-center">
@@ -299,7 +302,7 @@ export function ApolloApp() {
           <>
             {/* Sidebar */}
             <aside
-              className={`absolute inset-y-0 left-0 z-20 flex w-[272px] shrink-0 flex-col border-r border-app-line bg-white transition-transform duration-300 ease-product motion-reduce:transition-none panel:static panel:translate-x-0 ${
+              className={`absolute inset-y-0 left-0 z-20 flex w-[272px] shrink-0 flex-col border-r border-app-line bg-white transition-transform duration-300 ease-product motion-reduce:transition-none @min-[840px]/window:static @min-[840px]/window:translate-x-0 ${
                 sidebarOpen ? 'translate-x-0 shadow-xl' : '-translate-x-full'
               }`}
             >
@@ -406,7 +409,7 @@ export function ApolloApp() {
                   type="button"
                   onClick={() => setSidebarOpen(true)}
                   aria-label="Show navigation"
-                  className={`${headerButton} panel:hidden`}
+                  className={`${headerButton} @min-[840px]/window:hidden`}
                 >
                   <AppIcon name="menu" className="size-[19px]" />
                 </button>
@@ -416,7 +419,7 @@ export function ApolloApp() {
                   className="ml-auto flex cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 text-[15px] text-app-ink transition-colors hover:bg-app-hover focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none"
                 >
                   <AppIcon name="new-chat" className="size-[18px]" />
-                  <span className="hidden panel:inline">New Chat</span>
+                  <span className="hidden @min-[560px]/window:inline">New Chat</span>
                 </button>
                 <button
                   type="button"
@@ -442,12 +445,12 @@ export function ApolloApp() {
 
               <div
                 ref={scrollerRef}
-                className="min-h-0 flex-1 overflow-y-auto px-5 panel:px-8"
+                className="min-h-0 flex-1 overflow-y-auto px-5 @min-[720px]/window:px-8"
               >
                 <div className="mx-auto w-full max-w-[1000px] pt-6 pb-4">
                   {thread.length === 0 && !busy ? (
                     <div className="@container">
-                      <h2 className="text-[30px] leading-tight font-semibold tracking-[-0.02em] text-app-ink panel:text-[34px]">
+                      <h2 className="text-[30px] leading-tight font-semibold tracking-[-0.02em] text-app-ink @min-[720px]/window:text-[34px]">
                         Welcome back, Joseph
                       </h2>
                       <p className="mt-2 text-[16px] text-app-muted">
@@ -515,7 +518,7 @@ export function ApolloApp() {
                           className="group flex w-full flex-col gap-1.5 motion-safe:animate-message-enter"
                         >
                           <ApolloBlocks blocks={message.blocks} />
-                          <div className="flex transition-opacity duration-200 panel:opacity-0 panel:group-focus-within:opacity-100 panel:group-hover:opacity-100 motion-reduce:opacity-100">
+                          <div className="flex transition-opacity duration-200 @min-[720px]/window:opacity-0 @min-[720px]/window:group-focus-within:opacity-100 @min-[720px]/window:group-hover:opacity-100 motion-reduce:opacity-100">
                             <CopyButton text={messageText(message)} />
                           </div>
                         </div>
@@ -568,7 +571,7 @@ export function ApolloApp() {
                 </div>
               </div>
 
-              <div className="shrink-0 px-5 pb-5 panel:px-8">
+              <div className="shrink-0 px-5 pb-5 @min-[720px]/window:px-8">
                 <div className="mx-auto w-full max-w-[1000px]">
                   <Composer
                     value={composer}
@@ -592,14 +595,19 @@ export function ApolloApp() {
               onPointerUp={endResize}
               onPointerCancel={endResize}
               onKeyDown={onResizeKey}
-              className="absolute right-0 bottom-0 z-30 grid size-5 cursor-nwse-resize touch-none place-items-center text-app-faint transition-colors hover:text-app-muted focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none"
+              title="Drag to resize"
+              className={`absolute right-0 bottom-0 z-30 grid size-6 cursor-nwse-resize touch-none place-items-center rounded-tl-lg transition-colors focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none ${
+                resizing
+                  ? 'bg-app-selected text-app-ink'
+                  : 'text-app-faint hover:bg-app-hover hover:text-app-muted'
+              }`}
             >
-              <svg viewBox="0 0 12 12" className="size-3" aria-hidden>
+              <svg viewBox="0 0 12 12" className="size-3.5" aria-hidden>
                 <path
-                  d="M11 5 5 11M11 9l-2 2"
+                  d="M10.5 3.5 3.5 10.5M10.5 7.5l-3 3"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.3"
+                  strokeWidth="1.4"
                   strokeLinecap="round"
                 />
               </svg>
