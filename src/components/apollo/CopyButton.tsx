@@ -61,7 +61,7 @@ export function CopyButton({
       type="button"
       onClick={copy}
       aria-label={label}
-      className="group flex shrink-0 cursor-pointer items-center gap-1.25 rounded-md px-1.5 py-1 text-[11px] text-product-faint transition-colors duration-150 hover:bg-product-hover hover:text-product-label focus-visible:ring-2 focus-visible:ring-product-ring focus-visible:outline-none"
+      className="group flex shrink-0 cursor-pointer items-center gap-1.25 rounded-md px-1.5 py-1 text-[11px] text-app-faint transition-colors duration-150 hover:bg-app-hover hover:text-app-ink focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none"
     >
       <span aria-hidden className="grid size-3.5 place-items-center">
         {state === 'copied' ? (

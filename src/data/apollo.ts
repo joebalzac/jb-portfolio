@@ -338,21 +338,23 @@ className="max-panel:order-[calc(var(--tab-index)*2+1)]"`,
     id: 'layer',
     title: 'One primitive layer, two surfaces',
     body:
-      'Building the interactive demo forced the boundary to become real. Everything shared now lives in `src/components/apollo/` — the block renderer, the thinking panel, the composer, the dropdown, the clipboard button, the timing constants and the conversation fixtures. Two very different surfaces compose them: the autoplaying marketing carousel, which nobody types into, and the interactive playground, which is nothing but typing. Neither duplicates the other, and the demo in section 02 is therefore the same renderer that ships, not a lookalike.',
+      'Building the interactive demo forced the boundary to become real. Everything shared now lives in `src/components/apollo/` — the block renderer, the thinking panel, the composer, the dropdown, the clipboard button, the timing constants and the conversation fixtures. Two very different chromes compose them: the in-product application, which is nothing but typing, and the autoplaying marketing carousel, which nobody types into. They share the renderer and the fixtures and share no layout at all, which is exactly the seam I wanted — a restyle is a chrome change, never a fork of the conversation logic.',
     code: {
       lang: 'txt',
       file: 'src/components/apollo/',
       note: 'module layout',
-      source: `types.ts           MessageBlock, ChatMessage, Persona
-timing.ts          every duration, read by 3 consumers
-conversations.ts   scripted fixtures + userMessageText
-ApolloBlocks.tsx   the exhaustive block renderer
-ThinkingStatus.tsx planning / working panel
-Composer.tsx       prompt box, auto-grow, submit rules
-Dropdown.tsx       ARIA listbox, roving focus
-CopyButton.tsx     clipboard + fallback + announcement
-ApolloPlayground.tsx  interactive composition
-chrome.ts / UiIcon.tsx / options.ts`,
+      source: `types.ts            MessageBlock, ChatMessage, Persona
+timing.ts           every duration, read by 3 consumers
+conversations.ts    scripted fixtures + userMessageText
+ApolloBlocks.tsx    the exhaustive block renderer
+ThinkingStatus.tsx  planning / working panel
+Composer.tsx        prompt box, auto-grow, submit rules
+Dropdown.tsx        ARIA listbox, roving focus
+CopyButton.tsx      clipboard + fallback + announcement
+SuggestionCard.tsx  container-queried prompt card
+AppIcon.tsx         currentColor icon set + Apollo mark
+ApolloApp.tsx       the in-product chrome  ─┐ shared
+../projects/ApolloUI.tsx  marketing chrome ─┘ renderer`,
     },
     takeaway:
       'Reuse what renders; specialize what choreographs. The folder is the argument.',

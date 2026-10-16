@@ -4,7 +4,7 @@ import { Composer } from '../components/apollo/Composer';
 import { CopyButton } from '../components/apollo/CopyButton';
 import { EXCHANGES } from '../components/apollo/conversations';
 import { Dropdown } from '../components/apollo/Dropdown';
-import { AGENT_MODES, COMMUNITIES } from '../components/apollo/options';
+import { AGENT_MODES, SCOPES } from '../components/apollo/options';
 import type { MessageBlock } from '../components/apollo/types';
 import { ThinkingTrace } from '../components/craft/ThinkingTrace';
 import { ToolCallStack } from '../components/craft/ToolCallStack';
@@ -68,7 +68,7 @@ function Tile({
 /** Standalone prompt box, wired to a visible log of what it submitted. */
 function ComposerTile() {
   const [value, setValue] = useState('');
-  const [community, setCommunity] = useState('caladan');
+  const [scope, setScope] = useState('cross-org');
   const [mode, setMode] = useState('full');
   const [sent, setSent] = useState<string[]>([]);
 
@@ -82,8 +82,8 @@ function ComposerTile() {
           setSent((current) => [value.trim(), ...current].slice(0, 3));
           setValue('');
         }}
-        community={community}
-        onCommunityChange={setCommunity}
+        scope={scope}
+        onScopeChange={setScope}
         mode={mode}
         onModeChange={setMode}
         placeholder="Type here — Enter sends, Shift+Enter is a newline"
@@ -146,22 +146,22 @@ function BlocksTile() {
 }
 
 function DropdownTile() {
-  const [community, setCommunity] = useState('balance');
+  const [scope, setScope] = useState('balance');
   const [mode, setMode] = useState('assist');
 
-  const communityLabel = COMMUNITIES.find((c) => c.value === community)?.label;
+  const scopeLabel = SCOPES.find((s) => s.value === scope)?.label;
   const modeLabel = AGENT_MODES.find((m) => m.value === mode)?.label;
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-product-line bg-white px-3.5 py-3 text-[13px]">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-app-line bg-white px-3 py-2.5 text-[14px]">
         <Dropdown
-          label="Community"
-          value={community}
-          options={COMMUNITIES}
-          onChange={setCommunity}
+          label="Scope"
+          value={scope}
+          options={SCOPES}
+          onChange={setScope}
         />
-        <span aria-hidden className="text-product-line">
+        <span aria-hidden className="text-app-line">
           |
         </span>
         <Dropdown
@@ -172,8 +172,7 @@ function DropdownTile() {
         />
       </div>
       <p className="font-mono text-[11px] text-muted">
-        <span className="text-faint">context ›</span> {communityLabel} ·{' '}
-        {modeLabel}
+        <span className="text-faint">context ›</span> {scopeLabel} · {modeLabel}
       </p>
       <p className="text-xs leading-relaxed text-muted">
         Open one and use the arrow keys — focus moves with the active option,
@@ -230,7 +229,7 @@ export function ComponentGallery() {
 
       <Tile
         label="Context dropdowns"
-        note="Built to the ARIA listbox pattern rather than a styled select, because the trigger sits inline in the composer and has to carry product typography. Agent mode is in the composer because it changes what a reply may do on your behalf."
+        note="Built to the ARIA listbox pattern rather than a styled select, because the trigger sits inline in the composer and has to carry the app's own typography. Agent mode lives in the composer because it changes what a reply is allowed to do on your behalf."
       >
         <DropdownTile key={resetToken} />
       </Tile>

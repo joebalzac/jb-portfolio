@@ -30,6 +30,16 @@
   --color-product-label: #3f3e3c;
   --color-product-pill: #3a3a3b;
   --color-product-online: #47c47d;
+  /* Apollo application chrome — the in-product surface, distinct from the
+     marketing stage. Values taken from the shipped app. */
+  --color-app-ink: #111827;
+  --color-app-muted: #6b7280;
+  --color-app-faint: #9ca3af;
+  --color-app-line: #e5e7eb;
+  --color-app-hover: #f3f4f6;
+  --color-app-purple-0: #f3f0ff;
+  --color-app-purple-5: #7950f2;
+
   /* Completes the product scale for editorial use alongside the UI tokens. */
   --color-product-faint: #a9a8a5;
   --color-product-hover: #efedea;
@@ -160,6 +170,16 @@
   --color-line: #dddcda;
   --color-card: #f6f4f2;
   --color-accent: #6b4fff;
+}
+
+/* Selected navigation row in the Apollo app rail. */
+@utility bg-app-active {
+  background: linear-gradient(
+    231.21deg,
+    rgb(74, 18, 226) 0%,
+    rgb(140, 88, 229) 51.56%,
+    rgb(112, 134, 247) 100%
+  );
 }
 
 @utility bg-planning {

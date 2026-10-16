@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ApolloPlayground } from '../components/apollo/ApolloPlayground';
+import { ApolloApp } from '../components/apollo/ApolloApp';
 import { ApolloUI } from '../components/projects/ApolloUI';
 import {
   architecture,
@@ -221,14 +221,14 @@ export function Introduction() {
 /* ---------------------------------------------------- 02 the product experience */
 
 const TRY_IT = [
-  { action: 'Pick a role', result: 'Runs that role’s scripted exchange, with tables, drafts and action chips.' },
+  { action: 'Pick a suggestion', result: 'Runs that role’s scripted exchange, with tables, drafts and action chips.' },
   { action: 'Type anything', result: 'Gets an honest fallback — there is no model behind this page, and it says so.' },
   { action: 'Press Stop', result: 'Cancels a reply mid-flight. Lands immediately, no half-finished sequence.' },
-  { action: 'New Chat', result: 'Clears the thread and returns to the role prompts.' },
-  { action: 'Community / Agent mode', result: 'Real dropdowns — arrow keys move, Escape returns to the trigger.' },
+  { action: 'New Chat', result: 'Clears the thread and returns to the welcome screen.' },
+  { action: 'Scope / Agent mode', result: 'Real listboxes — arrow keys move, Escape returns focus to the trigger.' },
   { action: 'Hover a reply', result: 'Reveals a copy control that writes the whole answer to your clipboard.' },
-  { action: 'Collapse the rail', result: 'Double chevron at the top left — the product’s own control, with labels animating in.' },
-  { action: 'Expand / Close', result: 'Top right. Expand fills the stage; Close minimises to a reopen pill.' },
+  { action: 'Sidebar rows', result: 'Selected row carries the product’s own gradient highlight.' },
+  { action: 'Expand / Close', result: 'Top right. Expand grows the window; Close minimises to a reopen pill.' },
 ];
 
 export function ProductExperience() {
@@ -250,8 +250,8 @@ export function ProductExperience() {
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
             The clearest argument for an interaction decision is the interface
             making it. So this is not a video. Type in it, interrupt it, copy out
-            of it. It is the same chrome, renderer and composer geometry as the
-            surface further down — every control here is simply wired.
+            of it. This is the in-product chrome — the application as a property
+            manager actually sees it.
           </p>
         </Reveal>
 
@@ -265,7 +265,7 @@ export function ProductExperience() {
       </div>
 
       <Reveal delay={120} className="mt-10">
-        <ApolloPlayground key={demoKey} />
+        <ApolloApp key={demoKey} />
       </Reveal>
 
       <div className="mx-auto mt-14 max-w-4xl">
@@ -294,9 +294,11 @@ export function ProductExperience() {
         <Reveal>
           <Eyebrow>the shipped marketing surface</Eyebrow>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
-            The same components on the public marketing page, where nobody is
-            going to type anything — so it plays itself. Dwell time is computed
-            from each script, and playback pauses on hover or off-screen.
+            The same conversation components, restyled for the public marketing
+            page — where nobody is going to type anything, so it plays itself.
+            Two chromes, one renderer: the app above is built for work, this one
+            is built to be looked at. Dwell time is computed from each script,
+            and playback pauses on hover or off-screen.
           </p>
         </Reveal>
 

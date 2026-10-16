@@ -1,11 +1,11 @@
 import type { DropdownOption } from './Dropdown';
 
-/** Selectable context for the composer. Fixtures — no live inventory. */
-export const COMMUNITIES: DropdownOption[] = [
+/** Selectable scope for the composer. Fixtures — no live inventory. */
+export const SCOPES: DropdownOption[] = [
+  { value: 'cross-org', label: 'Cross-org', hint: 'Every community and connector' },
   { value: 'caladan', label: 'Caladan Lofts', hint: '248 units · Chicago' },
   { value: 'balance', label: 'Balance Bay', hint: '180 units · Tampa' },
   { value: 'chicagoland', label: 'Chicagoland', hint: '312 units · Chicago' },
-  { value: 'all', label: 'All communities', hint: 'Portfolio view' },
 ];
 
 /**

@@ -1,4 +1,5 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { AppIcon } from './AppIcon';
 import { UiIcon } from './UiIcon';
 
 export type DropdownOption = {
@@ -10,7 +11,7 @@ export type DropdownOption = {
 /**
  * Menu button + listbox, built to the ARIA listbox pattern rather than a
  * styled <select>, because the trigger has to sit inline in the composer and
- * carry product typography.
+ * carry the app's own typography.
  *
  * Keyboard: Enter/Space/Down/Up opens, arrows move the active option, Enter or
  * Space commits, Escape closes and returns focus to the trigger, Home/End jump.
@@ -24,6 +25,7 @@ export function Dropdown({
   align = 'start',
   icon,
   placeholder,
+  renderTrigger,
 }: {
   label: string;
   value: string;
@@ -33,6 +35,8 @@ export function Dropdown({
   icon?: string;
   /** Shown when `value` matches no option — e.g. an action menu with no state. */
   placeholder?: string;
+  /** Replaces the default trigger content, for icon-only menus. */
+  renderTrigger?: (open: boolean) => ReactNode;
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
@@ -95,20 +99,28 @@ export function Dropdown({
             setOpen(true);
           }
         }}
-        className="flex max-w-45 min-w-0 cursor-pointer items-center gap-1.25 rounded-md px-1 py-0.5 whitespace-nowrap text-product-muted transition-colors duration-150 hover:bg-product-hover hover:text-product focus-visible:ring-2 focus-visible:ring-product-ring focus-visible:outline-none"
+        className={
+          renderTrigger
+            ? 'cursor-pointer rounded-md focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none'
+            : 'flex max-w-45 min-w-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 whitespace-nowrap text-app-muted transition-colors duration-150 hover:bg-app-hover hover:text-app-ink focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none'
+        }
       >
-        {icon ? <UiIcon src={icon} className="size-3.5" /> : null}
-        {selected || placeholder ? (
-          <span className="truncate">{selected?.label ?? placeholder}</span>
-        ) : null}
-        <span
-          aria-hidden
-          className={`transition-transform duration-200 ease-product motion-reduce:transition-none ${
-            open ? 'rotate-180' : ''
-          }`}
-        >
-          <UiIcon src="/apollo-ui/chevron.svg" className="size-3.5" />
-        </span>
+        {renderTrigger ? (
+          renderTrigger(open)
+        ) : (
+          <>
+            {icon ? <UiIcon src={icon} className="size-3.5" /> : null}
+            {selected || placeholder ? (
+              <span className="truncate">{selected?.label ?? placeholder}</span>
+            ) : null}
+            <AppIcon
+              name="chevron"
+              className={`size-3.5 transition-transform duration-200 ease-product motion-reduce:transition-none ${
+                open ? 'rotate-180' : ''
+              }`}
+            />
+          </>
+        )}
       </button>
 
       {open ? (
@@ -117,7 +129,7 @@ export function Dropdown({
           id={id}
           role="listbox"
           aria-label={label}
-          className={`absolute bottom-full z-30 mb-2 max-h-56 w-max min-w-45 overflow-y-auto rounded-lg border border-product-line bg-white py-1 shadow-composer motion-safe:animate-menu-in ${
+          className={`absolute bottom-full z-30 mb-2 max-h-56 w-max min-w-45 overflow-y-auto rounded-lg border border-app-line bg-white py-1 shadow-[0_8px_24px_rgba(17,24,39,0.12)] motion-safe:animate-menu-in ${
             align === 'end' ? 'right-0' : 'left-0'
           }`}
           onKeyDown={(event) => {
@@ -159,22 +171,22 @@ export function Dropdown({
                     commit(index);
                   }
                 }}
-                className={`flex cursor-pointer items-start gap-2 px-3 py-1.75 text-left text-product-chip leading-product tracking-product transition-colors duration-100 focus-visible:outline-none ${
+                className={`flex cursor-pointer items-start gap-2 px-3 py-1.75 text-left text-[14px] leading-snug transition-colors duration-100 focus-visible:outline-none ${
                   index === activeIndex
-                    ? 'bg-product-soft text-product'
-                    : 'text-product-label hover:bg-product-soft'
+                    ? 'bg-app-hover text-app-ink'
+                    : 'text-app-ink hover:bg-app-hover'
                 }`}
               >
                 <span
                   aria-hidden
                   className={`mt-1.25 size-1.25 shrink-0 rounded-full ${
-                    isSelected ? 'bg-product-accent' : 'bg-transparent'
+                    isSelected ? 'bg-app-purple-5' : 'bg-transparent'
                   }`}
                 />
                 <span className="min-w-0">
                   <span className="block truncate">{option.label}</span>
                   {option.hint ? (
-                    <span className="mt-0.5 block text-[11px] text-product-faint">
+                    <span className="mt-0.5 block text-[11px] text-app-faint">
                       {option.hint}
                     </span>
                   ) : null}
