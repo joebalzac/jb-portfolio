@@ -349,6 +349,9 @@ conversations.ts    scripted fixtures + userMessageText
 ApolloBlocks.tsx    the exhaustive block renderer
 ThinkingStatus.tsx  planning / working panel
 Composer.tsx        prompt box, auto-grow, submit rules
+AttachMenu.tsx      + menu, drill-in, real file picker
+AgentMenu.tsx       agent + model read-out, drill-in
+useMenu.ts          outside-click, Escape, focus return
 Dropdown.tsx        ARIA listbox, roving focus
 CopyButton.tsx      clipboard + fallback + announcement
 SuggestionCard.tsx  container-queried prompt card

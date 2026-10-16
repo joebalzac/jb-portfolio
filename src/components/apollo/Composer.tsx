@@ -1,7 +1,9 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { AgentMenu } from './AgentMenu';
 import { AppIcon } from './AppIcon';
-import { Dropdown, type DropdownOption } from './Dropdown';
-import { AGENT_MODES, ATTACH_OPTIONS, SCOPES } from './options';
+import { AttachMenu } from './AttachMenu';
+import { Dropdown } from './Dropdown';
+import { SCOPES } from './options';
 
 /**
  * The Apollo app composer.
@@ -37,9 +39,10 @@ export function Composer({
 }) {
   const fieldId = useId();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [attachments, setAttachments] = useState<DropdownOption[]>([]);
+  const [attachments, setAttachments] = useState<string[]>([]);
   const [listening, setListening] = useState(false);
   const [scoped, setScoped] = useState(false);
+  const [model, setModel] = useState('sol-high');
 
   const canSend = value.trim().length > 0 && !busy;
 
@@ -77,18 +80,18 @@ export function Composer({
         <ul className="flex flex-wrap gap-1.5">
           {attachments.map((item) => (
             <li
-              key={item.value}
+              key={item}
               className="flex items-center gap-1.5 rounded-full border border-app-line bg-app-hover py-1 pr-1 pl-2.5 text-[12px] text-app-ink motion-safe:animate-chip-in"
             >
-              {item.label}
+              {item}
               <button
                 type="button"
                 onClick={() =>
                   setAttachments((current) =>
-                    current.filter((entry) => entry.value !== item.value),
+                    current.filter((entry) => entry !== item),
                   )
                 }
-                aria-label={`Remove ${item.label}`}
+                aria-label={`Remove ${item}`}
                 className="grid size-4 cursor-pointer place-items-center rounded-full text-app-faint transition-colors hover:bg-app-line hover:text-app-ink focus-visible:ring-2 focus-visible:ring-app-purple-5 focus-visible:outline-none"
               >
                 <span aria-hidden>×</span>
@@ -122,28 +125,12 @@ export function Composer({
       />
 
       <div className="flex w-full items-center gap-2 text-[15px] text-app-muted">
-        <Dropdown
-          label="Attach a file"
-          value=""
-          options={ATTACH_OPTIONS}
-          onChange={(next) => {
-            const option = ATTACH_OPTIONS.find((item) => item.value === next);
-            if (!option) return;
+        <AttachMenu
+          onAdd={(label) =>
             setAttachments((current) =>
-              current.some((entry) => entry.value === next)
-                ? current
-                : [...current, option],
-            );
-          }}
-          renderTrigger={(open) => (
-            <span
-              className={`${iconButton} ${
-                open ? 'bg-app-hover text-app-ink' : 'hover:bg-app-hover hover:text-app-ink'
-              }`}
-            >
-              <AppIcon name="plus" className="size-5" />
-            </span>
-          )}
+              current.includes(label) ? current : [...current, label],
+            )
+          }
         />
 
         <button
@@ -169,11 +156,11 @@ export function Composer({
           onClick={() => setScoped((current) => !current)}
           aria-pressed={scoped}
           aria-label="Limit the reply to the selected scope"
-          className={`${iconButton} ${
-            scoped ? 'text-app-purple-5' : 'hover:bg-app-hover hover:text-app-ink'
+          className={`${iconButton} text-app-purple-5 ${
+            scoped ? 'bg-app-purple-0' : 'hover:bg-app-hover'
           }`}
         >
-          <AppIcon name="circle" className="size-4" />
+          <AppIcon name="circle" className="size-4" strokeWidth={2} />
         </button>
 
         <Dropdown
@@ -181,12 +168,13 @@ export function Composer({
           value={scope}
           options={SCOPES}
           onChange={onScopeChange}
+          chevron={false}
         />
-        <Dropdown
-          label="Agent mode"
-          value={mode}
-          options={AGENT_MODES}
-          onChange={onModeChange}
+        <AgentMenu
+          mode={mode}
+          onModeChange={onModeChange}
+          model={model}
+          onModelChange={setModel}
         />
 
         <button

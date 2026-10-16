@@ -26,6 +26,7 @@ export function Dropdown({
   icon,
   placeholder,
   renderTrigger,
+  chevron = true,
 }: {
   label: string;
   value: string;
@@ -37,6 +38,8 @@ export function Dropdown({
   placeholder?: string;
   /** Replaces the default trigger content, for icon-only menus. */
   renderTrigger?: (open: boolean) => ReactNode;
+  /** The product omits the caret on the scope control. */
+  chevron?: boolean;
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
@@ -113,12 +116,14 @@ export function Dropdown({
             {selected || placeholder ? (
               <span className="truncate">{selected?.label ?? placeholder}</span>
             ) : null}
-            <AppIcon
-              name="chevron"
-              className={`size-3.5 transition-transform duration-200 ease-product motion-reduce:transition-none ${
-                open ? 'rotate-180' : ''
-              }`}
-            />
+            {chevron ? (
+              <AppIcon
+                name="chevron"
+                className={`size-3.5 transition-transform duration-200 ease-product motion-reduce:transition-none ${
+                  open ? 'rotate-180' : ''
+                }`}
+              />
+            ) : null}
           </>
         )}
       </button>
@@ -129,7 +134,7 @@ export function Dropdown({
           id={id}
           role="listbox"
           aria-label={label}
-          className={`absolute bottom-full z-30 mb-2 max-h-56 w-max min-w-45 overflow-y-auto rounded-lg border border-app-line bg-white py-1 shadow-[0_8px_24px_rgba(17,24,39,0.12)] motion-safe:animate-menu-in ${
+          className={`absolute bottom-full z-30 mb-2 max-h-56 w-max min-w-45 overflow-y-auto rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(17,24,39,0.16)] ring-1 ring-black/[0.04] motion-safe:animate-menu-in ${
             align === 'end' ? 'right-0' : 'left-0'
           }`}
           onKeyDown={(event) => {
@@ -171,7 +176,7 @@ export function Dropdown({
                     commit(index);
                   }
                 }}
-                className={`flex cursor-pointer items-start gap-2 px-3 py-1.75 text-left text-[14px] leading-snug transition-colors duration-100 focus-visible:outline-none ${
+                className={`flex cursor-pointer items-start gap-2 rounded-lg px-3 py-2 text-left text-[15px] leading-snug transition-colors duration-100 focus-visible:outline-none ${
                   index === activeIndex
                     ? 'bg-app-selected text-app-ink'
                     : 'text-app-ink hover:bg-app-hover'

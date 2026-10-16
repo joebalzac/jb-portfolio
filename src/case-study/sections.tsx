@@ -222,12 +222,12 @@ export function Introduction() {
 
 const TRY_IT = [
   { action: 'Pick a suggestion', result: 'Runs that role’s scripted exchange, with tables, drafts and action chips.' },
+  { action: 'The + menu', result: 'Upload from device, or drill into Entities, Connectors and Skills — each badged with the character that invokes it.' },
+  { action: 'Agent & model', result: 'Reads out both settings at rest rather than hiding them; either row drills in to change it.' },
   { action: 'Type anything', result: 'Gets an honest fallback — there is no model behind this page, and it says so.' },
   { action: 'Press Stop', result: 'Cancels a reply mid-flight. Lands immediately, no half-finished sequence.' },
   { action: 'New Chat', result: 'Clears the thread and returns to the welcome screen.' },
-  { action: 'Scope / Agent mode', result: 'Real listboxes — arrow keys move, Escape returns focus to the trigger.' },
   { action: 'Hover a reply', result: 'Reveals a copy control that writes the whole answer to your clipboard.' },
-  { action: 'Sidebar rows', result: 'Selected row takes the app’s grey, with weight rather than colour carrying the state.' },
   { action: 'Expand / Close', result: 'Top right. Expand grows the window; Close minimises to a reopen pill.' },
 ];
 
