@@ -40,6 +40,8 @@ export type WorkItem = {
   coverLogoColor?: string;
   brandTone?: 'dark' | 'soft';
   url?: string;
+  /** Real URL for items that live on their own route. */
+  href?: string;
   demo?: 'apollo';
   plainMedia?: boolean;
 };
@@ -51,6 +53,7 @@ export const work: WorkItem[] = [
       'a role-aware chat surface — leasing, maintenance, community, and leadership, each in its own thread.',
     brandTone: 'soft',
     cover: '/img/eliseai/apollo-ui.png',
+    href: '/work/apollo',
     demo: 'apollo',
     whatIDid: [
       'built the persona carousel so each role types a prompt, plans, and answers in character.',

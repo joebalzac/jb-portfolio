@@ -1,282 +1,30 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useRef,
   useState,
   type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-
-type Persona = {
-  title: string;
-  subtitle: string;
-  prompt: string;
-};
-
-type MessageBlock =
-  | { type: "text"; text: string }
-  | { type: "list"; ordered?: boolean; items: string[] }
-  | { type: "table"; columns: string[]; rows: string[][] }
-  | { type: "draft"; text: string }
-  | { type: "actions"; items: string[] };
-
-type ChatMessage = {
-  role: "user" | "apollo";
-  blocks: MessageBlock[];
-};
-
-const PERSONAS: Persona[] = [
-  {
-    title: "Leasing Agent",
-    subtitle: "Turn every tour into a lease, not a to-do list.",
-    prompt:
-      "I was in tours all day — who haven't I marked shown or written notes for?",
-  },
-  {
-    title: "Maintenance Tech",
-    subtitle: "Hands on the repair, Apollo handles the rest.",
-    prompt:
-      "Unit 204 is having an issue with the disposal. What should I look at first?",
-  },
-  {
-    title: "Community Manager",
-    subtitle: "More face time with residents, less time chasing follow-ups.",
-    prompt:
-      "List all of my upcoming move-ins this month and draft a mass welcome text message with a move-in checklist reminder for all of them.",
-  },
-  {
-    title: "Regionals & Executives",
-    subtitle: "The end of dashboards, the start of strategy.",
-    prompt:
-      "Break down move-outs into controllable vs. uncontrollable reasons across the portfolio. Take conversation history into account in your analysis.",
-  },
-];
-
-const EXCHANGES: ChatMessage[][] = [
-  [
-    {
-      role: "user",
-      blocks: [
-        {
-          type: "text",
-          text: "I was in tours all day — who haven't I marked shown or written notes for?",
-        },
-      ],
-    },
-    {
-      role: "apollo",
-      blocks: [
-        {
-          type: "text",
-          text: "One tour needs marking: Annabel Donovan's self-guided tour on July 1. Mark as shown?",
-        },
-      ],
-    },
-    { role: "user", blocks: [{ type: "text", text: "Yes." }] },
-    {
-      role: "apollo",
-      blocks: [
-        {
-          type: "text",
-          text: "Done. Annabel's still in Inquiry status, AI assistant active.",
-        },
-      ],
-    },
-    {
-      role: "user",
-      blocks: [
-        { type: "text", text: "What else should I do for her follow-up?" },
-      ],
-    },
-    {
-      role: "apollo",
-      blocks: [
-        {
-          type: "text",
-          text: "The post-tour cadence is already running automatically (follow-ups at 2 hrs, 2 days, 4 days, 12 days). Beyond that, I'd send a personal note, send a quote for the studio she toured, and assign a leasing agent — no one's on her account yet. I went ahead and drafted the personal note:",
-        },
-        {
-          type: "draft",
-          text: "Hi Annabel, thanks for touring the studio on July 1! Let me know if you have questions on pricing or the application — happy to send a quote whenever you're ready.",
-        },
-        { type: "actions", items: ["Send", "Edit"] },
-      ],
-    },
-    { role: "user", blocks: [{ type: "text", text: "Send it." }] },
-    { role: "apollo", blocks: [{ type: "text", text: "Sent." }] },
-  ],
-  [
-    {
-      role: "user",
-      blocks: [
-        {
-          type: "text",
-          text: "Unit 204 is having an issue with the disposal. What should I look at first?",
-        },
-      ],
-    },
-    {
-      role: "apollo",
-      blocks: [
-        {
-          type: "text",
-          text: "Check the disposal before snaking — this unit has a repeat pattern of jams and slow drains.",
-        },
-        {
-          type: "list",
-          ordered: true,
-          items: [
-            "Clear the disposal (steel wool jammed it last time).",
-            "If clear, snake the branch line — recurring slow drains suggest buildup past the trap.",
-            "Pull the P-trap and check under the cabinet — past jobs found a clog and leak together.",
-          ],
-        },
-        {
-          type: "text",
-          text: "Four prior plumbing orders on this unit (kitchen + bath), including a recurring under-cabinet leak alongside drainage issues:",
-        },
-        {
-          type: "list",
-          items: [
-            "Kitchen sink leak + inoperative disposal — repaired",
-            "Bath/kitchen under-cabinet leaks — fixed",
-            "Tub/shower not draining — cleared",
-          ],
-        },
-      ],
-    },
-  ],
-  [
-    {
-      role: "user",
-      blocks: [
-        {
-          type: "text",
-          text: "List all of my upcoming move-ins this month and draft a mass welcome text message with a move-in checklist reminder for all of them.",
-        },
-      ],
-    },
-    {
-      role: "apollo",
-      blocks: [
-        { type: "text", text: "You've got two upcoming June move-ins:" },
-        {
-          type: "table",
-          columns: ["Resident", "Community", "Unit", "Move-in", "SMS status"],
-          rows: [
-            [
-              "Jane Stewart",
-              "Balance Bay",
-              "12",
-              "June 18",
-              "INVALID — can't text",
-            ],
-            ["Maya Martin", "Chicagoland", "34", "June 30", "Opted in"],
-          ],
-        },
-        {
-          type: "text",
-          text: "Heads-up: Jane's number is invalid for SMS, so only Maya would actually receive a text — you may want to reach her by email instead.\nHere's a draft welcome message for both:",
-        },
-        {
-          type: "draft",
-          text: "Hi [first name], welcome to [community name]! We're so excited to have you joining us. Your move-in is coming up soon, and you can get a head start by completing your move-in checklist right in your resident portal. It walks you through everything you need before move-in day. Reach out anytime if you have questions. We can't wait to welcome you home!",
-        },
-        {
-          type: "text",
-          text: "Want me to send this? Texting Maya and handling Jane over email?",
-        },
-      ],
-    },
-    { role: "user", blocks: [{ type: "text", text: "Yes, let’s do that!" }] },
-  ],
-  [
-    {
-      role: "user",
-      blocks: [
-        {
-          type: "text",
-          text: "Break down move-outs into controllable vs. uncontrollable reasons across the portfolio. Take conversation history into account in your analysis.",
-        },
-      ],
-    },
-    {
-      role: "apollo",
-      blocks: [
-        {
-          type: "text",
-          text: "58% of the last 12 months’ churn value is controllable: $842.6K across 51 move-outs, vs. $512.3K uncontrollable. Full breakdown on the Portfolio Churn dashboard.\nControllable dollars by driver (leases can cite more than one, so rows overlap):",
-        },
-        {
-          type: "table",
-          columns: ["Driver", "Move-outs", "Annualized rent"],
-          rows: [
-            ["Rent increase / better value elsewhere", "23", "$391,500"],
-            ["Community issues (noise, safety)", "21", "$358,940"],
-            ["Service & staff complaints", "19", "$311,220"],
-            ["Maintenance issues", "17", "$284,600"],
-          ],
-        },
-      ],
-    },
-  ],
-];
-
-const MIN_INTERVAL_MS = 8000;
-const STEP_MS = 1100;
-const HOLD_AFTER_MS = 5000;
-const REVEAL_OFFSET_MS = 220;
-const SEND_AFTER_TYPE_MS = 280;
-const REPLY_BEAT_MS = 350;
-const PLANNING_MS = 600;
-const THINKING_MS = 1000;
-const TYPE_INTERVAL_MS = 24;
-
-const WORKING_ACTIONS = [
-  { type: "conversation", label: "Loading Conversations" },
-  { type: "data", label: "Analyzing lease data" },
-  { type: "action", label: "Sending follow-up email" },
-] as const;
-
-const NAV = [
-  { src: "/apollo-ui/search.svg", label: "Search", size: "size-3.5" },
-  { src: "/apollo-ui/atlas.svg", label: "Apollo", size: "size-3.5", active: true },
-  { src: "/apollo-ui/smart-home.svg", label: "Home", size: "size-3.5" },
-  { src: "/apollo-ui/square-check.svg", label: "Tasks", size: "size-3.5" },
-  { src: "/apollo-ui/user-square.svg", label: "Contacts", size: "size-3.5" },
-  { src: "/apollo-ui/signature.svg", label: "Leases", size: "size-3.5" },
-  { src: "/apollo-ui/calendar.svg", label: "Calendar", size: "size-3.5" },
-  { src: "/apollo-ui/chart-bar.svg", label: "Reports", size: "size-3.5" },
-  { src: "/apollo-ui/building.svg", label: "Communities", size: "size-3.5" },
-  { src: "/apollo-ui/brain.svg", label: "Knowledge", size: "size-3.5" },
-  { src: "/apollo-ui/user-cog.svg", label: "Users", size: "size-3.5" },
-  { src: "/apollo-ui/hammer.svg", label: "Maintenance", size: "size-3.5" },
-  { src: "/apollo-ui/refresh.svg", label: "Sync", size: "size-3.5" },
-  { src: "/apollo-ui/phone.svg", label: "Phone", size: "size-3.5" },
-  { src: "/apollo-ui/ladder.svg", label: "Onboarding", size: "size-3.5" },
-  { src: "/apollo-ui/mood-smile.svg", label: "Sentiment", size: "size-3.5" },
-  { src: "/apollo-ui/file-search.svg", label: "File search", size: "size-3.5" },
-  { src: "/apollo-ui/bell.svg", label: "Notifications", size: "size-3.5" },
-] as const;
-
-const DESKTOP_STAGE =
-  "https://cdn.prod.website-files.com/63cc1eef179b054a9306598d/6a95a49759ad77ed32691f7a_Desktop_ApolloDoes_Visual-1.avif";
-const MOBILE_STAGE =
-  "https://cdn.prod.website-files.com/63cc1eef179b054a9306598d/6a95a4994a6e8b9999049b16_Desktop_ApolloDoes_Visual.avif";
-
-function typingDurationMs(text: string) {
-  const step = text.length > 90 ? 2 : 1;
-  return Math.ceil(Math.max(text.length, 1) / step) * TYPE_INTERVAL_MS;
-}
-
-function userMessageText(message: ChatMessage) {
-  return message.blocks
-    .filter(
-      (block): block is Extract<MessageBlock, { type: "text" }> =>
-        block.type === "text",
-    )
-    .map((block) => block.text)
-    .join("\n");
-}
+import {
+  HOLD_AFTER_MS,
+  MIN_INTERVAL_MS,
+  PLANNING_MS,
+  REPLY_BEAT_MS,
+  REVEAL_OFFSET_MS,
+  SEND_AFTER_TYPE_MS,
+  STEP_MS,
+  THINKING_MS,
+  TYPE_INTERVAL_MS,
+  typingDurationMs,
+} from "../apollo/timing";
+import { ApolloBlocks } from "../apollo/ApolloBlocks";
+import { NAV, DESKTOP_STAGE, MOBILE_STAGE } from "../apollo/chrome";
+import { EXCHANGES, PERSONAS, userMessageText } from "../apollo/conversations";
+import { ThinkingStatus } from "../apollo/ThinkingStatus";
+import type { ChatMessage } from "../apollo/types";
+import { UiIcon } from "../apollo/UiIcon";
 
 function thinksBeforeReply(messages: ChatMessage[], index: number) {
   return messages[index]?.role === "apollo";
@@ -299,205 +47,6 @@ function slideDurationMs(messages: ChatMessage[]) {
     duration += REPLY_BEAT_MS + STEP_MS;
   });
   return Math.max(MIN_INTERVAL_MS, duration + HOLD_AFTER_MS);
-}
-
-function UiIcon({ src, className }: { src: string; className: string }) {
-  return (
-    <img
-      src={src}
-      alt=""
-      draggable={false}
-      className={`block aspect-square max-w-none shrink-0 object-contain ${className}`}
-    />
-  );
-}
-
-function ActionGlyph({
-  type,
-}: {
-  type: (typeof WORKING_ACTIONS)[number]["type"];
-}) {
-  const common = {
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.2,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-  if (type === "conversation") {
-    return (
-      <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
-        <path d="M3.2 2.4h6.4L12 4.8v7.6a1 1 0 0 1-1 1H3.2a1 1 0 0 1-1-1V3.4a1 1 0 0 1 1-1Z" {...common} />
-        <path d="M4.4 7.2h5.2M4.4 9.6h3.2" {...common} />
-      </svg>
-    );
-  }
-  if (type === "data") {
-    return (
-      <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
-        <rect x="1.6" y="2.2" width="12.8" height="9.2" rx="1.2" {...common} />
-        <path d="M3.2 5.2 1.8 6.4 3.2 7.6M5.6 8.2 7.8 4.4" {...common} />
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
-      <path d="M2.4 5.4 8 2.6l5.6 2.8L8 8.2 2.4 5.4Z" {...common} />
-      <path d="M2.4 5.4V10.6L8 13.4l5.6-2.8V5.4" {...common} />
-    </svg>
-  );
-}
-
-function ApolloBlocks({ blocks }: { blocks: MessageBlock[] }) {
-  return (
-    <div className="flex max-w-full flex-col gap-2.5">
-      {blocks.map((block, index) => {
-        if (block.type === "text") {
-          return (
-            <div className="flex flex-col gap-2.5" key={index}>
-              {block.text
-                .split("\n")
-                .filter(Boolean)
-                .map((line, lineIndex) => (
-                  <p
-                    className="m-0 text-sm leading-product tracking-product text-product"
-                    key={`${index}-${lineIndex}`}
-                  >
-                    {line}
-                  </p>
-                ))}
-            </div>
-          );
-        }
-        if (block.type === "list") {
-          const ListTag = block.ordered ? "ol" : "ul";
-          return (
-            <ListTag
-              className={`m-0 flex list-outside flex-col gap-1.5 text-sm leading-product tracking-product text-product ${
-                block.ordered ? "list-decimal pl-5" : "list-disc pl-list"
-              }`}
-              key={index}
-            >
-              {block.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ListTag>
-          );
-        }
-        if (block.type === "table") {
-          return (
-            <div
-              className="w-full overflow-x-auto rounded-lg border border-product-line"
-              key={index}
-            >
-              <table className="w-full min-w-full border-collapse text-xs leading-product-table tracking-product">
-                <thead>
-                  <tr>
-                    {block.columns.map((column) => (
-                      <th
-                        className="bg-product-soft px-2 py-1.75 text-left align-top font-medium whitespace-nowrap text-product-label first:whitespace-normal max-panel:whitespace-normal"
-                        key={column}
-                      >
-                        {column}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {block.rows.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {row.map((cell, cellIndex) => (
-                        <td
-                          className={`border-t border-product-line px-2 py-1.75 text-left align-top whitespace-nowrap text-product first:whitespace-normal max-panel:whitespace-normal ${
-                            cell.startsWith("INVALID")
-                              ? "font-medium text-product-alert"
-                              : ""
-                          }`}
-                          key={`${rowIndex}-${cellIndex}`}
-                        >
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          );
-        }
-        if (block.type === "draft") {
-          return (
-            <p
-              className="m-0 rounded-r-lg border-l-2 border-product-accent bg-product-soft px-3.5 py-3 text-sm leading-product tracking-product whitespace-pre-wrap text-product"
-              key={index}
-            >
-              {block.text}
-            </p>
-          );
-        }
-        return (
-          <div className="flex flex-wrap gap-2" key={index}>
-            {block.items.map((item) => (
-              <span
-                className="rounded-full border border-product-line bg-white px-3 py-1.5 text-product-chip leading-product-title tracking-product text-product"
-                key={item}
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function ThinkingStatus({ elapsedSeconds }: { elapsedSeconds: number }) {
-  return (
-    <div className="flex w-full flex-col motion-safe:animate-message-enter">
-      <div className="flex min-h-8 w-full items-center gap-1.75 px-1.25 py-1.25 text-sm leading-product tracking-product text-product-muted">
-        <span
-          className="grid size-5.25 place-items-center text-product-accent motion-safe:animate-working-pulse"
-          aria-hidden
-        >
-          <svg viewBox="0 0 21 21" width="21" height="21" aria-hidden>
-            <path
-              d="M10.5 1.8 11.9 8.1 18.2 10.5 11.9 12.9 10.5 19.2 9.1 12.9 2.8 10.5 9.1 8.1 10.5 1.8Z"
-              fill="currentColor"
-            />
-          </svg>
-        </span>
-        <span>Working</span>
-        <span
-          className="size-0.5 shrink-0 rounded-full bg-product-muted"
-          aria-hidden
-        />
-        <span>{elapsedSeconds.toFixed(1)}s</span>
-      </div>
-      <div className="flex w-full gap-1.75 px-1.25">
-        <span
-          className="mx-2 w-px shrink-0 self-stretch bg-product-line"
-          aria-hidden
-        />
-        <div className="flex min-w-0 flex-1 flex-col gap-1.75 py-3.5 text-sm leading-product tracking-product text-product-muted">
-          <p className="m-0 w-full">
-            Let me load the matching skills to continue.
-          </p>
-          {WORKING_ACTIONS.map((action) => (
-            <div
-              className="flex w-full items-center gap-1.75"
-              key={action.type}
-            >
-              <span className="grid size-5.25 shrink-0 place-items-center overflow-hidden rounded-product-mark border border-product-line bg-product-soft text-product-label">
-                <ActionGlyph type={action.type} />
-              </span>
-              <span>{action.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function ConversationPreview({
@@ -672,7 +221,12 @@ function ConversationPreview({
   );
 }
 
-export function ApolloUI() {
+/**
+ * `autoplay` lets a host pause the carousel without reaching inside it — used
+ * by the case study so a live walkthrough can hold on one persona. Hover and
+ * off-screen pausing still apply on top of it.
+ */
+export function ApolloUI({ autoplay = true }: { autoplay?: boolean } = {}) {
   const rootRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [inView, setInView] = useState(false);
@@ -681,11 +235,17 @@ export function ApolloUI() {
   const [composerText, setComposerText] = useState("");
   const [narrow, setNarrow] = useState(false);
   const slides = PERSONAS;
-  const paused = !inView || hovered || reduceMotion || slides.length < 2;
+  const paused =
+    !autoplay || !inView || hovered || reduceMotion || slides.length < 2;
   const current = slides[activeIndex] ?? slides[0];
   const currentMessages = EXCHANGES[activeIndex] ?? EXCHANGES[0];
   const currentDurationMs = slideDurationMs(currentMessages);
   const tabGap = 12;
+
+  const baseId = useId();
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const tabId = (index: number) => `${baseId}-tab-${index}`;
+  const panelId = (index: number) => `${baseId}-panel-${index}`;
 
   const goTo = useCallback(
     (index: number) => {
@@ -697,6 +257,47 @@ export function ApolloUI() {
   const advance = useCallback(() => {
     goTo(activeIndex + 1);
   }, [activeIndex, goTo]);
+
+  /**
+   * Roving focus for the tablist. Selection follows focus, which is the
+   * expected behavior for tabs whose panels are cheap to render.
+   */
+  const focusTab = useCallback(
+    (index: number) => {
+      const next = (index + slides.length) % slides.length;
+      goTo(next);
+      tabRefs.current[next]?.focus();
+    },
+    [goTo, slides.length],
+  );
+
+  const onTabKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          event.preventDefault();
+          focusTab(activeIndex + 1);
+          break;
+        case "ArrowLeft":
+        case "ArrowUp":
+          event.preventDefault();
+          focusTab(activeIndex - 1);
+          break;
+        case "Home":
+          event.preventDefault();
+          focusTab(0);
+          break;
+        case "End":
+          event.preventDefault();
+          focusTab(slides.length - 1);
+          break;
+        default:
+          break;
+      }
+    },
+    [activeIndex, focusTab, slides.length],
+  );
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 720px)");
@@ -751,11 +352,25 @@ export function ApolloUI() {
       <div
         className="relative h-[min(520px,70vh)] overflow-hidden rounded-product bg-white bg-cover bg-center inset-shadow-stage max-panel:order-[calc(var(--active)*2+2)] max-panel:my-4 panel:h-150 panel:rounded-xl"
         style={{
+          /* Brand tint sits under the remote backdrop, so a blocked CDN or a
+             bad network degrades to an intentional surface rather than a hole.
+             The demo itself — chrome, icons, conversation — is entirely local. */
+          backgroundColor: "#ebe8f2",
           backgroundImage: `url("${narrow ? MOBILE_STAGE : DESKTOP_STAGE}")`,
         }}
-        aria-hidden
+        role="tabpanel"
+        id={panelId(activeIndex)}
+        aria-labelledby={tabId(activeIndex)}
+        tabIndex={0}
       >
-        <div className="absolute inset-x-0 top-0 -bottom-6 overflow-hidden bg-black/2 panel:inset-x-auto panel:top-10 panel:-bottom-8 panel:left-1/2 panel:w-[calc(100%-48px)] panel:-translate-x-1/2 panel:rounded-2xl panel:bg-black/2 panel:p-1">
+        <p className="sr-only">
+          {current.title}: {current.subtitle} Illustrative demo of the Apollo
+          conversation surface, playing the prompt “{current.prompt}” with
+          scripted responses.
+        </p>
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 -bottom-6 overflow-hidden bg-black/2 panel:inset-x-auto panel:top-10 panel:-bottom-8 panel:left-1/2 panel:w-[calc(100%-48px)] panel:-translate-x-1/2 panel:rounded-2xl panel:bg-black/2 panel:p-1">
           <div className="flex h-full w-full overflow-hidden rounded-product bg-product-bg shadow-product panel:rounded-xl">
             <div className="flex h-full w-10 shrink-0 flex-col overflow-hidden bg-product text-white">
               <div className="grid h-10.75 shrink-0 place-items-center">
@@ -844,6 +459,8 @@ export function ApolloUI() {
         className="relative flex w-full gap-3 max-panel:contents"
         role="tablist"
         aria-label="Choose a role"
+        aria-orientation="horizontal"
+        onKeyDown={onTabKeyDown}
       >
         <span
           className="pointer-events-none absolute top-0 left-0 z-10 h-px bg-ink transition-transform duration-560 ease-product motion-reduce:transition-none max-panel:hidden"
@@ -860,9 +477,15 @@ export function ApolloUI() {
                 selected ? "max-panel:pb-0" : ""
               }`}
               key={slide.title}
+              ref={(node) => {
+                tabRefs.current[index] = node;
+              }}
               type="button"
               role="tab"
+              id={tabId(index)}
               aria-selected={selected}
+              aria-controls={panelId(index)}
+              tabIndex={selected ? 0 : -1}
               onClick={() => goTo(index)}
               style={{ "--tab-index": index } as CSSProperties}
             >
