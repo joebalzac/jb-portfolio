@@ -79,7 +79,7 @@ export function Nav() {
   return (
     <header ref={headerRef} className="sticky top-0 z-50">
       <div className="border-b border-line bg-bg/80 backdrop-blur">
-        <div className="mx-auto flex max-w-4xl items-center justify-end px-8 py-5">
+        <div className="shell flex items-center justify-end px-8 py-5">
           <nav className="hidden items-center gap-6 text-sm text-ink/70 md:flex">
             {nav.map((item) => (
               <a
@@ -132,7 +132,7 @@ export function Nav() {
             aria-label="Sections"
             className="border-b border-line bg-bg"
           >
-            <div className="mx-auto flex max-w-4xl flex-col px-8 pt-1 pb-4 text-sm text-ink/70">
+            <div className="shell flex flex-col px-8 pt-1 pb-4 text-sm text-ink/70">
               {nav.map((item) => (
                 <a
                   key={item.label}

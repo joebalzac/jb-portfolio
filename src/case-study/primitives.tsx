@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useReducedMotion } from '../lib/useReducedMotion';
 
 /** One measure for the whole case study. */
-export const SHELL = 'mx-auto w-full max-w-[1120px]';
+export const SHELL = 'shell';
 
 /** Numbered section with an editorial rule. Scroll target for presentation mode. */
 export function CaseSection({

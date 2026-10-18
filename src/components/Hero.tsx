@@ -3,7 +3,7 @@ import { profile } from '../data/site';
 export function Hero() {
   return (
     <section className="px-8 py-32 pb-8">
-      <div className="mx-auto max-w-4xl">
+      <div className="shell">
         <h1 className="text-5xl font-bold tracking-tight text-ink sm:text-6xl md:text-7xl">
           {profile.name.toLowerCase()}
           <span className="text-accent">.</span>

@@ -1,11 +1,9 @@
 import { links } from '../data/site';
 
-export function Footer({ shellClass = 'max-w-4xl' }: { shellClass?: string } = {}) {
+export function Footer() {
   return (
     <footer className="border-t border-line px-8 py-10">
-      <div
-        className={`mx-auto flex w-full flex-wrap items-center justify-between gap-4 ${shellClass}`}
-      >
+      <div className="shell flex flex-wrap items-center justify-between gap-4">
         <nav className="flex flex-wrap gap-x-5 gap-y-2">
           {links.map((link) => (
             <a

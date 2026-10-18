@@ -39,7 +39,7 @@ export function Work({ onNavigate }: { onNavigate?: (to: string) => void }) {
   };
 
   return (
-    <Section id="work" title="work" wide={selected?.demo === 'apollo'}>
+    <Section id="work" title="work">
       {selected ? (
         <WorkDetail item={selected} onClose={() => select(null)} />
       ) : work.length === 0 ? (

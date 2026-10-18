@@ -20,7 +20,7 @@ function CaseNav({ onNavigate }: { onNavigate: (to: string) => void }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg/80 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-[1120px] items-center justify-between gap-4 px-6 py-4 sm:px-8">
+      <div className="shell flex items-center justify-between gap-4 px-6 py-4 sm:px-8">
         <a
           href="/"
           onClick={(event) => {
@@ -91,7 +91,7 @@ function CaseStudyBody({ onNavigate }: { onNavigate: (to: string) => void }) {
         <Engineering />
       </main>
 
-      {active ? null : <Footer shellClass="max-w-[1120px]" />}
+      {active ? null : <Footer />}
       <PresentationBar />
     </div>
   );

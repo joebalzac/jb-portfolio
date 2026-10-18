@@ -98,7 +98,7 @@ export function PresentationBar() {
         aria-label="Presentation controls"
         className="fixed inset-x-0 bottom-0 z-60 border-t border-line bg-bg/90 backdrop-blur"
       >
-        <div className="mx-auto flex w-full max-w-[1120px] items-center gap-3 px-4 py-3 sm:px-6">
+        <div className="shell flex items-center gap-3 px-4 py-3 sm:px-6">
           <span className="hidden shrink-0 items-center gap-2 font-mono text-[11px] text-faint sm:flex">
             <span
               aria-hidden
