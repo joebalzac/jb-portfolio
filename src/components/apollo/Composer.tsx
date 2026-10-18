@@ -70,7 +70,10 @@ export function Composer({
 
   return (
     <div
-      className={`flex w-full flex-col gap-3 rounded-xl border bg-white px-4 pt-3.5 pb-3 transition-shadow duration-200 ${
+      /* min-height + justify-between gives the product's resting shape: the
+         prompt sits at the top, the controls stay pinned to the bottom, and
+         the box only grows once the text actually needs the room. */
+      className={`flex min-h-[116px] w-full flex-col justify-between gap-3 rounded-xl border bg-white px-4 pt-3.5 pb-3 transition-shadow duration-200 ${
         busy
           ? 'border-app-line'
           : 'border-app-line focus-within:border-app-purple-5/50 focus-within:shadow-[0_0_0_3px_rgba(121,80,242,0.08)]'
