@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useInView } from '../lib/useInView';
 import { useReducedMotion } from '../lib/useReducedMotion';
+import { ThinkingStatus } from '../components/apollo/ThinkingStatus';
 import { useDemoReset } from './presentationContext';
 
 /**
@@ -35,8 +36,6 @@ const PHASES = [
 ] as const;
 
 type PhaseId = (typeof PHASES)[number]['id'];
-
-const SKILLS = ['Loading conversations', 'Analyzing lease data'];
 
 const HOLD_MS: Record<PhaseId, number> = {
   idle: 900,
@@ -131,40 +130,7 @@ export function PhaseStepper() {
           ) : null}
 
           {phase === 'working' ? (
-            <div className="flex w-full flex-col">
-              <div className="flex min-h-8 items-center gap-1.75 px-1 text-[13px] leading-product tracking-product text-product-muted">
-                <span
-                  aria-hidden
-                  className={`grid size-5 place-items-center text-product-accent ${
-                    reduced ? '' : 'animate-working-pulse'
-                  }`}
-                >
-                  <svg viewBox="0 0 21 21" width="18" height="18" aria-hidden>
-                    <path
-                      d="M10.5 1.8 11.9 8.1 18.2 10.5 11.9 12.9 10.5 19.2 9.1 12.9 2.8 10.5 9.1 8.1 10.5 1.8Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </span>
-                <span>Working</span>
-                <span
-                  aria-hidden
-                  className="size-0.5 shrink-0 rounded-full bg-product-muted"
-                />
-                <span className="tabular-nums">{elapsed.toFixed(1)}s</span>
-              </div>
-              <div className="flex gap-1.75 px-1">
-                <span
-                  aria-hidden
-                  className="mx-2 w-px shrink-0 self-stretch bg-product-line"
-                />
-                <div className="flex flex-col gap-1.75 py-3 text-[13px] leading-product tracking-product text-product-muted">
-                  {SKILLS.map((skill) => (
-                    <span key={skill}>{skill}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <ThinkingStatus elapsedSeconds={elapsed} />
           ) : null}
 
           {phase === 'answer' ? (

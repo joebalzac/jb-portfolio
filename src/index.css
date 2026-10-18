@@ -188,6 +188,36 @@
   background-size: 180% 180%;
 }
 
+/* Glyph motion: strokes draw themselves, so an icon demonstrates its own
+   construction rather than just sitting there at a larger size. */
+@keyframes glyph-draw {
+  0% {
+    stroke-dashoffset: 64;
+    opacity: 0.3;
+  }
+  45%,
+  80% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.3;
+  }
+}
+
+.glyph-draw :is(path, rect, circle, line) {
+  stroke-dasharray: 64;
+  animation: glyph-draw 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph-draw :is(path, rect, circle, line) {
+    stroke-dasharray: none;
+    animation: none;
+  }
+}
+
 html {
   background-color: var(--color-bg);
   color-scheme: light;

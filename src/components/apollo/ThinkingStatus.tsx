@@ -9,10 +9,14 @@ const WORKING_ACTIONS = [
   { type: "action", label: "Sending follow-up email" },
 ] as const;
 
-function ActionGlyph({
+export type ActionGlyphType = "conversation" | "data" | "action";
+
+export function ActionGlyph({
   type,
+  size = 10.5,
 }: {
-  type: (typeof WORKING_ACTIONS)[number]["type"];
+  type: ActionGlyphType;
+  size?: number;
 }) {
   const common = {
     fill: "none",
@@ -23,7 +27,7 @@ function ActionGlyph({
   };
   if (type === "conversation") {
     return (
-      <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
+      <svg viewBox="0 0 16 16" width={size} height={size} aria-hidden>
         <path d="M3.2 2.4h6.4L12 4.8v7.6a1 1 0 0 1-1 1H3.2a1 1 0 0 1-1-1V3.4a1 1 0 0 1 1-1Z" {...common} />
         <path d="M4.4 7.2h5.2M4.4 9.6h3.2" {...common} />
       </svg>
@@ -31,14 +35,14 @@ function ActionGlyph({
   }
   if (type === "data") {
     return (
-      <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
+      <svg viewBox="0 0 16 16" width={size} height={size} aria-hidden>
         <rect x="1.6" y="2.2" width="12.8" height="9.2" rx="1.2" {...common} />
         <path d="M3.2 5.2 1.8 6.4 3.2 7.6M5.6 8.2 7.8 4.4" {...common} />
       </svg>
     );
   }
   return (
-    <svg viewBox="0 0 16 16" width="10.5" height="10.5" aria-hidden>
+    <svg viewBox="0 0 16 16" width={size} height={size} aria-hidden>
       <path d="M2.4 5.4 8 2.6l5.6 2.8L8 8.2 2.4 5.4Z" {...common} />
       <path d="M2.4 5.4V10.6L8 13.4l5.6-2.8V5.4" {...common} />
     </svg>

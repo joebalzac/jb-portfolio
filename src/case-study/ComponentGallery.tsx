@@ -4,11 +4,14 @@ import { useReducedMotion } from '../lib/useReducedMotion';
 import { ApolloBlocks } from '../components/apollo/ApolloBlocks';
 import { Composer } from '../components/apollo/Composer';
 import { CopyButton } from '../components/apollo/CopyButton';
+import {
+  ActionGlyph,
+  type ActionGlyphType,
+} from '../components/apollo/ThinkingStatus';
 import { EXCHANGES } from '../components/apollo/conversations';
 import { Dropdown } from '../components/apollo/Dropdown';
 import { AGENT_MODES, SCOPES } from '../components/apollo/options';
 import type { MessageBlock } from '../components/apollo/types';
-import { ThinkingTrace } from '../components/craft/ThinkingTrace';
 import { ToolCallStack } from '../components/craft/ToolCallStack';
 import { PhaseStepper } from './PhaseStepper';
 import { useDemoReset } from './presentationContext';
@@ -314,20 +317,116 @@ function CopyTile({ inView }: { inView: boolean }) {
   );
 }
 
-/** Loops while visible; replay restarts it from the top on demand. */
-function TraceTile({ inView }: { inView: boolean }) {
-  const [run, setRun] = useState(0);
+/** The spark the product pulses while a reply is being worked on. */
+function SparkGlyph({ size = 26 }: { size?: number }) {
   return (
-    <>
-      <ThinkingTrace key={run} active={inView} />
-      <button
-        type="button"
-        onClick={() => setRun((r) => r + 1)}
-        className={`${CONTROL} mt-4 self-start`}
-      >
-        replay
-      </button>
-    </>
+    <svg viewBox="0 0 21 21" width={size} height={size} aria-hidden>
+      <path
+        d="M10.5 1.8 11.9 8.1 18.2 10.5 11.9 12.9 10.5 19.2 9.1 12.9 2.8 10.5 9.1 8.1 10.5 1.8Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+const GLYPHS = [
+  { id: 'spark', label: 'Working', caption: 'pulses while the agent is busy' },
+  { id: 'conversation', label: 'Loading conversations', caption: 'reading prior threads' },
+  { id: 'data', label: 'Analyzing lease data', caption: 'querying records' },
+  { id: 'action', label: 'Sending follow-up', caption: 'acting on your behalf' },
+] as const;
+
+/**
+ * The working glyphs, enlarged.
+ *
+ * In the product these sit at 10.5px inside the thinking panel, where the
+ * motion is barely perceptible. Blown up they show what the panel is actually
+ * doing: each stroke draws itself, and the row being worked on is the one
+ * carrying the running indicator.
+ */
+function GlyphTile({ inView }: { inView: boolean }) {
+  const reduced = useReducedMotion();
+  const [active, setActive] = useState(0);
+
+  useLoop(async (wait) => {
+    await wait(1600);
+    setActive((i) => (i + 1) % GLYPHS.length);
+  }, inView && !reduced);
+
+  return (
+    <ul className="flex flex-col gap-2">
+      {GLYPHS.map((glyph, index) => {
+        const isActive = index === active;
+        const done = index < active;
+        return (
+          <li
+            key={glyph.id}
+            className={`flex items-center gap-3.5 rounded-lg border px-3 py-2.5 transition-colors duration-300 ${
+              isActive
+                ? 'border-product-ring bg-white'
+                : 'border-transparent bg-transparent'
+            }`}
+          >
+            <span
+              className={`grid size-11 shrink-0 place-items-center rounded-lg border transition-colors duration-300 ${
+                isActive
+                  ? 'border-product-ring bg-product-soft text-product-accent'
+                  : 'border-product-line bg-product-soft text-product-label'
+              } ${!reduced && isActive && glyph.id !== 'spark' ? 'glyph-draw' : ''} ${
+                !reduced && isActive && glyph.id === 'spark'
+                  ? 'animate-working-pulse'
+                  : ''
+              }`}
+              style={{ animationDelay: `${index * 120}ms` }}
+            >
+              {glyph.id === 'spark' ? (
+                <SparkGlyph />
+              ) : (
+                <ActionGlyph type={glyph.id as ActionGlyphType} size={24} />
+              )}
+            </span>
+
+            <span className="min-w-0 flex-1">
+              <span
+                className={`block truncate text-[13px] transition-colors duration-300 ${
+                  isActive ? 'text-ink' : 'text-muted'
+                }`}
+              >
+                {glyph.label}
+              </span>
+              <span className="block truncate font-mono text-[11px] text-faint">
+                {glyph.caption}
+              </span>
+            </span>
+
+            <span className="flex w-10 shrink-0 justify-end">
+              {isActive ? (
+                <span className="flex gap-0.5" aria-hidden>
+                  {[0, 1, 2].map((dot) => (
+                    <span
+                      key={dot}
+                      className="size-1 rounded-full bg-accent motion-safe:animate-working-pulse"
+                      style={{ animationDelay: `${dot * 160}ms` }}
+                    />
+                  ))}
+                </span>
+              ) : done ? (
+                <svg viewBox="0 0 16 16" className="size-3.5 text-faint" aria-hidden>
+                  <path
+                    d="M3.2 8.4 6.2 11.4 12.8 4.8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : null}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -421,10 +520,10 @@ export function ComponentGallery() {
       </Tile>
 
       <Tile
-        label="Thinking trace"
-        note="Streams the reasoning, holds it, then collapses to a receipt."
+        label="Working glyphs"
+        note="The icons from the thinking panel at four times their shipped size, drawing themselves."
       >
-        {(inView) => <TraceTile key={resetToken} inView={inView} />}
+        {(inView) => <GlyphTile key={resetToken} inView={inView} />}
       </Tile>
 
       <Tile
