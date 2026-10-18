@@ -4,14 +4,14 @@ import { ApolloUI } from '../components/projects/ApolloUI';
 import { architecture, caseMeta, collaboration, contributions } from '../data/apollo';
 import { ComponentGallery } from './ComponentGallery';
 import { useDemoReset } from './presentationContext';
-import { CaseSection, CodeExcerpt, Eyebrow, Reveal } from './primitives';
+import { CaseSection, CodeExcerpt, Eyebrow, Reveal, SHELL } from './primitives';
 
 /* ------------------------------------------------------------------ hero */
 
 export function CaseHero() {
   return (
     <header className="px-6 pt-24 pb-6 sm:px-8 sm:pt-32">
-      <div className="mx-auto max-w-4xl">
+      <div className={SHELL}>
         <Reveal>
           <Eyebrow>{caseMeta.eyebrow}</Eyebrow>
         </Reveal>
@@ -164,17 +164,17 @@ export function ProductExperience() {
   const demoKey = `${resetToken}-${localReset}`;
 
   return (
-    <CaseSection id="experience" number="02" title="The product experience" wide>
+    <CaseSection id="experience" number="02" title="The product experience">
       <Reveal>
         <ApolloApp key={demoKey} />
       </Reveal>
 
       {/* Minimal disclosure, kept so nothing here reads as a live integration. */}
-      <p className="mx-auto mt-3 max-w-4xl text-xs text-faint">
+      <p className={`${SHELL} mt-3 text-xs text-faint`}>
         Illustrative demo — scripted fixtures, no live service or customer data.
       </p>
 
-      <div className="mx-auto mt-20 max-w-4xl">
+      <div className={`${SHELL} mt-20`}>
         <Reveal>
           <div className="flex flex-wrap items-center gap-2 border-t border-line pt-7">
             <span className="mr-auto font-mono text-[11px] tracking-wide text-faint uppercase">

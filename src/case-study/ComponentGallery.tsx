@@ -1,4 +1,6 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useInView } from '../lib/useInView';
+import { useReducedMotion } from '../lib/useReducedMotion';
 import { ApolloBlocks } from '../components/apollo/ApolloBlocks';
 import { Composer } from '../components/apollo/Composer';
 import { CopyButton } from '../components/apollo/CopyButton';
@@ -47,14 +49,24 @@ function Tile({
   label: string;
   note: string;
   action?: ReactNode;
-  children: ReactNode;
+  /** Receives whether the tile is on screen, so each demo can play itself. */
+  children: ReactNode | ((inView: boolean) => ReactNode);
   span?: boolean;
 }) {
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.15 });
+  /* The entrance latches: a tile that faded back out on the way past would
+     read as a glitch. `inView` stays live so the demos inside can pause. */
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => {
+    if (inView) setRevealed(true);
+  }, [inView]);
+
   return (
     <section
-      className={`flex flex-col rounded-xl border border-line bg-bg ${
-        span ? 'lg:col-span-2' : ''
-      }`}
+      ref={ref}
+      className={`flex flex-col rounded-xl border border-line bg-bg transition-[opacity,transform] duration-700 ease-product motion-reduce:transition-none ${
+        revealed ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
+      } ${span ? 'lg:col-span-2' : ''}`}
     >
       <header className="flex items-start justify-between gap-4 px-4 pt-4 pb-3.5">
         <div className="min-w-0">
@@ -64,28 +76,102 @@ function Tile({
         {action ? <div className="flex shrink-0 gap-1.5">{action}</div> : null}
       </header>
       <div className="flex flex-1 flex-col justify-center border-t border-line p-4">
-        {children}
+        {typeof children === 'function' ? children(inView) : children}
       </div>
     </section>
   );
 }
 
-function ComposerTile() {
+/**
+ * Chained-timeout driver shared by the self-playing tiles.
+ *
+ * Each demo describes its sequence with awaited waits; the hook runs it only
+ * while the tile is visible and motion is allowed, and tears the whole chain
+ * down on exit so scrolling away never leaves a half-finished frame.
+ */
+function useLoop(
+  run: (wait: (ms: number) => Promise<void>) => Promise<void>,
+  active: boolean,
+) {
+  const latest = useRef(run);
+  latest.current = run;
+
+  useEffect(() => {
+    if (!active) return;
+    let cancelled = false;
+    const timers: number[] = [];
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        timers.push(window.setTimeout(resolve, ms));
+      });
+
+    void (async () => {
+      while (!cancelled) await latest.current(wait);
+    })();
+
+    return () => {
+      cancelled = true;
+      timers.forEach((id) => window.clearTimeout(id));
+    };
+  }, [active]);
+}
+
+/** Flattens any block to the plain text the clipboard should receive. */
+function blockText(block: MessageBlock) {
+  if (block.type === 'text' || block.type === 'draft') return block.text;
+  if (block.type === 'list') return block.items.map((i) => `• ${i}`).join('\n');
+  if (block.type === 'actions') return block.items.join(' / ');
+  return [block.columns.join('\t'), ...block.rows.map((r) => r.join('\t'))].join('\n');
+}
+
+const DEMO_PROMPTS = [
+  'Who haven’t I marked shown from today’s tours?',
+  'Draft a welcome text for this month’s move-ins.',
+];
+
+function ComposerTile({ inView }: { inView: boolean }) {
+  const reduced = useReducedMotion();
   const [value, setValue] = useState('');
   const [scope, setScope] = useState('cross-org');
   const [mode, setMode] = useState('full');
   const [sent, setSent] = useState<string[]>([]);
+  /* The demo types for you until you take the field, then never again. */
+  const [taken, setTaken] = useState(false);
+  const turn = useRef(0);
+
+  const submit = (text: string) => {
+    if (!text.trim()) return;
+    setSent((current) => [text.trim(), ...current].slice(0, 2));
+    setValue('');
+  };
+
+  useLoop(async (wait) => {
+    const prompt = DEMO_PROMPTS[turn.current % DEMO_PROMPTS.length];
+    turn.current += 1;
+    setValue('');
+    await wait(500);
+    for (let i = 1; i <= prompt.length; i++) {
+      setValue(prompt.slice(0, i));
+      await wait(26);
+    }
+    await wait(650);
+    submit(prompt);
+    await wait(1900);
+  }, inView && !taken && !reduced);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div
+      className="flex flex-col gap-3"
+      onPointerDownCapture={() => setTaken(true)}
+      onKeyDownCapture={() => setTaken(true)}
+    >
       <Composer
         value={value}
-        onChange={setValue}
-        onSubmit={() => {
-          if (!value.trim()) return;
-          setSent((current) => [value.trim(), ...current].slice(0, 2));
-          setValue('');
+        onChange={(next) => {
+          setTaken(true);
+          setValue(next);
         }}
+        onSubmit={() => submit(value)}
         scope={scope}
         onScopeChange={setScope}
         mode={mode}
@@ -112,9 +198,16 @@ function ComposerTile() {
   );
 }
 
-function BlocksTile() {
+function BlocksTile({ inView }: { inView: boolean }) {
+  const reduced = useReducedMotion();
   const [index, setIndex] = useState(0);
+  const [taken, setTaken] = useState(false);
   const active = BLOCK_SAMPLES[index];
+
+  useLoop(async (wait) => {
+    await wait(2300);
+    setIndex((i) => (i + 1) % BLOCK_SAMPLES.length);
+  }, inView && !taken && !reduced);
 
   return (
     <div className="flex flex-col gap-3">
@@ -123,7 +216,10 @@ function BlocksTile() {
           <button
             key={sample.type}
             type="button"
-            onClick={() => setIndex(i)}
+            onClick={() => {
+              setTaken(true);
+              setIndex(i);
+            }}
             aria-pressed={i === index}
             className={`cursor-pointer rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors duration-200 ${
               i === index
@@ -136,20 +232,37 @@ function BlocksTile() {
         ))}
       </div>
       <div className="min-h-38 rounded-lg border border-app-line bg-white p-3.5">
-        <ApolloBlocks blocks={[active.block]} />
+        <div key={index} className="motion-safe:animate-message-enter">
+          <ApolloBlocks blocks={[active.block]} />
+        </div>
       </div>
     </div>
   );
 }
 
-function DropdownTile() {
-  const [scope, setScope] = useState('balance');
-  const [mode, setMode] = useState('assist');
+function DropdownTile({ inView }: { inView: boolean }) {
+  const reduced = useReducedMotion();
+  const [scope, setScope] = useState('cross-org');
+  const [mode, setMode] = useState('full');
+  const [taken, setTaken] = useState(false);
+  const turn = useRef(0);
   const scopeLabel = SCOPES.find((s) => s.value === scope)?.label;
   const modeLabel = AGENT_MODES.find((m) => m.value === mode)?.label;
 
+  /* Cycles the selection rather than opening the menu — an overlay that opens
+     by itself reads as a bug, where a value changing reads as a demo. */
+  useLoop(async (wait) => {
+    await wait(2100);
+    turn.current += 1;
+    if (turn.current % 2) {
+      setScope(SCOPES[turn.current % SCOPES.length].value);
+    } else {
+      setMode(AGENT_MODES[turn.current % AGENT_MODES.length].value);
+    }
+  }, inView && !taken && !reduced);
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" onPointerDownCapture={() => setTaken(true)}>
       <div className="flex flex-wrap items-center gap-2 rounded-xl border border-app-line bg-white px-3 py-2.5 text-[14px]">
         <Dropdown label="Scope" value={scope} options={SCOPES} onChange={setScope} />
         <span aria-hidden className="text-app-line">|</span>
@@ -161,85 +274,108 @@ function DropdownTile() {
         />
       </div>
       <p className="font-mono text-[11px] text-muted">
-        <span className="text-faint">context ›</span> {scopeLabel} · {modeLabel}
+        <span className="text-faint">context ›</span>{' '}
+        <span key={`${scope}-${mode}`} className="motion-safe:animate-chip-in">
+          {scopeLabel} · {modeLabel}
+        </span>
       </p>
     </div>
   );
 }
 
-function CopyTile() {
-  const draft = firstBlockOfType('draft');
+const COPY_SAMPLES = [
+  { type: 'draft' as const, label: 'a drafted message' },
+  { type: 'list' as const, label: 'a checklist' },
+  { type: 'table' as const, label: 'a table' },
+].map((entry) => ({ ...entry, block: firstBlockOfType(entry.type) }));
+
+function CopyTile({ inView }: { inView: boolean }) {
+  const reduced = useReducedMotion();
+  const [index, setIndex] = useState(0);
+  const sample = COPY_SAMPLES[index];
+
+  useLoop(async (wait) => {
+    await wait(3200);
+    setIndex((i) => (i + 1) % COPY_SAMPLES.length);
+  }, inView && !reduced);
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-lg border border-app-line bg-white p-3.5">
-        <ApolloBlocks blocks={[draft]} />
+      <div className="max-h-44 overflow-hidden rounded-lg border border-app-line bg-white p-3.5">
+        <div key={index} className="motion-safe:animate-message-enter">
+          <ApolloBlocks blocks={[sample.block]} />
+        </div>
       </div>
-      <CopyButton text={draft.text} label="Copy draft message" />
+      <div className="flex items-center justify-between gap-3">
+        <CopyButton text={blockText(sample.block)} label={`Copy ${sample.label}`} />
+        <span className="font-mono text-[10px] text-faint">{sample.label}</span>
+      </div>
     </div>
   );
 }
 
-/** Replay is the interaction: the loop runs once, on demand. */
-function TraceTile() {
+/** Loops while visible; replay restarts it from the top on demand. */
+function TraceTile({ inView }: { inView: boolean }) {
   const [run, setRun] = useState(0);
   return (
-    <Tile
-      label="Thinking trace"
-      note="Streams the reasoning, holds it, then collapses to a receipt."
-      action={
-        <button type="button" onClick={() => setRun((r) => r + 1)} className={CONTROL}>
-          replay
-        </button>
-      }
-    >
-      <ThinkingTrace key={run} />
-    </Tile>
+    <>
+      <ThinkingTrace key={run} active={inView} />
+      <button
+        type="button"
+        onClick={() => setRun((r) => r + 1)}
+        className={`${CONTROL} mt-4 self-start`}
+      >
+        replay
+      </button>
+    </>
   );
 }
 
-/** Hand the timeline to the reader so they can stop on a single state. */
-function ToolTile() {
-  const [auto, setAuto] = useState(false);
+/** Plays itself in view; the arrows hand the timeline to the reader. */
+function ToolTile({ inView }: { inView: boolean }) {
+  const reduced = useReducedMotion();
+  const [manual, setManual] = useState(false);
   const [step, setStep] = useState(0);
   const max = 2;
 
   return (
-    <Tile
-      label="Tool calls"
-      note="Pending, running and done as three visually distinct states."
-      action={
-        <>
-          <button
-            type="button"
-            onClick={() => setStep((s) => Math.max(-1, s - 1))}
-            disabled={auto || step <= -1}
-            aria-label="Previous step"
-            className={CONTROL}
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            onClick={() => setStep((s) => Math.min(max, s + 1))}
-            disabled={auto || step >= max}
-            aria-label="Next step"
-            className={CONTROL}
-          >
-            ›
-          </button>
-          <button
-            type="button"
-            onClick={() => setAuto((a) => !a)}
-            aria-pressed={auto}
-            className={CONTROL}
-          >
-            {auto ? 'manual' : 'auto'}
-          </button>
-        </>
-      }
-    >
-      <ToolCallStack autoplay={auto} step={step} />
-    </Tile>
+    <>
+      <ToolCallStack autoplay={!manual && inView && !reduced} step={step} />
+      <div className="mt-4 flex gap-1.5">
+        <button
+          type="button"
+          onClick={() => {
+            setManual(true);
+            setStep((s) => Math.max(-1, s - 1));
+          }}
+          disabled={manual && step <= -1}
+          aria-label="Previous step"
+          className={CONTROL}
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setManual(true);
+            setStep((s) => Math.min(max, s + 1));
+          }}
+          disabled={manual && step >= max}
+          aria-label="Next step"
+          className={CONTROL}
+        >
+          ›
+        </button>
+        <button
+          type="button"
+          onClick={() => setManual((m) => !m)}
+          aria-pressed={manual}
+          className={CONTROL}
+        >
+          {manual ? 'play' : 'step'}
+        </button>
+      </div>
+    </>
   );
 }
 
@@ -253,7 +389,7 @@ export function ComponentGallery() {
         note="Auto-grows to a cap, then scrolls. Enter sends, Shift+Enter newlines, Escape clears."
         span
       >
-        <ComposerTile key={resetToken} />
+        {(inView) => <ComposerTile key={resetToken} inView={inView} />}
       </Tile>
 
       <Tile
@@ -267,25 +403,36 @@ export function ComponentGallery() {
         label="Response blocks"
         note="One typed union, one exhaustive renderer, five answer shapes."
       >
-        <BlocksTile key={resetToken} />
+        {(inView) => <BlocksTile key={resetToken} inView={inView} />}
       </Tile>
 
       <Tile
         label="Context dropdowns"
         note="ARIA listbox — arrow keys move, Escape returns focus to the trigger."
       >
-        <DropdownTile key={resetToken} />
+        {(inView) => <DropdownTile key={resetToken} inView={inView} />}
       </Tile>
 
       <Tile
         label="Copy to clipboard"
         note="Async clipboard with a selection fallback, and the result announced."
       >
-        <CopyTile key={resetToken} />
+        {(inView) => <CopyTile key={resetToken} inView={inView} />}
       </Tile>
 
-      <TraceTile key={`trace-${resetToken}`} />
-      <ToolTile key={`tool-${resetToken}`} />
+      <Tile
+        label="Thinking trace"
+        note="Streams the reasoning, holds it, then collapses to a receipt."
+      >
+        {(inView) => <TraceTile key={resetToken} inView={inView} />}
+      </Tile>
+
+      <Tile
+        label="Tool calls"
+        note="Pending, running and done as three visually distinct states."
+      >
+        {(inView) => <ToolTile key={resetToken} inView={inView} />}
+      </Tile>
     </div>
   );
 }

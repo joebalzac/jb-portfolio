@@ -1,19 +1,20 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useReducedMotion } from '../lib/useReducedMotion';
 
+/** One measure for the whole case study. */
+export const SHELL = 'mx-auto w-full max-w-[1120px]';
+
 /** Numbered section with an editorial rule. Scroll target for presentation mode. */
 export function CaseSection({
   id,
   number,
   title,
   children,
-  wide = false,
 }: {
   id: string;
   number: string;
   title: string;
   children: ReactNode;
-  wide?: boolean;
 }) {
   return (
     <section
@@ -21,9 +22,7 @@ export function CaseSection({
       aria-labelledby={`${id}-heading`}
       className="scroll-mt-20 px-6 py-20 sm:px-8 sm:py-28"
     >
-      {/* The header rule always sits in the 4xl column so section rules align
-          down the page, even when a section's body breaks out wider. */}
-      <div className="mx-auto max-w-4xl">
+      <div className={SHELL}>
         <div className="mb-12 flex items-baseline gap-4 border-t border-line pt-5">
           <span className="font-mono text-xs text-faint tabular-nums">{number}</span>
           <h2
@@ -33,8 +32,6 @@ export function CaseSection({
             {title.toLowerCase()}
           </h2>
         </div>
-      </div>
-      <div className={wide ? 'mx-auto max-w-7xl' : 'mx-auto max-w-4xl'}>
         {children}
       </div>
     </section>

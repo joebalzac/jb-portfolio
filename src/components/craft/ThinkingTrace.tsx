@@ -12,12 +12,13 @@ const PHASES = {
 
 type Phase = 'idle' | 'streaming' | 'open' | 'collapsed';
 
-export function ThinkingTrace() {
+export function ThinkingTrace({ active = true }: { active?: boolean } = {}) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [chars, setChars] = useState(0);
   const [seconds, setSeconds] = useState('1.8');
 
   useEffect(() => {
+    if (!active) return;
     let cancelled = false;
     const timers: number[] = [];
     const wait = (ms: number) =>
@@ -56,7 +57,7 @@ export function ThinkingTrace() {
       cancelled = true;
       timers.forEach(clearTimeout);
     };
-  }, []);
+  }, [active]);
 
   const open = phase === 'streaming' || phase === 'open';
   const done = phase === 'collapsed' || phase === 'open';

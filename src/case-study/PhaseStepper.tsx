@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useInView } from '../lib/useInView';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { useDemoReset } from './presentationContext';
 
 /**
- * Manual driver for the four states a reply passes through.
+ * The four states a reply passes through.
  *
- * Section 02 plays the real component on a timer; this lets you stop on a
- * single frame and compare. Same tokens and keyframes as the product surface
- * (`bg-planning`, `animate-planning-shimmer`, `animate-working-pulse`) so the
- * comparison is honest rather than a redrawing.
+ * Plays itself once it scrolls into view, and hands control over the moment
+ * you touch it — autoplay is for the person skimming, the chips are for the
+ * person who wants to stop on one frame. Same tokens and keyframes as the
+ * product surface, so the comparison is honest rather than a redrawing.
  */
 const PHASES = [
   {
@@ -37,11 +38,21 @@ type PhaseId = (typeof PHASES)[number]['id'];
 
 const SKILLS = ['Loading conversations', 'Analyzing lease data'];
 
+const HOLD_MS: Record<PhaseId, number> = {
+  idle: 900,
+  planning: 1100,
+  working: 1800,
+  answer: 2800,
+};
+
 export function PhaseStepper() {
   const resetToken = useDemoReset();
   const reduced = useReducedMotion();
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.4 });
   const [phase, setPhase] = useState<PhaseId>('idle');
   const [elapsed, setElapsed] = useState(0);
+  const [auto, setAuto] = useState(true);
+  const [hovered, setHovered] = useState(false);
 
   const stepIndex = PHASES.findIndex((p) => p.id === phase);
   const current = PHASES[stepIndex];
@@ -50,7 +61,20 @@ export function PhaseStepper() {
   useEffect(() => {
     setPhase('idle');
     setElapsed(0);
+    setAuto(true);
   }, [resetToken]);
+
+  /* Runs only while visible, and stops for good once the reader takes over. */
+  useEffect(() => {
+    if (!auto || !inView || hovered || reduced) return;
+    const timer = window.setTimeout(() => {
+      setPhase((current) => {
+        const index = PHASES.findIndex((p) => p.id === current);
+        return PHASES[(index + 1) % PHASES.length].id;
+      });
+    }, HOLD_MS[phase]);
+    return () => window.clearTimeout(timer);
+  }, [auto, hovered, inView, phase, reduced]);
 
   useEffect(() => {
     if (phase !== 'working') return;
@@ -62,6 +86,7 @@ export function PhaseStepper() {
   }, [phase]);
 
   const step = useCallback((direction: 1 | -1) => {
+    setAuto(false);
     setPhase((currentPhase) => {
       const index = PHASES.findIndex((p) => p.id === currentPhase);
       const next = Math.max(0, Math.min(PHASES.length - 1, index + direction));
@@ -70,7 +95,12 @@ export function PhaseStepper() {
   }, []);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-card">
+    <div
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="overflow-hidden rounded-xl border border-line bg-card"
+    >
       {/* Product-skinned stage, matching the real surface's tokens. */}
       <div className="min-h-57 bg-product-bg px-4 py-4 sm:px-5">
         <div className="flex w-full justify-end">
@@ -175,7 +205,10 @@ export function PhaseStepper() {
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setPhase(item.id)}
+                onClick={() => {
+                  setAuto(false);
+                  setPhase(item.id);
+                }}
                 aria-pressed={selected}
                 className={`cursor-pointer rounded-full border px-3 py-1 font-mono text-[11px] transition-colors duration-200 ${
                   selected
