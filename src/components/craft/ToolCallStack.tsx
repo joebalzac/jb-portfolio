@@ -31,13 +31,31 @@ const TIMING = {
   doneHold: 2400,
 } as const;
 
-export function ToolCallStack() {
-  const [statuses, setStatuses] = useState<ToolStatus[]>(
+/**
+ * `autoplay={false}` hands the timeline to the caller, which lets the case
+ * study step through the states by hand instead of waiting for the loop to
+ * come back around to the one you wanted to look at.
+ */
+export function ToolCallStack({
+  autoplay = true,
+  step = -1,
+}: {
+  autoplay?: boolean;
+  /** -1 none started, 0..n-1 that step running, n all done. */
+  step?: number;
+} = {}) {
+  const [autoStatuses, setStatuses] = useState<ToolStatus[]>(
     STEPS.map(() => 'pending'),
   );
-  const [active, setActive] = useState(-1);
+  const [autoActive, setActive] = useState(-1);
+
+  const statuses: ToolStatus[] = autoplay
+    ? autoStatuses
+    : STEPS.map((_, i) => (i < step ? 'done' : i === step ? 'running' : 'pending'));
+  const active = autoplay ? autoActive : step >= 0 && step < STEPS.length ? step : -1;
 
   useEffect(() => {
+    if (!autoplay) return;
     let cancelled = false;
     const timers: number[] = [];
     const wait = (ms: number) =>
@@ -72,7 +90,7 @@ export function ToolCallStack() {
       cancelled = true;
       timers.forEach(clearTimeout);
     };
-  }, []);
+  }, [autoplay]);
 
   return (
     <div className="w-full max-w-70">

@@ -10,7 +10,6 @@ import {
   Engineering,
   InteractionDesign,
   Introduction,
-  Outcome,
   ProductExperience,
 } from './sections';
 
@@ -90,7 +89,6 @@ function CaseStudyBody({ onNavigate }: { onNavigate: (to: string) => void }) {
         <ProductExperience />
         <InteractionDesign />
         <Engineering />
-        <Outcome />
       </main>
 
       {active ? null : <Footer />}

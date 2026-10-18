@@ -174,32 +174,3 @@ export function CodeExcerpt({
     </figure>
   );
 }
-
-/** Visible marker for anything not yet verified. Never styled to blend in. */
-export function MetricPlaceholder({ label }: { label: string }) {
-  return (
-    <div className="rounded-xl border border-dashed border-line bg-card/60 px-4 py-4">
-      <p className="font-mono text-[11px] text-faint">{label}</p>
-      <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-muted">
-        <span
-          aria-hidden
-          className="h-1.5 w-1.5 rounded-full bg-accent/60"
-        />
-        to verify
-      </p>
-    </div>
-  );
-}
-
-/** Honest provenance label for anything running on scripted data. */
-export function DemoNotice({ children }: { children: ReactNode }) {
-  return (
-    <p className="flex items-start gap-2.5 rounded-xl border border-line bg-card px-4 py-3 text-xs leading-relaxed text-muted">
-      <span
-        aria-hidden
-        className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
-      />
-      <span>{children}</span>
-    </p>
-  );
-}

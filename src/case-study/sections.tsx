@@ -1,26 +1,10 @@
 import { useState } from 'react';
 import { ApolloApp } from '../components/apollo/ApolloApp';
 import { ApolloUI } from '../components/projects/ApolloUI';
-import {
-  architecture,
-  caseMeta,
-  collaboration,
-  contributions,
-  outcomes,
-  problem,
-  provenance,
-  reflection,
-} from '../data/apollo';
+import { architecture, caseMeta, collaboration, contributions } from '../data/apollo';
 import { ComponentGallery } from './ComponentGallery';
 import { useDemoReset } from './presentationContext';
-import {
-  CaseSection,
-  CodeExcerpt,
-  DemoNotice,
-  Eyebrow,
-  MetricPlaceholder,
-  Reveal,
-} from './primitives';
+import { CaseSection, CodeExcerpt, Eyebrow, Reveal } from './primitives';
 
 /* ------------------------------------------------------------------ hero */
 
@@ -117,11 +101,46 @@ export function CaseHero() {
 export function Introduction() {
   return (
     <CaseSection id="intro" number="01" title="Introduction">
-      <Reveal>
-        <div className="rounded-xl border border-line bg-card px-5 py-5 sm:px-6">
-          <Eyebrow>{provenance.title}</Eyebrow>
-          <div className="mt-3 space-y-3">
-            {provenance.body.map((paragraph) => (
+      <div className="grid gap-x-10 gap-y-12 md:grid-cols-2">
+        <Reveal>
+          <Eyebrow>what i owned</Eyebrow>
+          <ul className="mt-5 space-y-5">
+            {contributions.mine.map((item) => (
+              <li key={item.label} className="flex items-start gap-3">
+                <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                <span>
+                  <span className="text-sm font-medium text-ink">{item.label}</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-muted">
+                    {item.detail}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+        <Reveal delay={60}>
+          <Eyebrow>what others owned</Eyebrow>
+          <ul className="mt-5 space-y-5">
+            {contributions.others.map((item) => (
+              <li key={item.label} className="flex items-start gap-3">
+                <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-faint" />
+                <span>
+                  <span className="text-sm font-medium text-muted">{item.label}</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-muted">
+                    {item.detail}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+
+      <Reveal className="mt-20">
+        <div className="border-t border-line pt-7">
+          <Eyebrow>{collaboration.title}</Eyebrow>
+          <div className="mt-5 grid gap-x-8 gap-y-6 md:grid-cols-3">
+            {collaboration.body.map((paragraph) => (
               <p key={paragraph} className="text-sm leading-relaxed text-muted">
                 {paragraph}
               </p>
@@ -129,100 +148,11 @@ export function Introduction() {
           </div>
         </div>
       </Reveal>
-
-      <Reveal className="mt-20">
-        <h3 className="max-w-xl text-xl leading-snug font-medium tracking-tight text-ink sm:text-2xl">
-          {problem.lede}
-        </h3>
-      </Reveal>
-
-      <div className="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-3">
-        {problem.points.map((point, index) => (
-          <Reveal key={point.heading} delay={index * 70}>
-            <div className="border-t border-line pt-5">
-              <h4 className="text-sm font-medium text-ink">{point.heading}</h4>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted">
-                {point.body}
-              </p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-
-      <Reveal className="mt-24">
-        <div className="grid gap-x-10 gap-y-12 md:grid-cols-2">
-          <div>
-            <Eyebrow>what i owned</Eyebrow>
-            <ul className="mt-5 space-y-5">
-              {contributions.mine.map((item) => (
-                <li key={item.label} className="flex items-start gap-3">
-                  <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                  <span>
-                    <span className="text-sm font-medium text-ink">
-                      {item.label}
-                    </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-muted">
-                      {item.detail}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <Eyebrow>what others owned</Eyebrow>
-            <ul className="mt-5 space-y-5">
-              {contributions.others.map((item) => (
-                <li key={item.label} className="flex items-start gap-3">
-                  <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-faint" />
-                  <span>
-                    <span className="text-sm font-medium text-muted">
-                      {item.label}
-                    </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-muted">
-                      {item.detail}
-                    </span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Reveal>
-
-      <Reveal className="mt-20">
-        <div className="border-t border-line pt-7">
-          <Eyebrow>{collaboration.title}</Eyebrow>
-          <div className="mt-5 grid gap-x-8 gap-y-6 md:grid-cols-3">
-            {collaboration.body.map((paragraph) => (
-              <p
-                key={paragraph}
-                className="text-sm leading-relaxed text-muted"
-              >
-                {paragraph}
-              </p>
-            ))}
-          </div>
-          <p className="mt-6 inline-flex items-center gap-1.5 font-mono text-[11px] text-faint">
-            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent/60" />
-            {collaboration.placeholder} — to verify
-          </p>
-        </div>
-      </Reveal>
     </CaseSection>
   );
 }
 
 /* ---------------------------------------------------- 02 the product experience */
-
-const TRY_IT = [
-  { action: 'Pick a suggestion', result: 'Runs that role’s scripted exchange — tables, drafts and action chips.' },
-  { action: 'The + menu', result: 'Upload from device, or drill into Entities, Connectors and Skills.' },
-  { action: 'Agent & model', result: 'Reads out both settings at rest; either row drills in to change it.' },
-  { action: 'Press Stop', result: 'Cancels a reply mid-flight. Lands immediately.' },
-  { action: 'Hover a reply', result: 'Reveals a copy control for the whole answer.' },
-  { action: 'Drag the corner', result: 'Resizes the window — arrow keys work on the handle too.' },
-];
 
 export function ProductExperience() {
   const resetToken = useDemoReset();
@@ -235,85 +165,38 @@ export function ProductExperience() {
 
   return (
     <CaseSection id="experience" number="02" title="The product experience" wide>
-      <div className="mx-auto max-w-4xl">
-        <Reveal>
-          <h3 className="max-w-xl text-xl leading-snug font-medium tracking-tight text-ink sm:text-2xl">
-            Four roles, one surface — and you can drive it.
-          </h3>
-          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-            The clearest argument for an interaction decision is the interface
-            making it. So this is not a video. Type in it, interrupt it, copy out
-            of it. This is the in-product chrome — the application as a property
-            manager actually sees it.
-          </p>
-        </Reveal>
-
-        <Reveal delay={80} className="mt-8">
-          <DemoNotice>
-            <strong className="font-medium text-ink">Illustrative demo.</strong>{' '}
-            Replies come from scripted fixtures — no model, no EliseAI service, no
-            customer data. The interaction behavior is the real implementation.
-          </DemoNotice>
-        </Reveal>
-      </div>
-
-      <Reveal delay={120} className="mt-10">
+      <Reveal>
         <ApolloApp key={demoKey} />
       </Reveal>
 
-      <div className="mx-auto mt-14 max-w-4xl">
-        <Reveal>
-          <Eyebrow>things to try</Eyebrow>
-          <dl className="mt-6 grid gap-x-10 gap-y-px sm:grid-cols-2">
-            {TRY_IT.map((item) => (
-              <div
-                key={item.action}
-                className="flex flex-col border-t border-line py-3.5 sm:flex-row sm:gap-4"
-              >
-                <dt className="shrink-0 font-mono text-[11px] text-ink sm:w-40">
-                  {item.action}
-                </dt>
-                <dd className="mt-1 text-sm leading-relaxed text-muted sm:mt-0">
-                  {item.result}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </Reveal>
-      </div>
+      {/* Minimal disclosure, kept so nothing here reads as a live integration. */}
+      <p className="mx-auto mt-3 max-w-4xl text-xs text-faint">
+        Illustrative demo — scripted fixtures, no live service or customer data.
+      </p>
 
-      {/* The shipped autoplaying version, for contrast. */}
-      <div className="mx-auto mt-24 max-w-4xl">
+      <div className="mx-auto mt-20 max-w-4xl">
         <Reveal>
-          <Eyebrow>the shipped marketing surface</Eyebrow>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
-            The same conversation components, restyled for the public marketing
-            page — where nobody is going to type anything, so it plays itself.
-            Two chromes, one renderer: the app above is built for work, this one
-            is built to be looked at — which is why the brand gradient lives
-            here, on the highlighted rail item, and the app settles for grey.
-            Dwell time is computed from each script, and playback pauses on
-            hover or off-screen.
-          </p>
+          <div className="flex flex-wrap items-center gap-2 border-t border-line pt-7">
+            <span className="mr-auto font-mono text-[11px] tracking-wide text-faint uppercase">
+              the same components, marketing chrome
+            </span>
+            <button
+              type="button"
+              onClick={() => setAutoplay((value) => !value)}
+              aria-pressed={!autoplay}
+              className="cursor-pointer rounded-full border border-line px-3.5 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
+            >
+              {autoplay ? 'pause' : 'play'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setLocalReset((value) => value + 1)}
+              className="cursor-pointer rounded-full border border-line px-3.5 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
+            >
+              restart
+            </button>
+          </div>
         </Reveal>
-
-        <div className="mt-7 flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setAutoplay((value) => !value)}
-            aria-pressed={!autoplay}
-            className="cursor-pointer rounded-full border border-line px-3.5 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
-          >
-            {autoplay ? 'pause autoplay' : 'resume autoplay'}
-          </button>
-          <button
-            type="button"
-            onClick={() => setLocalReset((value) => value + 1)}
-            className="cursor-pointer rounded-full border border-line px-3.5 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
-          >
-            restart
-          </button>
-        </div>
       </div>
 
       <Reveal className="mt-8">
@@ -387,56 +270,6 @@ export function Engineering() {
           </Reveal>
         ))}
       </div>
-    </CaseSection>
-  );
-}
-
-/* ----------------------------------------------- 05 outcome & reflection */
-
-export function Outcome() {
-  return (
-    <CaseSection id="outcome" number="05" title="Outcome & reflection">
-      <Reveal>
-        <Eyebrow>{outcomes.title}</Eyebrow>
-        <ul className="mt-5 space-y-4">
-          {outcomes.shipped.map((item) => (
-            <li key={item} className="flex items-start gap-3">
-              <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
-              <span className="max-w-2xl text-sm leading-relaxed text-ink sm:text-base">
-                {item}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
-
-      <Reveal delay={60} className="mt-12">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {outcomes.metrics.map((metric) => (
-            <MetricPlaceholder key={metric} label={metric} />
-          ))}
-        </div>
-        <p className="mt-4 text-xs leading-relaxed text-faint">
-          Left unfilled on purpose — I would rather show four visible gaps than
-          one number I cannot source.
-        </p>
-      </Reveal>
-
-      <Reveal className="mt-24">
-        <h3 className="font-mono text-xs tracking-wide text-muted">
-          {reflection.title.toLowerCase()}
-        </h3>
-        <div className="mt-7 space-y-7 border-t border-line pt-7">
-          {reflection.body.map((paragraph) => (
-            <p
-              key={paragraph}
-              className="max-w-2xl text-base leading-relaxed text-ink sm:text-[1.0625rem] sm:leading-[1.75]"
-            >
-              {paragraph}
-            </p>
-          ))}
-        </div>
-      </Reveal>
     </CaseSection>
   );
 }

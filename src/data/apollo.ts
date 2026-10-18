@@ -2,8 +2,6 @@
  * Case-study content for /work/apollo.
  *
  * Single source of truth for copy so the section components stay presentational.
- * Anything not yet verified is a `placeholder: true` metric and renders as a
- * visible "to verify" chip — never as an invented number.
  */
 
 export const caseMeta = {
@@ -14,39 +12,10 @@ export const caseMeta = {
     'Apollo is an AI assistant built into the software property teams already live in. Its hardest design problems are not visual — they are temporal. A person asks a question, and then has to trust a system that pauses, plans, calls tools, and changes its mind in public.',
   role: 'Design engineer — interaction design co-owned, frontend implementation mine',
   team: 'Product designer, full-stack engineer, agent/platform team',
-  timeline: { value: 'Timeline', placeholder: true as const },
   stack: ['React 19', 'TypeScript', 'Tailwind v4', 'Vite'],
 } as const;
 
 /** Precise provenance. Stated up front so nothing downstream reads as overclaim. */
-export const provenance = {
-  title: 'What you are looking at',
-  body: [
-    'These are my own re-implementations of Apollo surfaces, running on public assets and scripted fixtures — no EliseAI service, customer data or internal code is involved. The production build shipped alongside a full-stack engineer.',
-    'I co-owned the interaction design with a product designer and owned the frontend implementation. The agent itself — model routing, tool calling, retrieval — was built by the agent and platform team, and nothing here claims that work.',
-  ],
-} as const;
-
-export const problem = {
-  title: 'The problem',
-  lede:
-    'A leasing agent between tours has about fifteen seconds of patience. The assistant they are asking is slow by nature: it plans, reads lease data, and sometimes writes on their behalf.',
-  points: [
-    {
-      heading: 'Latency you cannot design away',
-      body: 'An agent that reasons takes seconds, not milliseconds. The interface has to make that wait legible instead of pretending it is not happening — a spinner says "wait", but it does not say "I understood you".',
-    },
-    {
-      heading: 'Four jobs, one surface',
-      body: 'Leasing, maintenance, community management and regional leadership ask structurally different questions. The same chat surface has to answer with a checklist, a comparison table, a draft message, or a portfolio breakdown — without becoming four products.',
-    },
-    {
-      heading: 'Actions, not just answers',
-      body: 'Apollo drafts texts and marks tours shown. The moment an assistant can act, the interface owes the user a visible seam between "here is what I found" and "here is what I am about to do on your behalf".',
-    },
-  ],
-} as const;
-
 export type Contribution = { label: string; detail: string };
 
 export const contributions: { mine: Contribution[]; others: Contribution[] } = {
@@ -103,7 +72,6 @@ export const collaboration = {
     'Production shipped with a full-stack engineer who owned the data and service layer. My side was the interface contract: what shape a response arrives in, and what the interface does during the seconds before it arrives.',
     'The agent team owned model routing and tool calling. The boundary that keeps that clean is the typed response schema — the interface needs to know which shapes an answer can take, not how the agent chose one.',
   ],
-  placeholder: 'Process detail — review cadence, design-system ownership',
 } as const;
 
 export type ArchitectureNote = {
@@ -165,36 +133,11 @@ export const architecture: ArchitectureNote[] = [
   },
 ];
 
-export const outcomes = {
-  title: 'What shipped',
-  shipped: [
-    'The Apollo conversation surface in production, built with a full-stack engineer.',
-    'The role-aware experience on EliseAI’s public Apollo marketing page.',
-    'A typed response-block system now used for every Apollo answer shape.',
-  ],
-  /** Deliberately unfilled. Rendered as visible "to verify" chips. */
-  metrics: [
-    'Launch date',
-    'Adoption / usage',
-    'Performance or engagement delta',
-    'Team or customer feedback',
-  ],
-} as const;
-
-export const reflection = {
-  title: 'Reflection',
-  body: [
-    'The thing I would tell a team starting on an agent interface: the hardest problems are temporal, and they do not show up in a static mock. Thinking states, interrupted generation, an answer that arrives in the wrong order — none of those exist in Figma. They only become real when someone can feel them, which is the argument for design engineering as a role rather than a handoff.',
-    'What I would change is the interruption model. Playback pauses and a pending reply can be cancelled, but you still cannot take over mid-sequence and redirect the conversation. Building that properly means treating a conversation as editable data rather than a script being played — which is also the version where the design system and the interaction system finally become the same artifact.',
-  ],
-} as const;
-
 export const sections = [
   { id: 'intro', number: '01', title: 'Introduction' },
   { id: 'experience', number: '02', title: 'The product experience' },
   { id: 'interaction', number: '03', title: 'Components & interactions' },
   { id: 'engineering', number: '04', title: 'Engineering & architecture' },
-  { id: 'outcome', number: '05', title: 'Outcome & reflection' },
 ] as const;
 
 export type SectionId = (typeof sections)[number]['id'];

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ApolloBlocks } from '../components/apollo/ApolloBlocks';
 import { Composer } from '../components/apollo/Composer';
 import { CopyButton } from '../components/apollo/CopyButton';
@@ -34,38 +34,42 @@ const BLOCK_SAMPLES = [
   { type: 'actions' as const, label: 'Actions' },
 ].map((entry) => ({ ...entry, block: firstBlockOfType(entry.type) }));
 
+const CONTROL =
+  'cursor-pointer rounded-full border border-line px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink disabled:cursor-default disabled:opacity-35';
+
 function Tile({
   label,
   note,
+  action,
   children,
   span = false,
 }: {
   label: string;
   note: string;
-  children: React.ReactNode;
+  action?: ReactNode;
+  children: ReactNode;
   span?: boolean;
 }) {
   return (
     <section
-      className={`flex flex-col rounded-xl border border-line bg-card ${
+      className={`flex flex-col rounded-xl border border-line bg-bg ${
         span ? 'lg:col-span-2' : ''
       }`}
     >
-      <div className="flex items-baseline justify-between gap-3 border-b border-line px-4 py-3">
-        <h4 className="text-sm font-medium text-ink">{label}</h4>
-        <span className="shrink-0 font-mono text-[10px] text-faint">live</span>
-      </div>
-      <div className="flex flex-1 flex-col justify-center bg-bg p-4">
+      <header className="flex items-start justify-between gap-4 px-4 pt-4 pb-3.5">
+        <div className="min-w-0">
+          <h4 className="text-sm font-medium text-ink">{label}</h4>
+          <p className="mt-1 text-xs leading-relaxed text-muted">{note}</p>
+        </div>
+        {action ? <div className="flex shrink-0 gap-1.5">{action}</div> : null}
+      </header>
+      <div className="flex flex-1 flex-col justify-center border-t border-line p-4">
         {children}
       </div>
-      <p className="border-t border-line px-4 py-3 text-xs leading-relaxed text-muted">
-        {note}
-      </p>
     </section>
   );
 }
 
-/** Standalone prompt box, wired to a visible log of what it submitted. */
 function ComposerTile() {
   const [value, setValue] = useState('');
   const [scope, setScope] = useState('cross-org');
@@ -79,7 +83,7 @@ function ComposerTile() {
         onChange={setValue}
         onSubmit={() => {
           if (!value.trim()) return;
-          setSent((current) => [value.trim(), ...current].slice(0, 3));
+          setSent((current) => [value.trim(), ...current].slice(0, 2));
           setValue('');
         }}
         scope={scope}
@@ -88,11 +92,9 @@ function ComposerTile() {
         onModeChange={setMode}
         placeholder="Type here — Enter sends, Shift+Enter is a newline"
       />
-      <div className="min-h-14">
+      <div className="min-h-9">
         {sent.length === 0 ? (
-          <p className="font-mono text-[11px] text-faint">
-            nothing submitted yet
-          </p>
+          <p className="font-mono text-[11px] text-faint">nothing submitted yet</p>
         ) : (
           <ul className="flex flex-col gap-1">
             {sent.map((entry, index) => (
@@ -126,21 +128,16 @@ function BlocksTile() {
             className={`cursor-pointer rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors duration-200 ${
               i === index
                 ? 'border-ink bg-ink text-bg'
-                : 'border-line bg-bg text-muted hover:border-faint hover:text-ink'
+                : 'border-line text-muted hover:border-faint hover:text-ink'
             }`}
           >
             {sample.label}
           </button>
         ))}
       </div>
-      <div className="min-h-38 rounded-lg border border-product-line bg-product-bg p-3.5">
+      <div className="min-h-38 rounded-lg border border-app-line bg-white p-3.5">
         <ApolloBlocks blocks={[active.block]} />
       </div>
-      <p className="font-mono text-[11px] text-faint">
-        {'{ type: "'}
-        {active.type}
-        {'" }'} — one renderer, five shapes
-      </p>
     </div>
   );
 }
@@ -148,22 +145,14 @@ function BlocksTile() {
 function DropdownTile() {
   const [scope, setScope] = useState('balance');
   const [mode, setMode] = useState('assist');
-
   const scopeLabel = SCOPES.find((s) => s.value === scope)?.label;
   const modeLabel = AGENT_MODES.find((m) => m.value === mode)?.label;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2 rounded-xl border border-app-line bg-white px-3 py-2.5 text-[14px]">
-        <Dropdown
-          label="Scope"
-          value={scope}
-          options={SCOPES}
-          onChange={setScope}
-        />
-        <span aria-hidden className="text-app-line">
-          |
-        </span>
+        <Dropdown label="Scope" value={scope} options={SCOPES} onChange={setScope} />
+        <span aria-hidden className="text-app-line">|</span>
         <Dropdown
           label="Agent mode"
           value={mode}
@@ -174,29 +163,83 @@ function DropdownTile() {
       <p className="font-mono text-[11px] text-muted">
         <span className="text-faint">context ›</span> {scopeLabel} · {modeLabel}
       </p>
-      <p className="text-xs leading-relaxed text-muted">
-        Open one and use the arrow keys — focus moves with the active option,
-        Escape returns to the trigger.
-      </p>
     </div>
   );
 }
 
 function CopyTile() {
   const draft = firstBlockOfType('draft');
-
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-lg border border-product-line bg-product-bg p-3.5">
+      <div className="rounded-lg border border-app-line bg-white p-3.5">
         <ApolloBlocks blocks={[draft]} />
       </div>
-      <div className="flex items-center justify-between gap-3">
-        <CopyButton text={draft.text} label="Copy draft message" />
-        <span className="font-mono text-[10px] text-faint">
-          try it — then paste
-        </span>
-      </div>
+      <CopyButton text={draft.text} label="Copy draft message" />
     </div>
+  );
+}
+
+/** Replay is the interaction: the loop runs once, on demand. */
+function TraceTile() {
+  const [run, setRun] = useState(0);
+  return (
+    <Tile
+      label="Thinking trace"
+      note="Streams the reasoning, holds it, then collapses to a receipt."
+      action={
+        <button type="button" onClick={() => setRun((r) => r + 1)} className={CONTROL}>
+          replay
+        </button>
+      }
+    >
+      <ThinkingTrace key={run} />
+    </Tile>
+  );
+}
+
+/** Hand the timeline to the reader so they can stop on a single state. */
+function ToolTile() {
+  const [auto, setAuto] = useState(false);
+  const [step, setStep] = useState(0);
+  const max = 2;
+
+  return (
+    <Tile
+      label="Tool calls"
+      note="Pending, running and done as three visually distinct states."
+      action={
+        <>
+          <button
+            type="button"
+            onClick={() => setStep((s) => Math.max(-1, s - 1))}
+            disabled={auto || step <= -1}
+            aria-label="Previous step"
+            className={CONTROL}
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onClick={() => setStep((s) => Math.min(max, s + 1))}
+            disabled={auto || step >= max}
+            aria-label="Next step"
+            className={CONTROL}
+          >
+            ›
+          </button>
+          <button
+            type="button"
+            onClick={() => setAuto((a) => !a)}
+            aria-pressed={auto}
+            className={CONTROL}
+          >
+            {auto ? 'manual' : 'auto'}
+          </button>
+        </>
+      }
+    >
+      <ToolCallStack autoplay={auto} step={step} />
+    </Tile>
   );
 }
 
@@ -207,7 +250,7 @@ export function ComponentGallery() {
     <div className="grid gap-4 lg:grid-cols-2">
       <Tile
         label="Prompt box"
-        note="Auto-grows to a cap, then scrolls — a composer that grows without limit pushes away the conversation you are trying to read. Send is disabled rather than hidden while empty, so the control never moves."
+        note="Auto-grows to a cap, then scrolls. Enter sends, Shift+Enter newlines, Escape clears."
         span
       >
         <ComposerTile key={resetToken} />
@@ -215,45 +258,34 @@ export function ComponentGallery() {
 
       <Tile
         label="Thinking states"
-        note="Two phases instead of one spinner. The first acknowledges the request inside 600ms; the second accounts for the time with a counter that counts up, because there is no honest denominator for a progress bar here."
+        note="Two phases instead of one spinner, and a count that is honest about not knowing the total."
       >
         <PhaseStepper key={resetToken} />
       </Tile>
 
       <Tile
         label="Response blocks"
-        note="A discriminated union of block types with one exhaustive renderer. A new answer shape is a data change plus one branch, not a new component — and TypeScript makes a missing case a build error."
+        note="One typed union, one exhaustive renderer, five answer shapes."
       >
         <BlocksTile key={resetToken} />
       </Tile>
 
       <Tile
         label="Context dropdowns"
-        note="Built to the ARIA listbox pattern rather than a styled select, because the trigger sits inline in the composer and has to carry the app's own typography. Agent mode lives in the composer because it changes what a reply is allowed to do on your behalf."
+        note="ARIA listbox — arrow keys move, Escape returns focus to the trigger."
       >
         <DropdownTile key={resetToken} />
       </Tile>
 
       <Tile
         label="Copy to clipboard"
-        note="Writes through the async Clipboard API, falls back to a selection copy when the browser refuses, and announces the result — a purely visual checkmark is invisible to a screen reader."
+        note="Async clipboard with a selection fallback, and the result announced."
       >
-        <CopyTile />
+        <CopyTile key={resetToken} />
       </Tile>
 
-      <Tile
-        label="Thinking trace"
-        note="Streams the reasoning, holds it long enough to read, then collapses to a receipt that says how long it took. Expanded by default while streaming, because hiding work in progress is what makes a wait feel like a hang."
-      >
-        <ThinkingTrace key={resetToken} />
-      </Tile>
-
-      <Tile
-        label="Tool call choreography"
-        note="Pending, running and done as three visually distinct states on one timeline. Each step is a scheduled timer torn down on reset, so an interruption never leaves a half-finished sequence."
-      >
-        <ToolCallStack key={resetToken} />
-      </Tile>
+      <TraceTile key={`trace-${resetToken}`} />
+      <ToolTile key={`tool-${resetToken}`} />
     </div>
   );
 }
