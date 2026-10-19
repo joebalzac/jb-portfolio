@@ -4,10 +4,10 @@ const THOUGHT =
   'Need availability for a 2BR next month. Check inventory, then confirm tour slots before replying.';
 
 const PHASES = {
-  idle: 600,
+  idle: 900,
   streamMsPerChar: 28,
-  holdOpen: 1400,
-  collapsed: 2200,
+  holdOpen: 3000,
+  collapsed: 2800,
 } as const;
 
 type Phase = 'idle' | 'streaming' | 'open' | 'collapsed';

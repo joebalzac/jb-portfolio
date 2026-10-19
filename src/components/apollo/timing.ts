@@ -11,8 +11,8 @@ export const HOLD_AFTER_MS = 5000;
 export const REVEAL_OFFSET_MS = 220;
 export const SEND_AFTER_TYPE_MS = 280;
 export const REPLY_BEAT_MS = 350;
-export const PLANNING_MS = 600;
-export const THINKING_MS = 1000;
+export const PLANNING_MS = 1600;
+export const THINKING_MS = 2800;
 export const TYPE_INTERVAL_MS = 24;
 
 /**

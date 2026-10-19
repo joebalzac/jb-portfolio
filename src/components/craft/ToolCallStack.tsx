@@ -25,10 +25,10 @@ const STEPS: ToolStep[] = [
 ];
 
 const TIMING = {
-  resetHold: 900,
-  stepGap: 420,
-  runningFor: 1100,
-  doneHold: 2400,
+  resetHold: 1300,
+  stepGap: 650,
+  runningFor: 2400,
+  doneHold: 3400,
 } as const;
 
 /**

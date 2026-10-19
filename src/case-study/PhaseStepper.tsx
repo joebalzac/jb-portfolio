@@ -38,10 +38,10 @@ const PHASES = [
 type PhaseId = (typeof PHASES)[number]['id'];
 
 const HOLD_MS: Record<PhaseId, number> = {
-  idle: 900,
-  planning: 1100,
-  working: 1800,
-  answer: 2800,
+  idle: 1400,
+  planning: 2600,
+  working: 3800,
+  answer: 4200,
 };
 
 export function PhaseStepper() {

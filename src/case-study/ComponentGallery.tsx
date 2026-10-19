@@ -349,7 +349,7 @@ function GlyphTile({ inView }: { inView: boolean }) {
   const [active, setActive] = useState(0);
 
   useLoop(async (wait) => {
-    await wait(1600);
+    await wait(2800);
     setActive((i) => (i + 1) % GLYPHS.length);
   }, inView && !reduced);
 
