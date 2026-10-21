@@ -1,4 +1,5 @@
 import { ApolloCaseStudy } from './case-study/ApolloCaseStudy';
+import { DesignSystemPage } from './design-system/DesignSystemPage';
 import { Craft } from './components/Craft';
 import { CustomCursor } from './components/CustomCursor';
 import { Footer } from './components/Footer';
@@ -33,6 +34,10 @@ function App() {
 
   if (path === '/work/apollo') {
     return <ApolloCaseStudy onNavigate={navigate} />;
+  }
+
+  if (path === '/design-system') {
+    return <DesignSystemPage onNavigate={navigate} />;
   }
 
   return <Home onNavigate={navigate} />;

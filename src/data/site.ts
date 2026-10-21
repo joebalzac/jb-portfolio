@@ -12,6 +12,7 @@ export const nav = [
   { label: 'work', href: '#work' },
   { label: 'projects', href: '#projects' },
   { label: 'craft', href: '#craft' },
+  { label: 'system', href: '/design-system' },
   { label: 'writing', href: '#writing' },
 ];
 

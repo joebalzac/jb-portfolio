@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { sections } from '../data/apollo';
+import { Button, IconButton } from '../ds';
 import { usePresentation } from './presentationContext';
 
 const TARGET_MINUTES = 15;
@@ -152,47 +153,35 @@ export function PresentationBar() {
           </span>
 
           <div className="flex shrink-0 items-center gap-1">
-            <button
-              type="button"
+            <IconButton
+              label="Previous section"
+              tone="outlined"
               onClick={prev}
               disabled={index === 0}
-              aria-label="Previous section"
-              className="grid h-8 w-8 cursor-pointer place-items-center rounded-full border border-line text-muted transition-colors hover:text-ink disabled:cursor-default disabled:opacity-30"
             >
               ‹
-            </button>
-            <button
-              type="button"
+            </IconButton>
+            <IconButton
+              label="Next section"
+              tone="outlined"
               onClick={next}
               disabled={index === sections.length - 1}
-              aria-label="Next section"
-              className="grid h-8 w-8 cursor-pointer place-items-center rounded-full border border-line text-muted transition-colors hover:text-ink disabled:cursor-default disabled:opacity-30"
             >
               ›
-            </button>
-            <button
-              type="button"
-              onClick={onReset}
-              className="ml-1 cursor-pointer rounded-full border border-line px-3 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
-            >
+            </IconButton>
+            <Button onClick={onReset} class="ml-1">
               {resetFlash ? 'reset ✓' : 'reset'}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <IconButton
+              label="Keyboard shortcuts"
+              tone="outlined"
               onClick={toggleHelp}
               aria-expanded={helpOpen}
-              aria-label="Keyboard shortcuts"
-              className="grid h-8 w-8 cursor-pointer place-items-center rounded-full border border-line font-mono text-[11px] text-muted transition-colors hover:text-ink"
+              class="font-mono text-[11px]"
             >
               ?
-            </button>
-            <button
-              type="button"
-              onClick={exit}
-              className="cursor-pointer rounded-full border border-line px-3 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
-            >
-              exit
-            </button>
+            </IconButton>
+            <Button onClick={exit}>exit</Button>
           </div>
         </div>
       </nav>

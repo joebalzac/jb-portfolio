@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Button } from '../ds';
 import { useInView } from '../lib/useInView';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { ApolloBlocks } from '../components/apollo/ApolloBlocks';
@@ -38,9 +39,6 @@ const BLOCK_SAMPLES = [
   { type: 'draft' as const, label: 'Draft' },
   { type: 'actions' as const, label: 'Actions' },
 ].map((entry) => ({ ...entry, block: firstBlockOfType(entry.type) }));
-
-const CONTROL =
-  'cursor-pointer rounded-full border border-line px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink disabled:cursor-default disabled:opacity-35';
 
 function Tile({
   label,
@@ -216,22 +214,18 @@ function BlocksTile({ inView }: { inView: boolean }) {
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-1.5">
         {BLOCK_SAMPLES.map((sample, i) => (
-          <button
+          <Button
             key={sample.type}
-            type="button"
+            size="sm"
+            tone={i === index ? 'active' : 'ghost'}
+            aria-pressed={i === index}
             onClick={() => {
               setTaken(true);
               setIndex(i);
             }}
-            aria-pressed={i === index}
-            className={`cursor-pointer rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors duration-200 ${
-              i === index
-                ? 'border-ink bg-ink text-bg'
-                : 'border-line text-muted hover:border-faint hover:text-ink'
-            }`}
           >
             {sample.label}
-          </button>
+          </Button>
         ))}
       </div>
       <div className="min-h-38 rounded-lg border border-app-line bg-white p-3.5">
@@ -441,38 +435,31 @@ function ToolTile({ inView }: { inView: boolean }) {
     <>
       <ToolCallStack autoplay={!manual && inView && !reduced} step={step} />
       <div className="mt-4 flex gap-1.5">
-        <button
-          type="button"
+        <Button
+          size="sm"
+          aria-label="Previous step"
+          disabled={manual && step <= -1}
           onClick={() => {
             setManual(true);
             setStep((s) => Math.max(-1, s - 1));
           }}
-          disabled={manual && step <= -1}
-          aria-label="Previous step"
-          className={CONTROL}
         >
           ‹
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          size="sm"
+          aria-label="Next step"
+          disabled={manual && step >= max}
           onClick={() => {
             setManual(true);
             setStep((s) => Math.min(max, s + 1));
           }}
-          disabled={manual && step >= max}
-          aria-label="Next step"
-          className={CONTROL}
         >
           ›
-        </button>
-        <button
-          type="button"
-          onClick={() => setManual((m) => !m)}
-          aria-pressed={manual}
-          className={CONTROL}
-        >
+        </Button>
+        <Button size="sm" aria-pressed={manual} onClick={() => setManual((m) => !m)}>
           {manual ? 'play' : 'step'}
-        </button>
+        </Button>
       </div>
     </>
   );

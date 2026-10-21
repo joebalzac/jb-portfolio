@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Footer } from '../components/Footer';
 import { sections } from '../data/apollo';
+import { Button } from '../ds';
 import { isPlainClick } from '../lib/useRoute';
 import { PresentationBar } from './PresentationBar';
 import { PresentationProvider } from './presentation';
@@ -48,17 +49,12 @@ function CaseNav({ onNavigate }: { onNavigate: (to: string) => void }) {
             <span className="mx-1.5 opacity-50">/</span>
             {current.title.toLowerCase()}
           </span>
-          <button
-            type="button"
-            onClick={toggle}
-            aria-pressed={active}
-            className="cursor-pointer rounded-full border border-line px-3.5 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
-          >
+          <Button onClick={toggle} aria-pressed={active}>
             {active ? 'exit present' : 'present'}
-            <kbd className="ml-2 hidden font-mono text-[10px] text-faint not-italic sm:inline">
+            <kbd className="hidden font-mono text-[10px] text-faint not-italic sm:inline">
               P
             </kbd>
-          </button>
+          </Button>
         </div>
       </div>
     </header>

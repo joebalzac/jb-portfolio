@@ -4,7 +4,9 @@ import { ApolloUI } from '../components/projects/ApolloUI';
 import { architecture, caseMeta, collaboration, contributions } from '../data/apollo';
 import { ComponentGallery } from './ComponentGallery';
 import { useDemoReset } from './presentationContext';
-import { CaseSection, CodeExcerpt, Eyebrow, Reveal, SHELL } from './primitives';
+import { Button, ButtonLink, Chip } from '../ds';
+import { CodeExcerpt } from '../ds/CodeExcerpt';
+import { CaseSection, Eyebrow, Reveal, SHELL } from './primitives';
 
 /* ------------------------------------------------------------------ hero */
 
@@ -27,10 +29,7 @@ export function CaseHero() {
         </Reveal>
         <Reveal delay={150}>
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <a
-              href="#experience"
-              className="group inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm text-bg transition-colors hover:bg-ink/85"
-            >
+            <ButtonLink href="#experience" tone="solid" size="lg" class="group">
               Try the interface
               <span
                 aria-hidden
@@ -38,13 +37,10 @@ export function CaseHero() {
               >
                 →
               </span>
-            </a>
-            <a
-              href="#engineering"
-              className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm text-muted transition-colors hover:border-faint hover:text-ink"
-            >
+            </ButtonLink>
+            <ButtonLink href="#engineering" size="lg">
               Read the architecture
-            </a>
+            </ButtonLink>
           </div>
         </Reveal>
         <Reveal delay={180}>
@@ -71,12 +67,7 @@ export function CaseHero() {
               </dt>
               <dd className="mt-2 flex flex-wrap gap-1.5">
                 {caseMeta.stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[11px] text-muted"
-                  >
-                    {tech}
-                  </span>
+                  <Chip key={tech}>{tech}</Chip>
                 ))}
               </dd>
             </div>
@@ -180,21 +171,15 @@ export function ProductExperience() {
             <span className="mr-auto font-mono text-[11px] tracking-wide text-faint uppercase">
               the same components, marketing chrome
             </span>
-            <button
-              type="button"
+            <Button
               onClick={() => setAutoplay((value) => !value)}
               aria-pressed={!autoplay}
-              className="cursor-pointer rounded-full border border-line px-3.5 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
             >
               {autoplay ? 'pause' : 'play'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setLocalReset((value) => value + 1)}
-              className="cursor-pointer rounded-full border border-line px-3.5 py-1.5 font-mono text-[11px] text-muted transition-colors hover:border-faint hover:text-ink"
-            >
+            </Button>
+            <Button onClick={() => setLocalReset((value) => value + 1)}>
               restart
-            </button>
+            </Button>
           </div>
         </Reveal>
       </div>
