@@ -4,6 +4,7 @@ import {
   ButtonLink,
   Chip,
   IconButton,
+  Panel,
   Surface,
   Text,
   type ButtonSize,
@@ -30,7 +31,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-20 px-6 py-16 sm:px-8 sm:py-20">
+    <section id={id} className="scroll-mt-20 px-6 py-group sm:px-8 sm:py-section">
       <div className="shell">
         <div className="mb-10 flex items-baseline gap-4 border-t border-line pt-5">
           <span className="font-mono text-xs text-faint tabular-nums">{number}</span>
@@ -97,7 +98,7 @@ export function DesignSystemPage({
         <div className="px-6 pt-20 pb-6 sm:px-8 sm:pt-28">
           <div className="shell">
             <Text variant="eyebrow">component library</Text>
-            <h1 className="mt-6 max-w-[20ch] text-[2.1rem] leading-[1.08] font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
+            <h1 className="mt-6 max-w-[20ch] text-[2.1rem] leading-[1.08] font-semibold tracking-product-title text-ink sm:text-5xl">
               Tokens, recipes, components.
             </h1>
             <Text variant="body" class="mt-7 max-w-2xl sm:text-base">
@@ -191,10 +192,10 @@ chip({ tone: 'accent' })   // types are inferred from the recipe`}
           />
           <Text variant="body" class="mt-6 max-w-2xl">
             TypeScript infers the allowed values from the recipe itself, so{' '}
-            <code className="font-mono text-[13px] text-ink">tone="danger"</code>{' '}
+            <code className="font-mono text-product-chip text-ink">tone="danger"</code>{' '}
             fails to compile on a recipe with no danger tone. Recipes live apart
             from components in{' '}
-            <code className="font-mono text-[13px] text-ink">recipes.ts</code>, so
+            <code className="font-mono text-product-chip text-ink">recipes.ts</code>, so
             a bare class string is available when a component API does not fit,
             and each component module exports only components.
           </Text>
@@ -263,6 +264,33 @@ chip({ tone: 'accent' })   // types are inferred from the recipe`}
           </div>
 
           <Surface pad="lg" class="mt-4">
+            <Text variant="title">Panel</Text>
+            <Text variant="detail" class="mt-1 mb-5">
+              The composition case. Dot notation so children read in render
+              order, and the regions own how they sit against each other.
+            </Text>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Panel>
+                <Panel.Header
+                  title="Panel.Header"
+                  note="Title, note and an action slot."
+                  action={<Button size="sm">action</Button>}
+                />
+                <Panel.Body>
+                  <Text variant="mono">Panel.Body</Text>
+                </Panel.Body>
+                <Panel.Footer>Panel.Footer</Panel.Footer>
+              </Panel>
+              <Panel tone="sunken">
+                <Panel.Header title="tone=&quot;sunken&quot;" />
+                <Panel.Body>
+                  <Text variant="mono">Same regions, different ground</Text>
+                </Panel.Body>
+              </Panel>
+            </div>
+          </Surface>
+
+          <Surface pad="lg" class="mt-4">
             <Text variant="title">Surface</Text>
             <Text variant="detail" class="mt-1 mb-5">
               The panel every card, tile and well is built from.
@@ -315,7 +343,7 @@ chip({ tone: 'accent' })   // types are inferred from the recipe`}
               </div>
               <Text variant="body" class="mt-5">
                 Nothing above re-rendered with different classes. The{' '}
-                <code className="font-mono text-[13px] text-ink">
+                <code className="font-mono text-product-chip text-ink">
                   --color-*
                 </code>{' '}
                 variables underneath them changed.
@@ -333,6 +361,122 @@ chip({ tone: 'accent' })   // types are inferred from the recipe`}
   --color-accent: #6b4fff;
 }`}
           />
+        </Section>
+        {/* --------------------------------------------------------- quality */}
+        <Section
+          id="quality"
+          number="05"
+          title="Quality"
+          lede="Contract tests for the promises components make, and a snapshot that fails the build when styling moves without anyone deciding it should."
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Surface tone="sunken" pad="lg">
+              <Text variant="eyebrow">accessibility contracts</Text>
+              <ul className="mt-4 flex flex-col gap-2.5">
+                {[
+                  'IconButton always has an accessible name',
+                  'Button defaults to type="button"',
+                  'Every interactive recipe carries a focus ring',
+                  'Disabled is both visual and functional',
+                  'External links get rel="noreferrer"',
+                  'No component hardcodes a hex value',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5">
+                    <span aria-hidden className="mt-1.5 size-1 shrink-0 rounded-full bg-accent" />
+                    <Text variant="detail">{item}</Text>
+                  </li>
+                ))}
+              </ul>
+            </Surface>
+
+            <Surface tone="sunken" pad="lg">
+              <Text variant="eyebrow">visual change detection</Text>
+              <Text variant="detail" class="mt-4">
+                49 variants, each snapshotted as its rendered class string. For
+                a token-driven system that is most of what pixel regression
+                buys: if the classes did not change, the render cannot have.
+                Honest limit — it would not catch a token value changing
+                underneath.
+              </Text>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <Chip tone="filled">node --test</Chip>
+                <Chip tone="filled">no jest</Chip>
+                <Chip tone="filled">no jsdom</Chip>
+                <Chip tone="accent">0 new deps</Chip>
+              </div>
+            </Surface>
+          </div>
+
+          <CodeExcerpt
+            file="scripts/ds-contract.tsx"
+            note="one of thirteen"
+            source={`test('every interactive recipe carries a visible focus ring', () => {
+  for (const [name, recipe] of [['button', button], ['link', link]]) {
+    assert.ok(
+      recipe().includes('focus-visible:'),
+      \`\${name} must style :focus-visible — keyboard users need to see focus\`,
+    );
+  }
+});`}
+          />
+        </Section>
+
+        {/* ----------------------------------------------------- measurement */}
+        <Section
+          id="measurement"
+          number="06"
+          title="Measurement"
+          lede="A system you cannot measure is a folder. npm run ds:audit reports adoption and duplication over the source — no browser, no dependencies."
+        >
+          <Surface tone="sunken" pad="lg">
+            <pre className="overflow-x-auto font-mono text-[11.5px] leading-[1.8] text-ink">
+{`Design system audit
+────────────────────────────────────────────────────
+Files scanned        39
+DS component uses    19
+Hand-rolled controls 3
+Adoption rate        86.4%  (floor 80.0%)
+Duplicated UI        13 class strings repeated
+
+Repeated class strings (candidates for a recipe):
+  3x  mt-6 inline-flex items-center gap-1 rounded-full …`}
+            </pre>
+          </Surface>
+          <Text variant="body" class="mt-6 max-w-2xl">
+            The audit found the gaps that built the last two components. Text
+            links were hand-styled in five files, so <code className="font-mono text-[13px] text-ink">Link</code>{' '}
+            exists; the skip-link pairing was copied by hand, so{' '}
+            <code className="font-mono text-[13px] text-ink">SkipLink</code>{' '}
+            does. Adoption went 68% → 86.4% in the same pass.{' '}
+            <code className="font-mono text-[13px] text-ink">--strict</code>{' '}
+            exits non-zero below the floor, so it can gate CI.
+          </Text>
+        </Section>
+
+        {/* ----------------------------------------------------- governance */}
+        <Section
+          id="governance"
+          number="07"
+          title="Governance"
+          lede="Written down in src/ds/README.md, because a convention nobody can cite is a preference."
+        >
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              { t: 'Contribution', d: 'Three uses earns a recipe; twice is a coincidence. Recipe before component. Extend an axis before adding one. Adopt it in the same PR.' },
+              { t: 'Versioning', d: 'No package version — it ships inside the app. The snapshot is the contract instead, and every change to it must be explained.' },
+              { t: 'Migrations', d: 'Audit the file, replace the controls, re-run the audit, confirm the snapshot. Adoption is measured, not announced.' },
+            ].map((item) => (
+              <Surface key={item.t} tone="sunken" pad="lg">
+                <Text variant="title">{item.t}</Text>
+                <Text variant="detail" class="mt-2">{item.d}</Text>
+              </Surface>
+            ))}
+          </div>
+          <Text variant="body" class="mt-6 max-w-2xl">
+            The README also carries the known gaps — no Storybook, no pixel
+            regression, no tailwind-merge — each with the reasoning. A system
+            that hides its edges gets discovered the hard way.
+          </Text>
         </Section>
       </main>
 

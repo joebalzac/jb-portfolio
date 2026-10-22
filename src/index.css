@@ -45,6 +45,25 @@
   --color-product-faint: #a9a8a5;
   --color-product-hover: #efedea;
 
+  /* ---- Design system foundation -------------------------------------
+     Semantic names, so a recipe says what it wraps rather than how big it
+     is. Changing a value here changes every component that uses it. */
+
+  /* Radii — named for the thing, not the pixel count. */
+  --radius-control: 999px;
+  --radius-field: 0.5rem;
+  --radius-surface: 0.75rem;
+
+  /* Elevation — two steps. A third would be a decision nobody can defend. */
+  --shadow-raised: 0 1px 2px rgb(17 24 39 / 0.04), 0 12px 32px rgb(17 24 39 / 0.06);
+  --shadow-overlay: 0 12px 40px rgb(17 24 39 / 0.16);
+
+  /* Spacing rhythm — the four steps layouts are allowed to use. */
+  --spacing-tight: 0.5rem;
+  --spacing-block: 1rem;
+  --spacing-group: 2.5rem;
+  --spacing-section: 5rem;
+
   --breakpoint-panel: 45.0625rem;
   --breakpoint-wide: 68.75rem;
 

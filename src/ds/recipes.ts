@@ -18,7 +18,7 @@ import { cv } from './cv';
  * props (`disabled` vs `href`). Explicit beats clever here.
  */
 export const button = cv({
-  base: 'inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full font-mono whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-default disabled:opacity-35',
+  base: 'inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-control font-mono whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-default disabled:opacity-35',
   variants: {
     tone: {
       /** Default. Reads as a control, not as the point of the page. */
@@ -40,11 +40,11 @@ export const button = cv({
 });
 
 export const iconButton = cv({
-  base: 'grid shrink-0 cursor-pointer place-items-center rounded-md transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-default disabled:opacity-30',
+  base: 'grid shrink-0 cursor-pointer place-items-center rounded-field transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-default disabled:opacity-30',
   variants: {
     tone: {
       quiet: 'text-muted hover:bg-card hover:text-ink',
-      outlined: 'rounded-full border border-line text-muted hover:text-ink',
+      outlined: 'rounded-control border border-line text-muted hover:text-ink',
       active: 'bg-card text-ink',
     },
     size: { sm: 'size-7', md: 'size-8' },
@@ -53,7 +53,7 @@ export const iconButton = cv({
 });
 
 export const chip = cv({
-  base: 'inline-flex items-center gap-1.5 rounded-full whitespace-nowrap',
+  base: 'inline-flex items-center gap-1.5 rounded-control whitespace-nowrap',
   variants: {
     tone: {
       neutral: 'border border-line text-muted',
@@ -69,12 +69,12 @@ export const chip = cv({
 });
 
 export const surface = cv({
-  base: 'rounded-xl',
+  base: 'rounded-surface',
   variants: {
     tone: {
       outlined: 'border border-line bg-bg',
       sunken: 'border border-line bg-card',
-      raised: 'border border-line bg-bg shadow-[0_1px_2px_rgba(17,24,39,0.04),0_12px_32px_rgba(17,24,39,0.06)]',
+      raised: 'border border-line bg-bg shadow-raised',
       bare: '',
     },
     pad: { none: '', sm: 'p-3', md: 'p-4', lg: 'p-6' },
@@ -97,4 +97,20 @@ export const text = cv({
     },
   },
   defaults: { variant: 'body' },
+});
+
+/** Text links. The audit found these hand-styled in five files. */
+export const link = cv({
+  base: 'inline-flex items-center gap-1.5 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none',
+  variants: {
+    tone: {
+      /** Navigation and footers. */
+      nav: 'text-sm text-muted hover:text-ink',
+      /** Inside running copy. */
+      inline: 'text-ink underline decoration-line underline-offset-4 hover:decoration-ink',
+      /** Metadata, timestamps, back links. */
+      subtle: 'text-sm text-muted hover:text-ink',
+    },
+  },
+  defaults: { tone: 'nav' },
 });

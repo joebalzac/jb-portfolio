@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { nav, profile } from '../data/site';
+import { Link } from '../ds';
 import { GitHubIcon } from './GitHubIcon';
 
 const clockFormatter = new Intl.DateTimeFormat('en-US', {
@@ -82,28 +83,23 @@ export function Nav() {
         <div className="shell flex items-center justify-end px-8 py-5">
           <nav className="hidden items-center gap-6 text-sm text-ink/70 md:flex">
             {nav.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="transition-colors hover:text-ink"
-              >
+              <Link key={item.label} href={item.href}>
                 {item.label}
-              </a>
+              </Link>
             ))}
             <span className="text-line">/</span>
             <span className="font-mono text-muted">
               {time} {profile.location}
             </span>
             <span className="text-line">/</span>
-            <a
+            <Link
               href={profile.github}
               target="_blank"
-              rel="noreferrer"
               aria-label="GitHub"
-              className="github-mark inline-flex overflow-visible text-muted transition-colors hover:text-ink"
+              class="github-mark overflow-visible"
             >
               <GitHubIcon className="size-3.5" />
-            </a>
+            </Link>
           </nav>
 
           <button
@@ -134,29 +130,28 @@ export function Nav() {
           >
             <div className="shell flex flex-col px-8 pt-1 pb-4 text-sm text-ink/70">
               {nav.map((item) => (
-                <a
+                <Link
                   key={item.label}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="flex min-h-11 items-center justify-end transition-colors hover:text-ink"
+                  class="min-h-11 justify-end"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
               <div className="mt-1 flex items-center justify-end gap-4 text-muted">
                 <span className="font-mono">
                   {time} {profile.location}
                 </span>
                 <span className="text-line">/</span>
-                <a
+                <Link
                   href={profile.github}
                   target="_blank"
-                  rel="noreferrer"
                   aria-label="GitHub"
-                  className="github-mark -mr-3 inline-flex h-11 w-11 items-center justify-end overflow-visible pr-3 text-muted transition-colors hover:text-ink"
+                  class="github-mark -mr-3 h-11 w-11 justify-end overflow-visible pr-3"
                 >
                   <GitHubIcon className="size-3.5" />
-                </a>
+                </Link>
               </div>
             </div>
           </nav>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { sections } from '../data/apollo';
-import { Button, IconButton } from '../ds';
+import { Button, IconButton, text } from '../ds';
 import { usePresentation } from './presentationContext';
 
 const TARGET_MINUTES = 15;
@@ -81,7 +81,7 @@ export function PresentationBar() {
 
       {helpOpen ? (
         <div className="fixed inset-x-4 bottom-24 z-60 mx-auto max-w-sm rounded-2xl border border-line bg-bg/95 p-5 shadow-lg backdrop-blur sm:inset-x-auto sm:right-6">
-          <h2 className="font-mono text-[11px] tracking-wide text-faint uppercase">
+          <h2 className={text({ variant: "eyebrow" })}>
             shortcuts
           </h2>
           <dl className="mt-4 space-y-2.5">

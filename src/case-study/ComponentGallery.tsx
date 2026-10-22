@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Button } from '../ds';
+import { Button, Panel, cx } from '../ds';
 import { useInView } from '../lib/useInView';
 import { useReducedMotion } from '../lib/useReducedMotion';
 import { ApolloBlocks } from '../components/apollo/ApolloBlocks';
@@ -54,7 +54,7 @@ function Tile({
   children: ReactNode | ((inView: boolean) => ReactNode);
   span?: boolean;
 }) {
-  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.15 });
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.15 });
   /* The entrance latches: a tile that faded back out on the way past would
      read as a glitch. `inView` stays live so the demos inside can pause. */
   const [revealed, setRevealed] = useState(false);
@@ -63,23 +63,21 @@ function Tile({
   }, [inView]);
 
   return (
-    <section
+    <div
       ref={ref}
-      className={`flex flex-col rounded-xl border border-line bg-bg transition-[opacity,transform] duration-700 ease-product motion-reduce:transition-none ${
-        revealed ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
-      } ${span ? 'lg:col-span-2' : ''}`}
+      className={cx(
+        'transition-[opacity,transform] duration-700 ease-product motion-reduce:transition-none',
+        revealed ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0',
+        span && 'lg:col-span-2',
+      )}
     >
-      <header className="flex items-start justify-between gap-4 px-4 pt-4 pb-3.5">
-        <div className="min-w-0">
-          <h4 className="text-sm font-medium text-ink">{label}</h4>
-          <p className="mt-1 text-xs leading-relaxed text-muted">{note}</p>
-        </div>
-        {action ? <div className="flex shrink-0 gap-1.5">{action}</div> : null}
-      </header>
-      <div className="flex flex-1 flex-col justify-center border-t border-line p-4">
-        {typeof children === 'function' ? children(inView) : children}
-      </div>
-    </section>
+      <Panel class="h-full">
+        <Panel.Header title={label} note={note} action={action} />
+        <Panel.Body>
+          {typeof children === 'function' ? children(inView) : children}
+        </Panel.Body>
+      </Panel>
+    </div>
   );
 }
 

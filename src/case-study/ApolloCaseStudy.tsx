@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Footer } from '../components/Footer';
 import { sections } from '../data/apollo';
-import { Button } from '../ds';
+import { Button, Link, SkipLink } from '../ds';
 import { isPlainClick } from '../lib/useRoute';
 import { PresentationBar } from './PresentationBar';
 import { PresentationProvider } from './presentation';
@@ -22,14 +22,14 @@ function CaseNav({ onNavigate }: { onNavigate: (to: string) => void }) {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg/80 backdrop-blur">
       <div className="shell flex items-center justify-between gap-4 px-6 py-4 sm:px-8">
-        <a
+        <Link
           href="/"
           onClick={(event) => {
             if (!isPlainClick(event)) return;
             event.preventDefault();
             onNavigate('/');
           }}
-          className="group inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-ink"
+          class="group"
         >
           <span
             aria-hidden
@@ -38,7 +38,7 @@ function CaseNav({ onNavigate }: { onNavigate: (to: string) => void }) {
             ←
           </span>
           joseph balzac
-        </a>
+        </Link>
 
         <div className="flex items-center gap-3">
           <span
@@ -66,12 +66,7 @@ function CaseStudyBody({ onNavigate }: { onNavigate: (to: string) => void }) {
 
   return (
     <div className="theme-apollo min-h-screen bg-bg text-ink">
-      <a
-        href="#intro"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-70 focus:rounded-full focus:border focus:border-line focus:bg-bg focus:px-4 focus:py-2 focus:text-sm focus:text-ink"
-      >
-        Skip to case study
-      </a>
+      <SkipLink href="#intro">Skip to case study</SkipLink>
 
       <CaseNav onNavigate={onNavigate} />
 

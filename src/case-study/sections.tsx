@@ -4,7 +4,7 @@ import { ApolloUI } from '../components/projects/ApolloUI';
 import { architecture, caseMeta, collaboration, contributions } from '../data/apollo';
 import { ComponentGallery } from './ComponentGallery';
 import { useDemoReset } from './presentationContext';
-import { Button, ButtonLink, Chip } from '../ds';
+import { Button, ButtonLink, Chip, Text, text } from '../ds';
 import { CodeExcerpt } from '../ds/CodeExcerpt';
 import { CaseSection, Eyebrow, Reveal, SHELL } from './primitives';
 
@@ -46,7 +46,7 @@ export function CaseHero() {
         <Reveal delay={180}>
           <dl className="mt-14 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-line pt-7 sm:grid-cols-2">
             <div>
-              <dt className="font-mono text-[11px] tracking-wide text-faint uppercase">
+              <dt className={text({ variant: "eyebrow" })}>
                 role
               </dt>
               <dd className="mt-2 text-sm leading-relaxed text-ink">
@@ -54,7 +54,7 @@ export function CaseHero() {
               </dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] tracking-wide text-faint uppercase">
+              <dt className={text({ variant: "eyebrow" })}>
                 team
               </dt>
               <dd className="mt-2 text-sm leading-relaxed text-ink">
@@ -62,7 +62,7 @@ export function CaseHero() {
               </dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] tracking-wide text-faint uppercase">
+              <dt className={text({ variant: "eyebrow" })}>
                 stack
               </dt>
               <dd className="mt-2 flex flex-wrap gap-1.5">
@@ -72,7 +72,7 @@ export function CaseHero() {
               </dd>
             </div>
             <div>
-              <dt className="font-mono text-[11px] tracking-wide text-faint uppercase">
+              <dt className={text({ variant: "eyebrow" })}>
                 timeline
               </dt>
               <dd className="mt-2 inline-flex items-center gap-1.5 text-sm text-muted">
@@ -168,9 +168,9 @@ export function ProductExperience() {
       <div className={`${SHELL} mt-20`}>
         <Reveal>
           <div className="flex flex-wrap items-center gap-2 border-t border-line pt-7">
-            <span className="mr-auto font-mono text-[11px] tracking-wide text-faint uppercase">
+            <Text variant="eyebrow" class="mr-auto">
               the same components, marketing chrome
-            </span>
+            </Text>
             <Button
               onClick={() => setAutoplay((value) => !value)}
               aria-pressed={!autoplay}

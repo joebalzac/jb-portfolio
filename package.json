@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ds:audit": "node scripts/ds-audit.mjs",
+    "ds:test": "vite build --ssr scripts/ds-contract.tsx --outDir .ds-test --logLevel error && node --test .ds-test/ds-contract.js",
+    "ds:test:update": "UPDATE_SNAPSHOT=1 npm run ds:test"
   },
   "dependencies": {
     "@fontsource/geist-mono": "^5.3.0",

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Text } from '../ds';
 import { useReducedMotion } from '../lib/useReducedMotion';
 
 /** One measure for the whole case study. */
@@ -20,7 +21,7 @@ export function CaseSection({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="scroll-mt-20 px-6 py-20 sm:px-8 sm:py-28"
+      className="scroll-mt-20 px-6 py-group sm:px-8 sm:py-section"
     >
       <div className={SHELL}>
         <div className="mb-12 flex items-baseline gap-4 border-t border-line pt-5">
@@ -94,11 +95,7 @@ export function Reveal({
   );
 }
 
-/** Small mono label used above blocks. */
+/** Small mono label above a block. Delegates to the system's type scale. */
 export function Eyebrow({ children }: { children: ReactNode }) {
-  return (
-    <span className="font-mono text-[11px] tracking-wide text-faint uppercase">
-      {children}
-    </span>
-  );
+  return <Text variant="eyebrow">{children}</Text>;
 }
