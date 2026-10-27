@@ -64,6 +64,20 @@ export const work: WorkItem[] = [
     images: [],
   },
   {
+    name: 'Prototype Playground',
+    description:
+      'a design system for prototyping fast — guardrails that keep every build on brand and on system.',
+    brandTone: 'soft',
+    cover: '/img/prototype-playground/cover.png',
+    url: 'https://prototype-playground-sepia.vercel.app/',
+    whatIDid: [
+      'built the playground so anyone can spin up a prototype from templates in minutes.',
+      'wired the design system tokens and components in as guardrails, not suggestions.',
+      'kept prototypes, templates, and the system in one place so explorations stay on brand.',
+    ],
+    images: [],
+  },
+  {
     name: 'EliseAI',
     description: 'design, website, ux, engineering and everything in between.',
     brandTone: 'dark',
